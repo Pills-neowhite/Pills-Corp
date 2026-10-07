@@ -1,0 +1,98 @@
+/* ==========================================================================
+   PILLS Design System · Tokens
+   Extracted from docs/design-system.md · Appendix A
+   Version 1.1 · 2026.04.23
+   ========================================================================== */
+
+:root {
+  /* ——— Color ——— */
+  --paper:           #F6F1E7;
+  --grid-stroke:     #E6DFD1;
+  --cyan-soft:       #D4E4F1;
+  --blueprint:       #0B5FA8;
+  --blueprint-deep:  #083F71;
+  --rust:            #B04A1E;
+  --graphite:        #5F6970;
+  --ink:             #0F1419;
+
+  /* ——— Opacity layers ——— */
+  --l1: 1;
+  --l2: 0.85;
+  --l3: 0.62;
+  --l4: 1;
+  --l5: 0.055;
+
+  /* ——— Spacing (8pt base) ——— */
+  --space-4xs: 4px;
+  --space-3xs: 8px;
+  --space-2xs: 12px;
+  --space-xs:  16px;
+  --space-sm:  24px;
+  --space-md:  40px;
+  --space-lg:  64px;
+  --space-xl:  96px;
+  --space-2xl: 144px;
+
+  /* ——— Typography ——— */
+  --font-sans: 'Space Grotesk', 'Pretendard Variable', Pretendard,
+               ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* ——— Motion ——— */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-color: 150ms;
+  --dur-pos:   200ms;
+  --delay-enter-pos:   300ms;
+  --delay-leave-pos:   150ms;
+  --delay-leave-color: 400ms;
+
+  /* ——— Interaction ——— */
+  --cta-opacity-rest:  0.45;
+  --cta-translate:     8px;
+  --card-translate-y: -3px;
+}
+
+/* ——— Base ——— */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  zoom: 1.1;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ——— Paper background with subtle grid ——— */
+.pills-paper {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(15,20,25,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15,20,25,0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@media (max-width: 767px) {
+  .pills-paper { background-size: 16px 16px; }
+}
+
+/* ——— Accessibility: Reduced motion ——— */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 75ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

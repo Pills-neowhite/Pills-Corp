@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PILLETs Birch Stream Platform — 1CPU × 4GPU AI HPC Server · Specification Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  /* ——— PILLS Design System v1.1 — Color Tokens ——— */
+  --paper:           #F6F1E7;
+  --grid-stroke:     #E6DFD1;
+  --cyan-soft:       #D4E4F1;
+  --blueprint:       #0B5FA8;
+  --blueprint-deep:  #083F71;
+  --rust:            #B04A1E;
+  --graphite:        #5F6970;
+  --ink:             #0F1419;
+  --l1: 1;
+  --l2: 0.85;
+  --l3: 0.62;
+  --l4: 1;
+  --l5: 0.055;
+  --font-sans: 'Space Grotesk', 'Pretendard Variable', Pretendard, ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+html, body {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+}
+.pills-paper {
+  position: fixed; inset: 0; z-index: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right,  rgba(15,20,25,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15,20,25,0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+#canvas-container { position: fixed; inset: 0; z-index: 1; }
+canvas { display: block; }
+
+/* ——— Sheet metadata bar (top) ——— */
+#sheet-meta {
+  position: absolute; top: 24px; left: 40px; right: 40px;
+  z-index: 10; display: flex; justify-content: space-between;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.11em;
+  text-transform: uppercase; color: var(--graphite);
+  pointer-events: none; user-select: none;
+}
+#sheet-meta .meta-r { color: var(--graphite); }
+
+/* ——— Wordmark + Section Label + H1 ——— */
+#overlay {
+  position: absolute; top: 24px; right: 40px;
+  z-index: 10; pointer-events: none; user-select: none;
+  text-align: right;
+}
+.wordmark {
+  font-size: 14px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink); margin: 0 0 24px 0;
+}
+.section-label {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.11em;
+  text-transform: uppercase; color: var(--blueprint); margin: 0 0 16px 0;
+}
+.h1 {
+  font-size: 28px; font-weight: 500; line-height: 1.05;
+  letter-spacing: -0.028em; margin: 0 0 12px 0; color: var(--ink);
+  max-width: 580px;
+}
+.h2 {
+  font-size: 12.2px; font-weight: 400; line-height: 1.55;
+  letter-spacing: 0; color: var(--graphite); margin: 0 0 24px 0;
+  max-width: 540px;
+}
+
+/* ——— Legend (specification list, drawing-syntax style) ——— */
+#legend {
+  margin-top: 8px; padding-left: 16px;
+  border-left: 0.5px solid var(--blueprint);
+  max-width: 540px;
+}
+#legend .spec-row {
+  font-size: 12.8px; font-weight: 400; line-height: 1.55;
+  letter-spacing: 0.04em; color: var(--ink); opacity: var(--l2);
+  margin: 4px 0; display: flex; gap: 12px;
+}
+#legend .spec-row .sq {
+  display: inline-block; width: 10px; height: 10px;
+  flex-shrink: 0; margin-top: 5px;
+}
+#legend .spec-row .lbl { flex: 1; }
+#legend .meta-block {
+  font-size: 10px; line-height: 1.55; letter-spacing: 0.02em;
+  color: var(--graphite); margin-top: 12px; padding-top: 12px;
+  border-top: 0.5px dashed var(--grid-stroke);
+}
+#legend .meta-block .kv { margin: 2px 0; }
+#legend .meta-block .k { color: var(--blueprint); font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; }
+
+/* ——— Navigation hint (top-right) ——— */
+#nav-hint {
+  position: absolute; top: 76px; right: 40px;
+  z-index: 10; pointer-events: none; user-select: none;
+  font-size: 11px; line-height: 1.55; letter-spacing: 0.04em;
+  color: var(--graphite); text-align: right; max-width: 220px;
+}
+#nav-hint .nav-title {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.11em;
+  text-transform: uppercase; color: var(--blueprint);
+  margin-bottom: 8px;
+}
+#nav-hint .nav-row { margin: 3px 0; }
+#nav-hint .nav-key {
+  color: var(--ink); font-weight: 500; font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* ——— Sheet counter (bottom-right) ——— */
+#sheet-counter {
+  position: absolute; bottom: 24px; right: 40px;
+  z-index: 10; pointer-events: none; user-select: none;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.11em;
+  text-transform: uppercase; color: var(--graphite);
+}
+
+/* ——— Credits (bottom-left, drawing title block) ——— */
+#credits {
+  position: absolute; bottom: 24px; left: 40px;
+  z-index: 10; pointer-events: none; user-select: none;
+  font-size: 10px; line-height: 1.55; letter-spacing: 0.04em;
+  color: var(--graphite);
+}
+#credits .author { color: var(--ink); font-weight: 500;
+  letter-spacing: 0.10em; text-transform: uppercase; font-size: 11px; }
+#credits .org { color: var(--blueprint); font-weight: 500;
+  letter-spacing: 0.10em; text-transform: uppercase; font-size: 10px; }
+
+/* ——— Ghost watermark ——— */
+.watermark {
+  position: absolute; bottom: 80px; left: calc(50% + 40px);
+  font-size: 144px; font-weight: 500; line-height: 1;
+  letter-spacing: -0.04em; color: var(--ink);
+  opacity: var(--l5); pointer-events: none; user-select: none; z-index: 2;
+}
+</style>
+</head>
+<body>
+<div class="pills-paper"></div>
+
+<div class="watermark">SPEC</div>
+
+<div id="overlay">
+  <p class="section-label">01 / AI HPC Server &amp; Workstation</p>
+  <h1 class="h1">PILLETs Birch Stream Platform</h1>
+  <p class="h2">1 CPU · 4 GPU passive · 5U Rackmount<br/>Intel C741 · Intel&reg; Xeon&reg; 6761P · NVIDIA H200 NVL 141GB × 4</p>
+</div>
+
+
+<div id="credits" style="display:none;"></div>
+
+<div id="spec-bottom" style="position:absolute; bottom:24px; right:40px; text-align:right; z-index:10; pointer-events:none; user-select:none; font-size:10px; line-height:1.55; letter-spacing:0.02em; color:var(--graphite);">
+  <div class="kv"><span class="k" style="color:var(--blueprint); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; font-size:9px;">CPU</span> Xeon 6761P · Granite Rapids-AP · 336MB L2+L3</div>
+  <div class="kv"><span class="k" style="color:var(--blueprint); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; font-size:9px;">GPU</span> 4 × H200 NVL · 141GB HBM3e · 4.8 TB/s · 600W</div>
+  <div class="kv"><span class="k" style="color:var(--blueprint); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; font-size:9px;">MEM</span> 8 × 128GB RDIMM · DDR5-6400 · 8-channel · 1TB</div>
+  <div class="kv"><span class="k" style="color:var(--blueprint); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; font-size:9px;">NET</span> 2 × 10GBASE-T · 1 × IPMI BMC</div>
+  <div class="kv"><span class="k" style="color:var(--blueprint); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; font-size:9px;">STO</span> 2 × M.2 22110 NVMe (PCIe 5.0 x2)</div>
+  <div class="kv"><span class="k" style="color:var(--blueprint); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; font-size:9px;">PWR</span> WS3000 (GPU 2400W) + SF850 (compute)</div>
+</div>
+
+
+<div id="canvas-container"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ============================================================================
+// PILLS DESIGN SYSTEM — Color tokens (Three.js RGB float)
+// ============================================================================
+const PAPER      = [0.965, 0.945, 0.906];   // #F6F1E7
+const GRID_STRK  = [0.902, 0.875, 0.820];   // #E6DFD1
+const CYAN_SOFT  = [0.831, 0.894, 0.945];   // #D4E4F1
+const BLUEPRINT  = [0.043, 0.373, 0.659];   // #0B5FA8
+const BLUE_DEEP  = [0.031, 0.247, 0.443];   // #083F71
+const RUST       = [0.690, 0.290, 0.118];   // #B04A1E
+const GRAPHITE   = [0.373, 0.412, 0.439];   // #5F6970
+const INK        = [0.059, 0.078, 0.098];   // #0F1419
+
+// PCB green — physical accuracy for motherboard substrate
+const PCB_GREEN    = [0.106, 0.353, 0.196];  // #1B5A32 — dark PCB green
+const PCB_GREEN_DK = [0.063, 0.235, 0.133];  // #103C22 — deeper traces
+
+// Semantic shades for blueprint paper rendering
+const C_FRAME    = INK;          // Chassis outlines (ink, primary)
+const C_PANEL    = GRAPHITE;     // Side/rear panels (graphite, L3)
+const C_MB       = PCB_GREEN;    // Motherboard PCB substrate (physical green)
+const C_MB_TR    = PCB_GREEN_DK; // Motherboard traces
+const C_CPU      = BLUEPRINT;
+const C_COOLER   = INK;
+const C_COOLER_2 = GRAPHITE;
+const C_RAM      = BLUE_DEEP;
+const C_GPU      = INK;
+const C_GPU_HL   = BLUEPRINT;
+const C_NVLINK   = RUST;         // NVLink bridge — rust accent (rare emphasis)
+const C_PSU      = INK;
+const C_PSU_BR   = BLUEPRINT;
+const C_FAN_FRM  = GRAPHITE;
+const C_FAN_BLD  = INK;
+const C_FAN_DLT  = RUST;         // DELTA fans — orange/rust accent
+const C_CABLE    = GRAPHITE;
+const C_MESH     = GRAPHITE;
+const C_BRACKET  = BLUEPRINT;
+const C_PCIE     = BLUE_DEEP;
+
+// ============================================================================
+// CHASSIS SPECS — SilverStone RM51 5U Rackmount (meters)
+//   +X = right, -X = left  ·  +Y = up, -Y = down (floor)
+//   +Z = front (mesh bezel), -Z = rear (I/O, exhaust, PSU)
+// ============================================================================
+const CASE = { w: 0.437, h: 0.22225, d: 0.555, earW: 0.0228 };
+const cw = CASE.w/2, ch = CASE.h/2, cd = CASE.d/2;
+const FLOOR_Y = -ch - 0.040;
+const caseCenterY = FLOOR_Y + 0.040 + ch;
+
+// Image-proportion only: extend chassis outline 38mm toward -X (datasheet spec unchanged)
+const VIS_X_EXT_NEG = 0.038;
+const cwL = cw + VIS_X_EXT_NEG;   // left visual extent (= 0.2185 + 0.038 = 0.2565)
+const cwR = cw;                    // right unchanged
+
+// Image-proportion only: shrink chassis outline 50mm at +Z (bezel empty space side)
+const VIS_Z_RED_POS = 0.050;
+const cdR = cd;                       // rear extent unchanged (-cd at chassis rear)
+const cdF = cd - VIS_Z_RED_POS;       // front visual extent (= 0.2775 - 0.050 = 0.2275)
+
+// ============================================================================
+// Scene / Camera / Renderer (light blueprint paper background)
+// ============================================================================
+const scene = new THREE.Scene();
+scene.background = null;
+const camera = new THREE.PerspectiveCamera(35, innerWidth/innerHeight, 0.05, 100);
+// XYZ diagonal isometric-like view; target = system visual center, camera offset equal in X/Y/Z
+const SYS_CX = ((cwR) + (-cwL))/2;          // visual X center (= -0.019)
+const SYS_CY = caseCenterY;                  // Y center (= 0)
+const SYS_CZ = ((cdF) + (-cd))/2;            // visual Z center (= -0.025)
+camera.position.set(1.0721, 0.9681, 1.1050);
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer:true});
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x000000, 0);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+// Negative X shifts content RIGHT, positive shifts LEFT
+const VIEW_SHIFT_X_PCT = -0.15;
+const VIEW_SHIFT_Y_PCT = 0.00;
+function applyViewOffset() {
+  const w = window.innerWidth, h = window.innerHeight;
+  camera.setViewOffset(w, h, VIEW_SHIFT_X_PCT * w, VIEW_SHIFT_Y_PCT * h, w, h);
+}
+applyViewOffset();
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.target.set(-0.1343, 0.0024, 0.0770);
+controls.autoRotate = false; controls.autoRotateSpeed = 1.0;
+
+
+// ============================================================================
+// Point buffers + helpers (geometry generation)
+// ============================================================================
+const linePos = [], lineCol = [];
+let _tgtP = linePos, _tgtC = lineCol;
+
+function boxEdges(hw,hh,hd){return[
+  {s:[-hw,-hh,-hd],e:[-hw,hh,-hd]},{s:[hw,-hh,-hd],e:[hw,hh,-hd]},
+  {s:[-hw,-hh,hd],e:[-hw,hh,hd]},{s:[hw,-hh,hd],e:[hw,hh,hd]},
+  {s:[-hw,hh,-hd],e:[hw,hh,-hd]},{s:[hw,hh,-hd],e:[hw,hh,hd]},
+  {s:[hw,hh,hd],e:[-hw,hh,hd]},{s:[-hw,hh,hd],e:[-hw,hh,-hd]},
+  {s:[-hw,-hh,-hd],e:[hw,-hh,-hd]},{s:[hw,-hh,-hd],e:[hw,-hh,hd]},
+  {s:[hw,-hh,hd],e:[-hw,-hh,hd]},{s:[-hw,-hh,hd],e:[-hw,-hh,-hd]}];}
+
+function addLine(x1,y1,z1,x2,y2,z2,rgb,density){
+  const len = Math.hypot(x2-x1,y2-y1,z2-z1), N = Math.max(10, Math.round(len*(density||400)));
+  for(let i=0;i<=N;i++){const t=i/N;
+    _tgtP.push(x1+(x2-x1)*t,y1+(y2-y1)*t,z1+(z2-z1)*t); _tgtC.push(rgb[0],rgb[1],rgb[2]);}}
+
+function addBoxEdges(cx,cy,cz,hw,hh,hd,rgb,density){
+  boxEdges(hw,hh,hd).forEach(e=>{
+    addLine(e.s[0]+cx,e.s[1]+cy,e.s[2]+cz,e.e[0]+cx,e.e[1]+cy,e.e[2]+cz,rgb,density);
+  });}
+
+function addRing(cx,cy,cz,plane,diameter,rgb,N){
+  N = N || 80; const r = diameter/2;
+  for(let i=0;i<=N;i++){const a=(i/N)*Math.PI*2;
+    let x1=cx,y1=cy,z1=cz;
+    if(plane==='xz'){x1+=Math.cos(a)*r;z1+=Math.sin(a)*r;}
+    else if(plane==='yz'){y1+=Math.cos(a)*r;z1+=Math.sin(a)*r;}
+    else{x1+=Math.cos(a)*r;y1+=Math.sin(a)*r;}
+    _tgtP.push(x1,y1,z1); _tgtC.push(rgb[0],rgb[1],rgb[2]);}}
+
+function makeTextSprite(text,color){
+  const cw2=Math.max(128,text.length*32); const c=document.createElement('canvas');
+  c.width=cw2; c.height=64;
+  const fs=Math.min(40,Math.floor(cw2*0.85/text.length)*1.4);
+  const ctx=c.getContext('2d');
+  ctx.font='500 '+fs+'px "Space Grotesk", sans-serif';
+  ctx.fillStyle=color; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text,cw2/2,32);
+  const tex=new THREE.CanvasTexture(c); tex.minFilter=THREE.LinearFilter;
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});
+  const s=new THREE.Sprite(mat); s.scale.set(0.18,0.09,1); return s;}
+
+function makePoints(pos,col,size,opacity){
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pos), 3));
+  g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(col), 3));
+  // Blueprint paper rendering: use NormalBlending (no additive — that washes out on light bg)
+  const m = new THREE.PointsMaterial({size:size||0.005, vertexColors:true, transparent:true,
+    opacity:(opacity===undefined?0.88:opacity), blending:THREE.NormalBlending,
+    sizeAttenuation:true, depthWrite:false});
+  return new THREE.Points(g, m);
+}
+
+// ============================================================================
+// 1. CHASSIS FRAME — SilverStone RM51 5U outline (ink, primary edges)
+// ============================================================================
+// 4 vertical corner posts — visual extension: -cwL left, +cwR right, +cdF front (bezel side)
+addLine(-cwL,caseCenterY-ch,-cdR,-cwL,caseCenterY+ch,-cdR,C_FRAME,500);
+addLine( cwR,caseCenterY-ch,-cdR, cwR,caseCenterY+ch,-cdR,C_FRAME,500);
+addLine(-cwL,caseCenterY-ch, cdF,-cwL,caseCenterY+ch, cdF,C_FRAME,500);
+addLine( cwR,caseCenterY-ch, cdF, cwR,caseCenterY+ch, cdF,C_FRAME,500);
+// top + bottom rectangles — extended to -cwL on left, shrunk to +cdF on front
+addLine(-cwL,caseCenterY+ch,-cdR, cwR,caseCenterY+ch,-cdR,C_FRAME,400);
+addLine(-cwL,caseCenterY+ch, cdF, cwR,caseCenterY+ch, cdF,C_FRAME,400);
+addLine(-cwL,caseCenterY+ch,-cdR,-cwL,caseCenterY+ch, cdF,C_FRAME,400);
+addLine( cwR,caseCenterY+ch,-cdR, cwR,caseCenterY+ch, cdF,C_FRAME,400);
+addLine(-cwL,caseCenterY-ch,-cdR, cwR,caseCenterY-ch,-cdR,C_FRAME,400);
+addLine(-cwL,caseCenterY-ch, cdF, cwR,caseCenterY-ch, cdF,C_FRAME,400);
+addLine(-cwL,caseCenterY-ch,-cdR,-cwL,caseCenterY-ch, cdF,C_FRAME,400);
+addLine( cwR,caseCenterY-ch,-cdR, cwR,caseCenterY-ch, cdF,C_FRAME,400);
+
+// 19" rack mount ears at front (+Z) — placed at the visually-extended chassis edges
+// + D-shaped carry handles attached to outer edge of each ear (per ref photo)
+[{side:-1, half:cwL},{side:1, half:cwR}].forEach(({side, half})=>{
+  const xIn = side*half, xOut = side*(half+CASE.earW);
+  addBoxEdges((xIn+xOut)/2, caseCenterY, cdF-0.003, CASE.earW/2, ch, 0.003, BLUEPRINT, 220);
+  for(let h=0;h<4;h++){
+    const hy = caseCenterY - ch + 0.022 + h*((CASE.h-0.044)/3);
+    addRing((xIn+xOut)/2, hy, cdF-0.001, 'xy', 0.010, BLUEPRINT, 24);
+  }
+  // ----- Tubular D-handle (real server style) attached to this ear -----
+  // Geometry: bent steel tube (~12mm diameter) forming D-shape, with mounting plate
+  // bolted to the rack ear face. Smooth quarter-circle bends.
+  const hX   = (xIn + xOut)/2;                         // X centerline on ear
+  const tubeR = 0.0065;                                 // tube radius (13mm tube)
+  const bendR = 0.018;                                  // 90° corner bend radius
+  const hZ_ear = cdF - 0.007;                           // ear face Z, -Z 10mm shift (was cdF + 0.003)
+  const hZ_out = hZ_ear + 0.060;                        // outermost forward Z (60mm protrusion)
+  const yMidTop = caseCenterY + ch*0.62;                // top end of vertical grip section
+  const yMidBot = caseCenterY - ch*0.62;                // bottom end of vertical grip
+  const yArmTop = yMidTop + bendR;                      // top arm Y (level of horizontal arm)
+  const yArmBot = yMidBot - bendR;
+  // Helper: render a thick tube as 8 parallel longitudinal stripes + cross rings
+  // along an axis (axisVec) from p0 to p1, with perpendicular vectors u, v.
+  function tubeStraight(p0, p1, u, v, r, color){
+    const stripes = 8, rings = 4;
+    const len = Math.hypot(p1[0]-p0[0], p1[1]-p0[1], p1[2]-p0[2]);
+    // Longitudinal stripes around tube
+    for(let s=0;s<stripes;s++){
+      const a = (s/stripes)*Math.PI*2;
+      const ux = u[0]*Math.cos(a)*r + v[0]*Math.sin(a)*r;
+      const uy = u[1]*Math.cos(a)*r + v[1]*Math.sin(a)*r;
+      const uz = u[2]*Math.cos(a)*r + v[2]*Math.sin(a)*r;
+      addLine(p0[0]+ux, p0[1]+uy, p0[2]+uz,
+              p1[0]+ux, p1[1]+uy, p1[2]+uz, color, 350);
+    }
+    // Cross-section rings at endpoints and midpoints
+    for(let ri=0;ri<=rings;ri++){
+      const t = ri/rings;
+      const cx = p0[0]+(p1[0]-p0[0])*t, cy = p0[1]+(p1[1]-p0[1])*t, cz = p0[2]+(p1[2]-p0[2])*t;
+      const ringN = 32;
+      for(let k=0;k<=ringN;k++){
+        const a = (k/ringN)*Math.PI*2;
+        const ux = u[0]*Math.cos(a)*r + v[0]*Math.sin(a)*r;
+        const uy = u[1]*Math.cos(a)*r + v[1]*Math.sin(a)*r;
+        const uz = u[2]*Math.cos(a)*r + v[2]*Math.sin(a)*r;
+        _tgtP.push(cx+ux, cy+uy, cz+uz);
+        _tgtC.push(color[0], color[1], color[2]);
+      }
+    }
+  }
+  // Helper: tube along a quarter-arc in the YZ plane (X fixed)
+  // Arc center at (hX, cY, cZ), radius bendR, sweeping from angle a0 to a1
+  function tubeArcYZ(cY, cZ, a0, a1, r, color){
+    const segs = 16, stripes = 8;
+    // The tube axis at each step is tangent to the arc; the perpendicular
+    // is (X axis) for tube's "side" and (radial direction) for "up/down".
+    for(let s=0;s<stripes;s++){
+      const ang = (s/stripes)*Math.PI*2;
+      let prev = null;
+      for(let i=0;i<=segs;i++){
+        const t = i/segs, a = a0 + (a1-a0)*t;
+        // Center of tube at this arc step
+        const cyC = cY + bendR*Math.cos(a);
+        const czC = cZ + bendR*Math.sin(a);
+        // Local cross-section: X is one perpendicular, radial outward is the other
+        const radY = Math.cos(a), radZ = Math.sin(a);
+        const px = hX + r*Math.cos(ang);                            // X offset
+        const py = cyC + r*Math.sin(ang)*radY;                      // along radial × sin
+        const pz = czC + r*Math.sin(ang)*radZ;
+        if(prev){ addLine(prev[0],prev[1],prev[2], px,py,pz, color, 250); }
+        prev = [px,py,pz];
+      }
+    }
+    // Cross-section rings at start, mid, end of arc
+    [a0, (a0+a1)/2, a1].forEach(a=>{
+      const cyC = cY + bendR*Math.cos(a);
+      const czC = cZ + bendR*Math.sin(a);
+      const radY = Math.cos(a), radZ = Math.sin(a);
+      const ringN = 32;
+      for(let k=0;k<=ringN;k++){
+        const ang = (k/ringN)*Math.PI*2;
+        _tgtP.push(hX + r*Math.cos(ang),
+                   cyC + r*Math.sin(ang)*radY,
+                   czC + r*Math.sin(ang)*radZ);
+        _tgtC.push(color[0], color[1], color[2]);
+      }
+    });
+  }
+  // === Tube segments ===
+  // Vertical grip (main vertical section at +Z)
+  tubeStraight([hX, yMidBot, hZ_out], [hX, yMidTop, hZ_out],
+               [1,0,0], [0,0,1], tubeR, INK);
+  // Top arm — short horizontal section from ear toward +Z
+  tubeStraight([hX, yArmTop, hZ_ear + bendR], [hX, yArmTop, hZ_out - bendR],
+               [1,0,0], [0,1,0], tubeR, INK);
+  // Bottom arm
+  tubeStraight([hX, yArmBot, hZ_ear + bendR], [hX, yArmBot, hZ_out - bendR],
+               [1,0,0], [0,1,0], tubeR, INK);
+  // Top bend (90° quarter arc from top-arm to top-of-vertical)
+  // Arc center at (hX, yMidTop, hZ_out - bendR), radius bendR
+  // Sweep from angle π/2 (pointing +Y from center → end of horizontal arm)
+  //              to angle 0 (pointing +Z → start of vertical bar)
+  tubeArcYZ(yMidTop, hZ_out - bendR, Math.PI/2, 0, tubeR, INK);
+  // Bottom bend — sweep π/2 (vertical bar bottom = +Z side of arc) to π (arm end = -Y side)
+  tubeArcYZ(yMidBot, hZ_out - bendR, Math.PI/2, Math.PI, tubeR, INK);
+  // === Mounting plates (rectangular flange on ear face) ===
+  addBoxEdges(hX, yArmTop, hZ_ear, 0.016, 0.014, 0.0025, GRAPHITE, 180);
+  addBoxEdges(hX, yArmBot, hZ_ear, 0.016, 0.014, 0.0025, GRAPHITE, 180);
+  // Plate top face highlight stripes
+  for(let i=0;i<3;i++){
+    const dy = -0.010 + i*0.010;
+    addLine(hX-0.014, yArmTop+dy, hZ_ear-0.0035, hX+0.014, yArmTop+dy, hZ_ear-0.0035, INK, 200);
+    addLine(hX-0.014, yArmBot+dy, hZ_ear-0.0035, hX+0.014, yArmBot+dy, hZ_ear-0.0035, INK, 200);
+  }
+  // Bolts (4 per plate, in corners)
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([dx,dy])=>{
+    addRing(hX + dx*0.011, yArmTop + dy*0.008, hZ_ear-0.0040, 'xy', 0.004, BLUEPRINT, 16);
+    addRing(hX + dx*0.011, yArmBot + dy*0.008, hZ_ear-0.0040, 'xy', 0.004, BLUEPRINT, 16);
+  });
+  // === Center grip texture (slight thickening at middle of vertical bar) ===
+  const gripY0 = caseCenterY - 0.040, gripY1 = caseCenterY + 0.040;
+  for(let i=0;i<5;i++){
+    const a = (i/5)*Math.PI*2;
+    const ux = Math.cos(a)*(tubeR+0.0008), uz = Math.sin(a)*(tubeR+0.0008);
+    addLine(hX+ux, gripY0, hZ_out+uz, hX+ux, gripY1, hZ_out+uz, INK, 200);
+  }
+});
+
+// Chassis floor — dotted standoff & mounting hole pattern (extended -X)
+{
+  const bpPos=[], bpCol=[];
+  const visW = cwL + cwR;          // total visual width
+  const visCx = (cwR - cwL)/2;     // X center of visual chassis
+  // Sparse paper-stipple floor (light, suggests material)
+  for(let i=0;i<2200;i++){
+    const px = visCx + (Math.random()-0.5)*visW;
+    const pz=(Math.random()-0.5)*CASE.d;
+    bpPos.push(px, caseCenterY-ch+0.001, pz);
+    const v=0.85+Math.random()*0.15;
+    bpCol.push(GRAPHITE[0]*v,GRAPHITE[1]*v,GRAPHITE[2]*v);
+  }
+  // SSI CEB standoff pattern (8 positions)
+  const mbStandoffs = [
+    [-0.140,-0.118],[-0.140, 0.000],[-0.140, 0.118],
+    [-0.025, 0.118],[ 0.025, 0.118],[ 0.140, 0.118],
+    [ 0.140, 0.000],[ 0.140,-0.118]
+  ];
+  mbStandoffs.forEach(([sx,sz])=>{
+    for(let a=0;a<24;a++){const ang=a/24*Math.PI*2;
+      bpPos.push(sx+Math.cos(ang)*0.005, caseCenterY-ch+0.002, sz+Math.sin(ang)*0.005);
+      bpCol.push(BLUEPRINT[0], BLUEPRINT[1], BLUEPRINT[2]);
+    }
+  });
+  scene.add(makePoints(bpPos, bpCol, 0.005, 0.65));
+}
+
+// Front mesh bezel (+Z) — hex-honeycomb perforation (visually extended -X)
+{
+  const mPos=[], mCol=[];
+  const visW = cwL + cwR;          // total visual width = 437 + 380 = 817mm
+  const visCx = (cwR - cwL)/2;     // X center of visually-extended chassis
+  const dH = CASE.h;
+  const hexR=0.005, hexSpX=0.014, hexSpY=0.014*0.866;
+  for(let i=0;i<18000;i++){
+    const px = visCx + (Math.random()-0.5)*visW;
+    const py = caseCenterY+(Math.random()-0.5)*dH;
+    const row=Math.round((py-caseCenterY)/hexSpY);
+    const offX=(row%2===0)?0:hexSpX*0.5;
+    const hx=Math.round((px-offX)/hexSpX)*hexSpX+offX;
+    const hy=caseCenterY+row*hexSpY;
+    if(Math.hypot(px-hx,py-hy)<hexR) continue;
+    mPos.push(px,py,cdF+0.001);
+    const v=0.85+Math.random()*0.15;
+    mCol.push(GRAPHITE[0]*v,GRAPHITE[1]*v,GRAPHITE[2]*v);
+  }
+  // Frame outline (extended -X, shrunk +Z)
+  const fN=220;
+  for(let i=0;i<=fN;i++){const t=i/fN;
+    mPos.push(-cwL+t*visW, caseCenterY-ch, cdF+0.001); mCol.push(INK[0],INK[1],INK[2]);
+    mPos.push(-cwL+t*visW, caseCenterY+ch, cdF+0.001); mCol.push(INK[0],INK[1],INK[2]);
+    mPos.push(-cwL, caseCenterY+(-0.5+t)*dH, cdF+0.001); mCol.push(INK[0],INK[1],INK[2]);
+    mPos.push( cwR, caseCenterY+(-0.5+t)*dH, cdF+0.001); mCol.push(INK[0],INK[1],INK[2]);
+  }
+  scene.add(makePoints(mPos,mCol,0.005,0.65));
+  const ss = makeTextSprite('SilverStone RM51', '#0F1419');
+  ss.position.set(visCx, caseCenterY+ch-0.020, cdF+0.003);
+  ss.scale.set(0.16, 0.020, 1); scene.add(ss);
+}
+
+// Rear panel (-Z) — sparse outline (extended -X)
+{
+  const rpPos=[], rpCol=[];
+  const visW = cwL + cwR;
+  const visCx = (cwR - cwL)/2;
+  for(let i=0;i<3600;i++){
+    const px = visCx + (Math.random()-0.5)*visW;
+    const py = caseCenterY+(Math.random()-0.5)*CASE.h;
+    if(px<-0.080 && Math.abs(py-(caseCenterY+0.030))<0.045) continue;
+    if(px>-0.040 && px<0.040 && Math.abs(py-(caseCenterY+0.020))<0.020) continue;
+    if(px>0.040 && px<0.220 && Math.abs(py-caseCenterY+0.010)<0.060) continue;
+    rpPos.push(px, py, -cd+0.001);
+    rpCol.push(GRAPHITE[0]*0.85, GRAPHITE[1]*0.85, GRAPHITE[2]*0.85);
+  }
+  scene.add(makePoints(rpPos,rpCol,0.005,0.50));
+}
+
+// Side panels (-X open extended wall is the visual extension area — closed on the right)
+{
+  const sPos=[], sCol=[];
+  for(let i=0;i<1800;i++){
+    const py = caseCenterY+(Math.random()-0.5)*CASE.h;
+    const pz = (Math.random()-0.5)*CASE.d;
+    sPos.push(cwR-0.001, py, pz);
+    sCol.push(GRAPHITE[0]*0.7, GRAPHITE[1]*0.7, GRAPHITE[2]*0.7);
+  }
+  scene.add(makePoints(sPos, sCol, 0.005, 0.32));
+}
+
+// ============================================================================
+// Animated fan registry (declared early — used by PSU groups and fan blocks below)
+// ============================================================================
+const fanBladeGroups = [];
+
+// ============================================================================
+// 2. DUAL POWER SUPPLIES — CORSAIR WS3000 (GPU) + SF850 (Compute) at rear-left
+// ============================================================================
+{
+  // WS3000 — 3000W GPU PSU (large ATX) — ROTATED 90° CW around Z axis
+  // After rotation, world dimensions: WS.h(X) × WS.w(Y) × WS.d(Z)
+  // Aligned flush to chassis interior -X (visual edge), -Y (floor), -Z (rear) corner.
+  const WS = { w:0.150, h:0.086, d:0.200 };
+  // World extents after rotation: ±WS.h/2 in X, ±WS.w/2 in Y, ±WS.d/2 in Z
+  const wpx = -cwL + WS.h/2;                  // flush to visual -X edge
+  const wpy = caseCenterY - ch + WS.w/2;      // flush to chassis floor (-Y)
+  const wpz = -cd + WS.d/2;                   // flush to chassis rear (-Z)
+
+  // Switch _tgtP to local PSU buffer (relative to PSU center = 0,0,0)
+  const psuPos = [], psuCol = [];
+  const _oldTP = _tgtP, _oldTC = _tgtC;
+  _tgtP = psuPos; _tgtC = psuCol;
+
+  // Main PSU box (local frame)
+  addBoxEdges(0, 0, 0, WS.w/2, WS.h/2, WS.d/2, INK, 240);
+
+  // -Z REAR EXHAUST FACE — frame outline + IEC inlet + power switch
+  const exhaustZ_L = -WS.d/2 - 0.001;
+  addBoxEdges(0, 0, exhaustZ_L, WS.w/2*0.96, WS.h/2*0.88, 0.0005, INK, 200);
+  const iecX_L = WS.w*0.26, iecY_L = -WS.h*0.22;
+  addBoxEdges(iecX_L, iecY_L, exhaustZ_L-0.001, 0.013, 0.009, 0.002, INK, 160);
+  for(let p=-1;p<=1;p++){
+    addLine(iecX_L+p*0.0035, iecY_L-0.003, exhaustZ_L-0.0015,
+            iecX_L+p*0.0035, iecY_L+0.003, exhaustZ_L-0.0015, BLUEPRINT, 100);
+  }
+  addBoxEdges(iecX_L-0.022, iecY_L, exhaustZ_L-0.001, 0.005, 0.004, 0.0015, INK, 120);
+  addLine(iecX_L-0.022, iecY_L-0.002, exhaustZ_L-0.0017, iecX_L-0.022, iecY_L+0.002, exhaustZ_L-0.0017, BLUEPRINT, 80);
+
+  // +Y TOP — intake fan grille + 140mm fan ring
+  for(let i=0;i<14;i++){
+    const lx = -WS.w*0.40 + i*(WS.w*0.80/13);
+    addLine(lx, WS.h/2+0.001, -WS.d*0.35, lx, WS.h/2+0.001, WS.d*0.35, GRAPHITE, 80);
+  }
+  addRing(0, WS.h/2+0.0015, -WS.d*0.05, 'xz', 0.118, BLUEPRINT, 80);
+  addRing(0, WS.h/2+0.0015, -WS.d*0.05, 'xz', 0.030, BLUEPRINT, 40);
+  for(let b=0;b<7;b++){const ang=(b/7)*Math.PI*2;
+    addLine(Math.cos(ang)*0.020, WS.h/2+0.0015, -WS.d*0.05+Math.sin(ang)*0.020,
+            Math.cos(ang)*0.056, WS.h/2+0.0015, -WS.d*0.05+Math.sin(ang)*0.056, GRAPHITE, 80);
+  }
+
+  // +X SIDE — CORSAIR brand label stripe (local frame)
+  const sideX_L = WS.w/2 + 0.001;
+  addLine(sideX_L, WS.h*0.30, -WS.d*0.42,
+          sideX_L, WS.h*0.30, WS.d*0.42, BLUEPRINT, 300);
+
+  // Restore global buffer
+  _tgtP = _oldTP; _tgtC = _oldTC;
+
+  // Build PSU geometry meshes (local frame)
+  const psuMesh = makePoints(psuPos, psuCol, 0.0048, 0.92);
+
+  // Honeycomb exhaust mesh (local frame)
+  const honeyPos=[], honeyCol=[];
+  {
+    const hexR=0.0028, hexSpX=0.0078, hexSpY=0.0078*0.866;
+    for(let i=0;i<6500;i++){
+      const px = (Math.random()-0.5)*WS.w*0.92;
+      const py = (Math.random()-0.5)*WS.h*0.78;
+      if(px > WS.w*0.10 && py < -WS.h*0.10) continue;
+      const row = Math.round(py/hexSpY);
+      const offX = (row%2===0)?0:hexSpX*0.5;
+      const hx = Math.round((px-offX)/hexSpX)*hexSpX + offX;
+      const hy = row*hexSpY;
+      if(Math.hypot(px-hx, py-hy) < hexR) continue;
+      honeyPos.push(px, py, exhaustZ_L);
+      const v = 0.85+Math.random()*0.15;
+      honeyCol.push(GRAPHITE[0]*v, GRAPHITE[1]*v, GRAPHITE[2]*v);
+    }
+  }
+  const honeyMesh = makePoints(honeyPos, honeyCol, 0.0042, 0.78);
+
+  // Sprites in local frame
+  const ws1 = makeTextSprite('CORSAIR', '#0B5FA8');
+  ws1.position.set(sideX_L, WS.h*0.05, 0); ws1.scale.set(0.110, 0.020, 1);
+  const ws2 = makeTextSprite('WS3000', '#0F1419');
+  ws2.position.set(sideX_L, -WS.h*0.18, 0); ws2.scale.set(0.075, 0.020, 1);
+  const ws3 = makeTextSprite('ATX 3.1 · 3000W · GPU', '#5F6970');
+  ws3.position.set(sideX_L, -WS.h*0.42, 0); ws3.scale.set(0.140, 0.014, 1);
+
+  // Group + rotate 90° CW around Z + position
+  const psuGroupWS = new THREE.Group();
+  psuGroupWS.add(psuMesh);
+  psuGroupWS.add(honeyMesh);
+  psuGroupWS.add(ws1);
+  psuGroupWS.add(ws2);
+  psuGroupWS.add(ws3);
+
+  // WS3000 ACTIVE INTAKE FAN — 140mm blades rotating around local Y axis
+  {
+    const wsFanPos=[], wsFanCol=[];
+    const wsFanDia = 0.118;
+    for(let b=0;b<7;b++){
+      const a=(b/7)*Math.PI*2;
+      for(let s=0;s<=28;s++){
+        const t=s/28, r=wsFanDia/2*0.18 + t*wsFanDia/2*0.78;
+        const ang=a+t*0.7;
+        wsFanPos.push(Math.cos(ang)*r, 0, Math.sin(ang)*r);
+        const v=0.70+t*0.30;
+        wsFanCol.push(INK[0]*v, INK[1]*v, INK[2]*v);
+      }
+    }
+    for(let i=0;i<=40;i++){const a=i/40*Math.PI*2;
+      wsFanPos.push(Math.cos(a)*0.014, 0, Math.sin(a)*0.014);
+      wsFanCol.push(BLUEPRINT[0], BLUEPRINT[1], BLUEPRINT[2]);
+    }
+    const wsFanMesh = makePoints(wsFanPos, wsFanCol, 0.005, 0.90);
+    const wsFanGroup = new THREE.Group();
+    wsFanGroup.position.set(0, WS.h/2+0.0020, -WS.d*0.05);
+    wsFanGroup.add(wsFanMesh);
+    psuGroupWS.add(wsFanGroup);
+    fanBladeGroups.push({group: wsFanGroup, speed: 6.5, axis: 'y'});
+  }
+
+  psuGroupWS.rotation.z = -Math.PI/2;   // 90° clockwise around Z
+  psuGroupWS.position.set(wpx, wpy, wpz);
+  scene.add(psuGroupWS);
+
+  // SF850 — 850W SFX Compute PSU — Group rotation chain applied below
+  // Position: aligned to -X chassis interior, cumulative +Z 200mm, -Y 80mm
+  const SF = { w:0.125, h:0.0635, d:0.100 };
+  const spx = -cwL + 0.040;                                    // align near -X interior wall
+  const spy = (wpy + WS.h/2 + SF.h/2 + 0.010) - 0.080;          // -Y 80mm (40+40)
+  const spz = (-cd + SF.d/2 + 0.050) + 0.200;                   // +Z 200mm (100+100)
+
+  // Local geometry buffer
+  const sfPos = [], sfCol = [];
+  const _oldTP2 = _tgtP, _oldTC2 = _tgtC;
+  _tgtP = sfPos; _tgtC = sfCol;
+
+  // SF850 body (local origin)
+  addBoxEdges(0, 0, 0, SF.w/2, SF.h/2, SF.d/2, INK, 210);
+  // -Z face frame
+  addBoxEdges(0, 0, -SF.d/2-0.001, SF.w/2*0.95, SF.h/2*0.86, 0.001, BLUEPRINT, 140);
+  // +Y top grille
+  for(let i=0;i<10;i++){
+    const lx = -SF.w*0.40 + i*(SF.w*0.80/9);
+    addLine(lx, SF.h/2+0.001, -SF.d*0.30, lx, SF.h/2+0.001, SF.d*0.30, GRAPHITE, 70);
+  }
+  // +Y top fan
+  addRing(0, SF.h/2+0.0015, 0, 'xz', 0.082, BLUEPRINT, 70);
+  addRing(0, SF.h/2+0.0015, 0, 'xz', 0.022, BLUEPRINT, 36);
+  // -Z accent stripe (RUST/orange)
+  addLine(-SF.w*0.38, SF.h*0.15, -SF.d/2-0.002,
+           SF.w*0.38, SF.h*0.15, -SF.d/2-0.002, RUST, 260);
+
+  // Restore global buffer
+  _tgtP = _oldTP2; _tgtC = _oldTC2;
+
+  // Build local meshes
+  const sfMesh = makePoints(sfPos, sfCol, 0.0048, 0.92);
+
+  // Sprites in local frame
+  const sf1 = makeTextSprite('CORSAIR', '#0B5FA8');
+  sf1.position.set(0, -SF.h*0.05, -SF.d/2-0.003); sf1.scale.set(0.075, 0.016, 1);
+  const sf2 = makeTextSprite('SF850', '#0F1419');
+  sf2.position.set(0, -SF.h*0.30, -SF.d/2-0.003); sf2.scale.set(0.050, 0.015, 1);
+  const sf3 = makeTextSprite('ATX 3.1 · 850W · CPU', '#5F6970');
+  sf3.position.set(0, SF.h*0.20, -SF.d/2-0.003); sf3.scale.set(0.110, 0.011, 1);
+
+  // Group + chained rotations (intrinsic): Z 90° CW, then X 90° CW
+  const psuGroupSF = new THREE.Group();
+  psuGroupSF.add(sfMesh);
+  psuGroupSF.add(sf1);
+  psuGroupSF.add(sf2);
+  psuGroupSF.add(sf3);
+
+  // SF850 ACTIVE INTAKE FAN — 92mm blades rotating around local Y axis
+  {
+    const sfFanPos=[], sfFanCol=[];
+    const sfFanDia = 0.082;
+    for(let b=0;b<7;b++){
+      const a=(b/7)*Math.PI*2;
+      for(let s=0;s<=24;s++){
+        const t=s/24, r=sfFanDia/2*0.18 + t*sfFanDia/2*0.78;
+        const ang=a+t*0.7;
+        sfFanPos.push(Math.cos(ang)*r, 0, Math.sin(ang)*r);
+        const v=0.70+t*0.30;
+        sfFanCol.push(INK[0]*v, INK[1]*v, INK[2]*v);
+      }
+    }
+    for(let i=0;i<=36;i++){const a=i/36*Math.PI*2;
+      sfFanPos.push(Math.cos(a)*0.010, 0, Math.sin(a)*0.010);
+      sfFanCol.push(RUST[0], RUST[1], RUST[2]);
+    }
+    const sfFanMesh = makePoints(sfFanPos, sfFanCol, 0.005, 0.90);
+    const sfFanGroup = new THREE.Group();
+    sfFanGroup.position.set(0, SF.h/2+0.0020, 0);
+    sfFanGroup.add(sfFanMesh);
+    psuGroupSF.add(sfFanGroup);
+    fanBladeGroups.push({group: sfFanGroup, speed: 9.0, axis: 'y'});
+  }
+
+  psuGroupSF.position.set(spx, spy, spz);
+  psuGroupSF.rotateZ(-Math.PI/2);  // 1st: 90° CW around Z
+  psuGroupSF.rotateX(-Math.PI/2);  // 2nd: 90° CW around local X (post-Z)
+  psuGroupSF.rotateY(Math.PI/2);   // 3rd: 90° CCW around local Y (post-X)
+  psuGroupSF.rotateY(Math.PI/2);   // 4th: 90° CCW around local Y (additional)
+  psuGroupSF.rotateZ(Math.PI/2);   // 5th: 90° CCW around local Z
+  psuGroupSF.rotateZ(-Math.PI/2);  // 6th: 90° CW around local Z (undo #5)
+  psuGroupSF.rotateX(-Math.PI/2);  // 7th: 90° CW around local X (new)
+  scene.add(psuGroupSF);
+
+  // Bracket between PSUs (kept in world coords — not part of rotated PSU)
+  addBoxEdges(spx-SF.w*0.10, wpy+WS.h/2+0.005, spz, 0.001, 0.005, SF.d/2+0.010, GRAPHITE, 100);
+
+  // (PCIe 12V-2x6 cable bundles removed — see also GPU section)
+}
+
+// ============================================================================
+// 3. MOTHERBOARD — MSI D3060AGB2N-10G · SSI CEB · centered, rear-biased
+//    Rear I/O at -Z edge (chassis rear)
+// ============================================================================
+// MB.w enlarged from 0.305 → 0.380 (+75mm) to fully cover both DIMM banks
+// AND the 4-GPU PCIe stack without DIMM/GPU X-axis overlap
+const MB = { w:0.380, d:0.267, t:0.0018 };
+const MB_Y = caseCenterY - ch + 0.014;
+const MB_CENTER_X = 0.030;     // MB extends X from -0.160 to +0.220
+const MB_CENTER_Z = -0.135;    // MB rear edge ~ chassis rear interior
+{
+  addBoxEdges(MB_CENTER_X, MB_Y, MB_CENTER_Z, MB.w/2, MB.t/2, MB.d/2, C_MB, 280);
+  // PCB stipple
+  const pPos=[], pCol=[];
+  for(let i=0;i<4200;i++){
+    const px = MB_CENTER_X + (Math.random()-0.5)*MB.w;
+    const pz = MB_CENTER_Z + (Math.random()-0.5)*MB.d;
+    pPos.push(px, MB_Y+MB.t/2+0.0005, pz);
+    const v = 0.78 + Math.random()*0.22;
+    pCol.push(C_MB[0]*v, C_MB[1]*v, C_MB[2]*v);
+  }
+  // PCB traces — long horizontal lines
+  for(let i=0;i<55;i++){
+    const zr = MB_CENTER_Z + (Math.random()-0.5)*MB.d*0.95;
+    const xs = MB_CENTER_X - MB.w*0.4 + Math.random()*MB.w*0.3;
+    const xe = MB_CENTER_X + MB.w*0.1 + Math.random()*MB.w*0.3;
+    for(let j=0;j<=40;j++){const t=j/40;
+      pPos.push(xs+(xe-xs)*t, MB_Y+MB.t/2+0.0008, zr);
+      pCol.push(C_MB_TR[0],C_MB_TR[1],C_MB_TR[2]);
+    }
+  }
+  scene.add(makePoints(pPos,pCol,0.004,0.72));
+  // Mounting screws
+  const screws=[[-0.140,-0.118],[-0.140, 0.000],[-0.140, 0.118],
+                [-0.025, 0.118],[ 0.025, 0.118],[ 0.140, 0.118],
+                [ 0.140, 0.000],[ 0.140,-0.118]];
+  screws.forEach(([sx,sz])=>{
+    addRing(MB_CENTER_X+sx, MB_Y+MB.t/2+0.001, MB_CENTER_Z+sz, 'xz', 0.006, INK, 18);
+  });
+  const msiLbl = makeTextSprite('MSI D3060AGB2N-10G', '#0F1419');
+  msiLbl.position.set(MB_CENTER_X+0.090, MB_Y+0.003, MB_CENTER_Z-0.110);
+  msiLbl.scale.set(0.150, 0.014, 1); scene.add(msiLbl);
+}
+
+// ============================================================================
+// 4. CPU + COOLER — Intel Xeon 6761P · CoolServer CS-4677-4UM95 (LGA 4677)
+//    Dual-tower 6 heat-pipes · 118 × 100 × 125 mm · 92mm PWM fan between towers
+//    NOTE: heat-pipe vertical segments through towers removed (cleaner)
+// ============================================================================
+// CPU shifted further -X so DIMM Bank B clears GPU 1 PCIe slot position
+const CPU_X = MB_CENTER_X - 0.075, CPU_Z = MB_CENTER_Z + 0.020;
+{
+  // IHS / socket frame
+  addBoxEdges(CPU_X, MB_Y+0.005, CPU_Z, 0.038, 0.002, 0.028, INK, 200);
+  addBoxEdges(CPU_X, MB_Y+0.004, CPU_Z, 0.048, 0.001, 0.038, BLUEPRINT, 180);
+  addLine(CPU_X+0.048, MB_Y+0.005, CPU_Z-0.018,
+          CPU_X+0.058, MB_Y+0.005, CPU_Z+0.005, BLUEPRINT, 180);
+
+  const baseY = MB_Y + 0.013;
+  addBoxEdges(CPU_X, baseY, CPU_Z, 0.059, 0.008, 0.050, C_COOLER_2, 220);
+  const towerH = 0.105;
+  const towerY = baseY + 0.008 + towerH/2;
+  const t1Z = CPU_Z + 0.028;
+  const t2Z = CPU_Z - 0.028;
+  addBoxEdges(CPU_X, towerY, t1Z, 0.055, towerH/2, 0.015, C_COOLER, 260);
+  addBoxEdges(CPU_X, towerY, t2Z, 0.055, towerH/2, 0.015, C_COOLER, 260);
+  // Fin stripes
+  for(let i=0;i<=36;i++){
+    const fy = baseY + 0.010 + (i/36)*towerH;
+    addLine(CPU_X-0.053, fy, t1Z-0.014, CPU_X+0.053, fy, t1Z-0.014, C_COOLER_2, 100);
+    addLine(CPU_X-0.053, fy, t1Z+0.014, CPU_X+0.053, fy, t1Z+0.014, C_COOLER_2, 100);
+    addLine(CPU_X-0.053, fy, t2Z-0.014, CPU_X+0.053, fy, t2Z-0.014, C_COOLER_2, 100);
+    addLine(CPU_X-0.053, fy, t2Z+0.014, CPU_X+0.053, fy, t2Z+0.014, C_COOLER_2, 100);
+  }
+  // Side faces (vertical fin lines visible from chassis sides)
+  for(let i=0;i<8;i++){
+    const fx = CPU_X - 0.045 + i*0.013;
+    addLine(fx, baseY+0.010, t1Z+0.014, fx, baseY+0.010+towerH, t1Z+0.014, GRAPHITE, 80);
+    addLine(fx, baseY+0.010, t2Z-0.014, fx, baseY+0.010+towerH, t2Z-0.014, GRAPHITE, 80);
+  }
+  // 6 heat-pipe top caps on each tower (top visible only — no 12 vertical "mystery" lines)
+  for(let i=0;i<6;i++){
+    const px = CPU_X - 0.025 + i*0.010;
+    addRing(px, baseY+0.010+towerH+0.002, t1Z, 'xz', 0.007, RUST, 22);
+    addRing(px, baseY+0.010+towerH+0.002, t2Z, 'xz', 0.007, RUST, 22);
+  }
+  // 92mm PWM fan between towers
+  const fanY = towerY;
+  const fanZ = CPU_Z;
+  addBoxEdges(CPU_X, fanY, fanZ, 0.046, 0.046, 0.0125, GRAPHITE, 200);
+  addRing(CPU_X, fanY, fanZ, 'xy', 0.090, BLUEPRINT, 80);
+  addRing(CPU_X, fanY, fanZ, 'xy', 0.020, BLUEPRINT, 36);
+  const cpuFanPos=[], cpuFanCol=[];
+  for(let b=0;b<7;b++){
+    const a=(b/7)*Math.PI*2;
+    for(let s=0;s<=28;s++){
+      const t=s/28, r=0.012 + t*0.030;
+      const ang=a+t*0.7;
+      cpuFanPos.push(Math.cos(ang)*r, Math.sin(ang)*r, 0);
+      const v=0.70+t*0.30;
+      cpuFanCol.push(INK[0]*v, INK[1]*v, INK[2]*v);
+    }
+  }
+  for(let i=0;i<=60;i++){const a=i/60*Math.PI*2;
+    cpuFanPos.push(Math.cos(a)*0.011, Math.sin(a)*0.011, 0); cpuFanCol.push(BLUEPRINT[0],BLUEPRINT[1],BLUEPRINT[2]);}
+  const cpuFanMesh = makePoints(cpuFanPos, cpuFanCol, 0.005, 0.88);
+  const cpuFanGroup = new THREE.Group();
+  cpuFanGroup.position.set(CPU_X, fanY, fanZ);
+  cpuFanGroup.add(cpuFanMesh);
+  scene.add(cpuFanGroup);
+  window._cpuFanGroup = cpuFanGroup;
+
+  // Airflow arrow
+  const arrowY = baseY + 0.025;
+  addLine(CPU_X-0.018, arrowY, CPU_Z-0.020, CPU_X+0.018, arrowY, CPU_Z-0.020, RUST, 200);
+  addLine(CPU_X+0.010, arrowY+0.005, CPU_Z-0.020, CPU_X+0.018, arrowY, CPU_Z-0.020, RUST, 100);
+  addLine(CPU_X+0.010, arrowY-0.005, CPU_Z-0.020, CPU_X+0.018, arrowY, CPU_Z-0.020, RUST, 100);
+
+  // Labels
+  const cpuLbl = makeTextSprite('Intel Xeon 6761P', '#0B5FA8');
+  cpuLbl.position.set(CPU_X, baseY+0.165, CPU_Z); cpuLbl.scale.set(0.150, 0.020, 1); scene.add(cpuLbl);
+  const cpuClk = makeTextSprite('336M · 2.50 GHz · LGA4677', '#5F6970');
+  cpuClk.position.set(CPU_X, baseY+0.140, CPU_Z); cpuClk.scale.set(0.170, 0.014, 1); scene.add(cpuClk);
+  const coolLbl = makeTextSprite('CS-4677-4UM95', '#0F1419');
+  coolLbl.position.set(CPU_X, baseY+0.118, CPU_Z); coolLbl.scale.set(0.120, 0.014, 1); scene.add(coolLbl);
+}
+
+// ============================================================================
+// 5. DDR5 RDIMM × 8 — 128GB · 6400 MT/s · 1TB total
+//    SSI CEB layout: 4 DIMMs each side of CPU, oriented PARALLEL to Z (long axis)
+//    Each DIMM: 133.35 (Z) × 31 (Y) × 8 (X) mm, slot spacing 7.62mm
+// ============================================================================
+{
+  const ramY = MB_Y + 0.020;
+  const DIMM_L = 0.133;        // length along Z
+  const DIMM_H = 0.031;        // height along Y
+  const DIMM_T = 0.0035;       // thickness along X (single board + heatspreader)
+  const DIMM_PITCH = 0.0095;   // slot-to-slot spacing along X (server-grade pitch)
+  // Bank A: 4 DIMMs to the -X (left) side of CPU socket
+  for(let i=0;i<4;i++){
+    const rx = CPU_X - 0.062 - i*DIMM_PITCH;
+    const rz = CPU_Z;          // centered on CPU Z line
+    // DIMM body (long along Z, vertical Y, thin X)
+    addBoxEdges(rx, ramY, rz, DIMM_T, DIMM_H/2, DIMM_L/2, C_RAM, 180);
+    // Gold contact strip at bottom (Z-running line)
+    addLine(rx, ramY-DIMM_H/2, rz-DIMM_L/2*0.95, rx, ramY-DIMM_H/2, rz+DIMM_L/2*0.95, BLUEPRINT, 220);
+    // Heatspreader top ridge (Z-running line, slightly inset)
+    addLine(rx, ramY+DIMM_H/2, rz-DIMM_L/2*0.9, rx, ramY+DIMM_H/2, rz+DIMM_L/2*0.9, BLUE_DEEP, 200);
+    // Notch (key) in PCB ~1/3 along length
+    addRing(rx, ramY-DIMM_H/2+0.003, rz-DIMM_L*0.10, 'xy', 0.004, INK, 14);
+    // Slot retention clips at both Z ends
+    addLine(rx-0.002, ramY+DIMM_H/2*0.9, rz-DIMM_L/2-0.002, rx+0.002, ramY+DIMM_H/2*0.9, rz-DIMM_L/2-0.002, INK, 60);
+    addLine(rx-0.002, ramY+DIMM_H/2*0.9, rz+DIMM_L/2+0.002, rx+0.002, ramY+DIMM_H/2*0.9, rz+DIMM_L/2+0.002, INK, 60);
+  }
+  // Bank B: 4 DIMMs to the +X (right) side of CPU socket
+  for(let i=0;i<4;i++){
+    const rx = CPU_X + 0.062 + i*DIMM_PITCH;
+    const rz = CPU_Z;
+    addBoxEdges(rx, ramY, rz, DIMM_T, DIMM_H/2, DIMM_L/2, C_RAM, 180);
+    addLine(rx, ramY-DIMM_H/2, rz-DIMM_L/2*0.95, rx, ramY-DIMM_H/2, rz+DIMM_L/2*0.95, BLUEPRINT, 220);
+    addLine(rx, ramY+DIMM_H/2, rz-DIMM_L/2*0.9, rx, ramY+DIMM_H/2, rz+DIMM_L/2*0.9, BLUE_DEEP, 200);
+    addRing(rx, ramY-DIMM_H/2+0.003, rz-DIMM_L*0.10, 'xy', 0.004, INK, 14);
+    addLine(rx-0.002, ramY+DIMM_H/2*0.9, rz-DIMM_L/2-0.002, rx+0.002, ramY+DIMM_H/2*0.9, rz-DIMM_L/2-0.002, INK, 60);
+    addLine(rx-0.002, ramY+DIMM_H/2*0.9, rz+DIMM_L/2+0.002, rx+0.002, ramY+DIMM_H/2*0.9, rz+DIMM_L/2+0.002, INK, 60);
+  }
+  const ddrLbl = makeTextSprite('DDR5-6400 · 128GB × 8 · 1TB', '#083F71');
+  ddrLbl.position.set(CPU_X, ramY+0.060, CPU_Z); ddrLbl.scale.set(0.220, 0.020, 1); scene.add(ddrLbl);
+  const ddrSub = makeTextSprite('8-channel · 2DPC RDIMM', '#5F6970');
+  ddrSub.position.set(CPU_X, ramY+0.040, CPU_Z); ddrSub.scale.set(0.160, 0.014, 1); scene.add(ddrSub);
+}
+
+// ============================================================================
+// 6. NVIDIA H200 NVL × 4 — 268 × 111 × 40 mm (official) · 141GB HBM3e · 600W
+//    Vertical orientation · I/O bracket at -Z (chassis REAR, near rear panel)
+//    Power connector at +Z (free end, toward front)
+//    Stacked along X with 40mm dual-slot pitch
+// ============================================================================
+{
+  const GPU = { l:0.268, h:0.111, w:0.040 };   // OFFICIAL H200 NVL dimensions
+  const gpuBaseY = MB_Y + 0.005;
+  // 4 GPUs aligned to chassis interior +X end edge (rightmost GPU near +X wall)
+  // Last GPU center at +0.195, rightmost edge at +0.215 ≈ chassis interior +X edge
+  const gpuPCIeX0 = 0.075;                     // first GPU center X
+  const gpuSpacing = 0.040;                     // 40mm dual-slot pitch
+  // GPU center Z chosen so bracket (-Z end) is ~5mm from chassis rear interior
+  const gpuCZ = -cd + 0.005 + 0.268/2;          // = -0.1385 absolute
+
+  for(let g=0;g<4;g++){
+    const gx = gpuPCIeX0 + g*gpuSpacing;
+    // PCB substrate (vertical, X thickness = card width / 5, height in Y, length in Z)
+    addBoxEdges(gx, gpuBaseY+GPU.h*0.45, gpuCZ, GPU.w/2*0.08, GPU.h*0.45, GPU.l/2, C_GPU, 210);
+    // Heatsink shroud (covers most of card, dual-slot thickness)
+    addBoxEdges(gx, gpuBaseY+GPU.h*0.55, gpuCZ, GPU.w/2*0.95, GPU.h*0.40, GPU.l/2*0.94, C_GPU, 240);
+    // Top fin pattern (transverse fins along Z, repeated)
+    for(let f=0;f<52;f++){
+      const fz = gpuCZ - GPU.l/2*0.92 + (f/51)*GPU.l*0.92;
+      addLine(gx-GPU.w/2*0.90, gpuBaseY+0.090, fz, gx+GPU.w/2*0.90, gpuBaseY+0.090, fz, BLUEPRINT, 70);
+    }
+    // Side ridges (top edge rails)
+    addLine(gx-GPU.w/2*0.90, gpuBaseY+GPU.h*0.88, gpuCZ-GPU.l/2*0.92,
+            gx-GPU.w/2*0.90, gpuBaseY+GPU.h*0.88, gpuCZ+GPU.l/2*0.92, INK, 220);
+    addLine(gx+GPU.w/2*0.90, gpuBaseY+GPU.h*0.88, gpuCZ-GPU.l/2*0.92,
+            gx+GPU.w/2*0.90, gpuBaseY+GPU.h*0.88, gpuCZ+GPU.l/2*0.92, INK, 220);
+
+    // I/O BRACKET at -Z end (chassis REAR — corrected from photos)
+    addBoxEdges(gx, gpuBaseY+GPU.h*0.50, gpuCZ-GPU.l/2-0.001, GPU.w/2, GPU.h*0.50, 0.002, C_BRACKET, 120);
+    // Bracket retention screw
+    addRing(gx, gpuBaseY+GPU.h*0.94, gpuCZ-GPU.l/2-0.002, 'xy', 0.005, BLUEPRINT, 16);
+
+    // PCIe edge connector (gold strip) along bottom, in PCIe slot region
+    addLine(gx-GPU.w/2*0.6, gpuBaseY+0.002, gpuCZ-GPU.l/2*0.30,
+            gx-GPU.w/2*0.6, gpuBaseY+0.002, gpuCZ+GPU.l/2*0.30, BLUEPRINT, 150);
+    addLine(gx+GPU.w/2*0.6, gpuBaseY+0.002, gpuCZ-GPU.l/2*0.30,
+            gx+GPU.w/2*0.6, gpuBaseY+0.002, gpuCZ+GPU.l/2*0.30, BLUEPRINT, 150);
+    // PCIe slot on MB
+    addBoxEdges(gx, MB_Y+0.005, gpuCZ-0.020, GPU.w/2*0.6, 0.003, 0.045, C_PCIE, 130);
+
+    // Power connector (12V-2x6) on FREE END at +Z, on top face
+    addBoxEdges(gx, gpuBaseY+GPU.h*0.93, gpuCZ+GPU.l*0.40, 0.013, 0.005, 0.014, INK, 90);
+
+    // Labels: NVIDIA branding (near bracket end, visible from rear)
+    const nvLbl = makeTextSprite('NVIDIA', '#0B5FA8');
+    nvLbl.position.set(gx, gpuBaseY+GPU.h*0.55, gpuCZ-GPU.l*0.30);
+    nvLbl.scale.set(0.050, 0.012, 1); scene.add(nvLbl);
+    const h200 = makeTextSprite('H200 NVL', '#0F1419');
+    h200.position.set(gx, gpuBaseY+GPU.h*0.42, gpuCZ-GPU.l*0.30);
+    h200.scale.set(0.052, 0.012, 1); scene.add(h200);
+    const memLbl = makeTextSprite('141GB', '#B04A1E');
+    memLbl.position.set(gx, gpuBaseY+GPU.h*0.30, gpuCZ-GPU.l*0.30);
+    memLbl.scale.set(0.034, 0.010, 1); scene.add(memLbl);
+
+    // (GPU power cable trail removed per design feedback)
+  }
+
+  // GPU group label
+  const gLbl = makeTextSprite('NVIDIA H200 NVL × 4 · 141GB HBM3e · 600W', '#0F1419');
+  gLbl.position.set(gpuPCIeX0+0.060, gpuBaseY+GPU.h+0.050, gpuCZ);
+  gLbl.scale.set(0.300, 0.022, 1); scene.add(gLbl);
+
+  // NVLink bridges — 2-way pairs (GPU1↔GPU2, GPU3↔GPU4) near bracket (-Z) end
+  const pairs = [[0,1],[2,3]];
+  pairs.forEach(([a,b])=>{
+    const xa = gpuPCIeX0 + a*gpuSpacing;
+    const xb = gpuPCIeX0 + b*gpuSpacing;
+    const cxBr = (xa+xb)/2;
+    const bridgeY = gpuBaseY + GPU.h*0.92;
+    const bridgeZ = gpuCZ - GPU.l*0.25;       // closer to bracket end
+    addBoxEdges(cxBr, bridgeY, bridgeZ, (xb-xa)/2+0.006, 0.005, 0.018, INK, 220);
+    addLine(xa-0.005, bridgeY+0.005, bridgeZ, xb+0.005, bridgeY+0.005, bridgeZ, RUST, 240);
+    addBoxEdges(xa, bridgeY-0.004, bridgeZ, 0.003, 0.003, 0.012, BLUEPRINT, 100);
+    addBoxEdges(xb, bridgeY-0.004, bridgeZ, 0.003, 0.003, 0.012, BLUEPRINT, 100);
+    const nvlLbl = makeTextSprite('NVLink 900GB/s', '#B04A1E');
+    nvlLbl.position.set(cxBr, bridgeY+0.022, bridgeZ);
+    nvlLbl.scale.set(0.110, 0.012, 1); scene.add(nvlLbl);
+  });
+
+  // Expose for fan placement
+  window._gpuMeta = { gpuPCIeX0, gpuSpacing, gpuCZ, GPU };
+}
+
+// ============================================================================
+// 7. CHIPSET / VRM / M.2 / 10GbE NICs / Front Panel Headers
+// ============================================================================
+{
+  // VRM heatsink left of CPU (CPU power)
+  addBoxEdges(CPU_X-0.080, MB_Y+0.020, CPU_Z+0.005, 0.012, 0.016, 0.045, INK, 160);
+  for(let i=0;i<14;i++){
+    const fz = CPU_Z-0.040 + i*0.007;
+    addLine(CPU_X-0.092, MB_Y+0.034, fz, CPU_X-0.068, MB_Y+0.034, fz, GRAPHITE, 60);
+  }
+  // VRM heatsink near rear (between CPU and rear I/O)
+  addBoxEdges(CPU_X+0.000, MB_Y+0.018, CPU_Z-0.075, 0.040, 0.014, 0.012, INK, 160);
+  for(let i=0;i<10;i++){
+    const fx = CPU_X-0.035 + i*0.008;
+    addLine(fx, MB_Y+0.030, CPU_Z-0.085, fx, MB_Y+0.030, CPU_Z-0.065, GRAPHITE, 60);
+  }
+  // PCH chipset
+  addBoxEdges(MB_CENTER_X+0.040, MB_Y+0.010, MB_CENTER_Z+0.105, 0.020, 0.007, 0.020, INK, 130);
+
+  // M.2 NVMe slots (2× 22110)
+  addBoxEdges(MB_CENTER_X-0.085, MB_Y+0.005, MB_CENTER_Z+0.100, 0.011, 0.001, 0.055, BLUEPRINT, 110);
+  addBoxEdges(MB_CENTER_X-0.085, MB_Y+0.005, MB_CENTER_Z+0.030, 0.011, 0.001, 0.055, BLUEPRINT, 110);
+  addRing(MB_CENTER_X-0.085, MB_Y+0.006, MB_CENTER_Z+0.150, 'xz', 0.004, INK, 14);
+  addRing(MB_CENTER_X-0.085, MB_Y+0.006, MB_CENTER_Z+0.080, 'xz', 0.004, INK, 14);
+
+  // Rear I/O block (2× 10GbE + USB + audio)
+  addBoxEdges(MB_CENTER_X-0.110, MB_Y+0.022, MB_CENTER_Z-0.122, 0.030, 0.018, 0.006, GRAPHITE, 170);
+  for(let i=0;i<3;i++){
+    addBoxEdges(MB_CENTER_X-0.130+i*0.013, MB_Y+0.022, MB_CENTER_Z-0.128, 0.005, 0.005, 0.002, BLUEPRINT, 80);
+  }
+  for(let i=0;i<4;i++){
+    addBoxEdges(MB_CENTER_X-0.094+i*0.007, MB_Y+0.018, MB_CENTER_Z-0.128, 0.0028, 0.003, 0.002, INK, 70);
+  }
+  const nicLbl = makeTextSprite('2 × 10GbE', '#0B5FA8');
+  nicLbl.position.set(MB_CENTER_X-0.110, MB_Y+0.050, MB_CENTER_Z-0.130);
+  nicLbl.scale.set(0.070, 0.014, 1); scene.add(nicLbl);
+
+  // SlimlineSAS / MCIO connectors
+  for(let i=0;i<3;i++){
+    addBoxEdges(MB_CENTER_X+0.115, MB_Y+0.008, MB_CENTER_Z+0.060-i*0.028, 0.008, 0.005, 0.013, INK, 100);
+  }
+}
+
+// ============================================================================
+// 8. FANS — 2× 180mm Air Penetrator front intake + 2× DELTA PFR0812DHE double-fan
+//    GPU cooling blocks at front of GPU stack (pushing air through passive heatsinks)
+// ============================================================================
+// (fanBladeGroups declared earlier near line ~481)
+function buildFan(cx, cy, cz, dia, axis, rgbBlade, rgbFrame, blades){
+  blades = blades || 9;
+  if(axis==='z'){
+    addBoxEdges(cx, cy, cz, dia/2+0.005, dia/2+0.005, 0.012, rgbFrame, 160);
+  }
+  const blPos=[], blCol=[];
+  for(let b=0;b<blades;b++){
+    const a = (b/blades)*Math.PI*2;
+    for(let s=0;s<=34;s++){
+      const t = s/34, r = dia/2*0.16 + t*dia/2*0.80;
+      const ang = a + t*0.75;
+      blPos.push(Math.cos(ang)*r, Math.sin(ang)*r, 0);
+      const v = 0.75+t*0.25;
+      blCol.push(rgbBlade[0]*v, rgbBlade[1]*v, rgbBlade[2]*v);
+    }
+  }
+  for(let i=0;i<=60;i++){const a=i/60*Math.PI*2;
+    blPos.push(Math.cos(a)*dia/2*0.14, Math.sin(a)*dia/2*0.14, 0);
+    blCol.push(rgbFrame[0],rgbFrame[1],rgbFrame[2]);
+  }
+  for(let r=0;r<8;r++){const rr=r/8*dia/2*0.14;
+    for(let i=0;i<24;i++){const a=i/24*Math.PI*2;
+      blPos.push(Math.cos(a)*rr, Math.sin(a)*rr, 0); blCol.push(GRAPHITE[0],GRAPHITE[1],GRAPHITE[2]);}}
+  const bladeMesh = makePoints(blPos, blCol, 0.005, 0.88);
+  const bladeGroup = new THREE.Group();
+  bladeGroup.position.set(cx, cy, cz);
+  bladeGroup.add(bladeMesh);
+  scene.add(bladeGroup);
+  addRing(cx, cy, cz, 'xy', dia*0.98, rgbFrame, 80);
+  addRing(cx, cy, cz, 'xy', dia*1.04, rgbFrame, 80);
+  return bladeGroup;
+}
+
+// Front intake: 2× 180mm Air Penetrator 184i PRO (at +Z, front)
+// Positioned inside the visually-shrunken chassis front (+cdF), 12mm from bezel interior
+{
+  const fanZ = cdF - 0.012;
+  const fanDia = 0.184;
+  const f1 = buildFan(-0.110, caseCenterY, fanZ, fanDia, 'z', INK, GRAPHITE, 9);
+  const f2 = buildFan( 0.110, caseCenterY, fanZ, fanDia, 'z', INK, GRAPHITE, 9);
+  fanBladeGroups.push({group:f1, speed:4.5, axis:'z'});
+  fanBladeGroups.push({group:f2, speed:4.5, axis:'z'});
+  const apLbl = makeTextSprite('AP 184i PRO × 2', '#5F6970');
+  apLbl.position.set(0, caseCenterY-ch+0.020, fanZ-0.015);
+  apLbl.scale.set(0.120, 0.016, 1); scene.add(apLbl);
+}
+
+// DELTA PFR0812DHE-4P double-fan blocks — 2 blocks (1 per GPU pair)
+//   Located IN FRONT of GPU stack (between GPU front face and intake fans)
+//   Push-pull configuration: 2× 80mm fans stacked back-to-back
+{
+  const DF_DIA = 0.080;
+  const DF_THICK = 0.038;
+  const meta = window._gpuMeta;
+  // Pair (1+2) center X and pair (3+4) center X
+  const pair12 = meta.gpuPCIeX0 + 0.5*meta.gpuSpacing;
+  const pair34 = meta.gpuPCIeX0 + 2.5*meta.gpuSpacing;
+  // Aligned to GPU and MB +Z (front) end line — fan-stack rear face sits at GPU front
+  const blockZ = meta.gpuCZ + meta.GPU.l/2 + 0.038;  // fan rear ≈ GPU front (free end)
+  const blockY = caseCenterY - 0.050;                 // net -50mm (was -60mm, +Y 10mm)
+  [{cx:pair12, idx:0},{cx:pair34, idx:1}].forEach(({cx, idx}) => {
+    addBoxEdges(cx, blockY, blockZ, DF_DIA/2+0.005, DF_DIA/2+0.005, DF_THICK, INK, 220);
+    const f1 = buildFan(cx, blockY, blockZ + DF_THICK/2 + 0.003, DF_DIA, 'z',
+                        INK, GRAPHITE, 7);
+    const f2 = buildFan(cx, blockY, blockZ - DF_THICK/2 - 0.003, DF_DIA, 'z',
+                        INK, GRAPHITE, 7);
+    fanBladeGroups.push({group:f1, speed: 11.0+idx*0.3, axis:'z'});
+    fanBladeGroups.push({group:f2, speed:-11.0-idx*0.3, axis:'z'});
+    addLine(cx-DF_DIA*0.45, blockY+DF_DIA*0.55, blockZ,
+            cx+DF_DIA*0.45, blockY+DF_DIA*0.55, blockZ, RUST, 220);
+    addBoxEdges(cx+DF_DIA*0.50, blockY-DF_DIA*0.40, blockZ, 0.004, 0.005, 0.006, INK, 100);
+    const dLbl = makeTextSprite('DELTA PFR0812DHE-4P × 2', '#B04A1E');
+    dLbl.position.set(cx, blockY+DF_DIA*0.70, blockZ);
+    dLbl.scale.set(0.170, 0.014, 1); scene.add(dLbl);
+  });
+  if(window._cpuFanGroup){
+    fanBladeGroups.push({group:window._cpuFanGroup, speed:7.5, axis:'z'});
+  }
+}
+
+// ============================================================================
+// SSD GUIDE + GPU ANTI-SAG — Unified horizontal bracket spanning chassis width
+// (per reference photo, single bar at GPU-top level, +Z side, FORWARD of CPU)
+// Each U.2 drive: 100 × 70 × 7 mm. Layout: 2×2 grid in -X half of bracket.
+// ============================================================================
+{
+  const U2 = { l:0.100, w:0.070, t:0.007 };
+  const brY = MB_Y + 0.151;                         // +Y 40mm shift (was MB_Y+0.111)
+  const brX0 = -cwL + 0.002, brX1 = cwR - 0.002;     // bracket X attached to both side walls
+  const brZ_back = -0.150;                           // -Z 10mm extension (was -0.140)
+  const brZ_front = -0.025;                          // +Z 10mm extension (was -0.035) — total +20mm
+  // Bracket color — yellow per design feedback
+  const BRACKET_Y = [0.957, 0.733, 0.067];               // #F4BB11 — bracket yellow
+  const BRACKET_Y_DK = [0.745, 0.557, 0.039];            // #BE8E0A — deeper edge
+  // Horizontal plate (thin in Y, spans X and Z)
+  addBoxEdges((brX0+brX1)/2, brY, (brZ_back+brZ_front)/2,
+              (brX1-brX0)/2, 0.0015, (brZ_front-brZ_back)/2, BRACKET_Y, 220);
+  // Plate edge highlights
+  addLine(brX0, brY+0.0015, brZ_back, brX1, brY+0.0015, brZ_back, BRACKET_Y_DK, 280);
+  addLine(brX0, brY+0.0015, brZ_front, brX1, brY+0.0015, brZ_front, BRACKET_Y_DK, 280);
+
+  // 4 SSDs in single row along X, centered on the narrow bracket Z extent
+  const ssdXcols = [-0.165, -0.105, -0.045, +0.015];   // 4 SSDs, 60mm pitch
+  const ssdZ = (brZ_back + brZ_front)/2;                // single Z line, bracket center
+  const SSD_PINK = [0.929, 0.118, 0.388];               // #ED1F63 — vivid pink
+  const SSD_PINK_LT = [1.000, 0.502, 0.667];            // #FF80AB — light pink label
+  ssdXcols.forEach((sx)=>{
+    const sz = ssdZ;
+    // Drive body (top face up) — PINK
+    addBoxEdges(sx, brY+U2.t/2+0.001, sz, U2.w/2, U2.t/2, U2.l/2, SSD_PINK, 200);
+    // Label top — light pink
+    addBoxEdges(sx, brY+U2.t+0.0015, sz, U2.w/2*0.85, 0.0003, U2.l/2*0.90, SSD_PINK_LT, 120);
+    // 4-corner mounting screws
+    [[-U2.w/2*0.85,-U2.l/2*0.85],[U2.w/2*0.85,-U2.l/2*0.85],
+     [-U2.w/2*0.85, U2.l/2*0.85],[U2.w/2*0.85, U2.l/2*0.85]].forEach(([dx,dz])=>{
+      addRing(sx+dx, brY+U2.t+0.0015, sz+dz, 'xz', 0.004, BLUEPRINT, 12);
+    });
+    // U.2 connector edge (rear of drive, +Z end)
+    addLine(sx-U2.w/2*0.6, brY+0.001, sz+U2.l/2*0.95,
+            sx+U2.w/2*0.6, brY+0.001, sz+U2.l/2*0.95, BLUEPRINT, 160);
+    // Activity LED
+    addRing(sx+U2.w*0.35, brY+U2.t+0.002, sz-U2.l/2*0.85, 'xz', 0.003, RUST, 10);
+  });
+
+  // GPU retention clips (anti-sag) at each GPU X position, near GPU +Z end
+  const gpuClips = [0.075, 0.115, 0.155, 0.195];
+  gpuClips.forEach((cx)=>{
+    // Vertical clip body (extends down from bracket to grip GPU top)
+    addBoxEdges(cx, brY-0.012, brZ_back+0.012, 0.008, 0.012, 0.006, INK, 160);
+    // Soft pad under clip (contacts GPU top)
+    addBoxEdges(cx, brY-0.022, brZ_back+0.012, 0.012, 0.001, 0.005, RUST, 120);
+    // NVIDIA label on clip
+    const nv = makeTextSprite('NVIDIA', '#0B5FA8');
+    nv.position.set(cx, brY-0.005, brZ_back+0.015);
+    nv.scale.set(0.022, 0.006, 1); scene.add(nv);
+  });
+
+  // Bracket mounting tabs — bent flanges screwed into the chassis side walls.
+  // Each tab is L-shaped: extends from bracket end vertically and bolts to the wall.
+  const tabH = 0.020, tabD = (brZ_front-brZ_back) * 0.35;
+  const tabZc = (brZ_back+brZ_front)/2;
+  // Left tab — flange flush with -X interior wall (-cwL), yellow
+  addBoxEdges(brX0, brY - tabH/2, tabZc, 0.001, tabH/2, tabD/2, BRACKET_Y, 200);
+  for(let i=-1;i<=1;i++){
+    addRing(brX0+0.0008, brY-0.004 + i*0.006, tabZc + i*0.010, 'yz', 0.004, BRACKET_Y_DK, 12);
+  }
+  // Right tab — flange flush with +X interior wall (+cwR), yellow
+  addBoxEdges(brX1, brY - tabH/2, tabZc, 0.001, tabH/2, tabD/2, BRACKET_Y, 200);
+  for(let i=-1;i<=1;i++){
+    addRing(brX1-0.0008, brY-0.004 + i*0.006, tabZc + i*0.010, 'yz', 0.004, BRACKET_Y_DK, 12);
+  }
+  // Side rail tracks — yellow
+  addLine(brX0-0.001, brY-tabH-0.001, brZ_back-0.020,
+          brX0-0.001, brY-tabH-0.001, brZ_front+0.020, BRACKET_Y, 240);
+  addLine(brX0-0.001, brY+0.002,       brZ_back-0.020,
+          brX0-0.001, brY+0.002,       brZ_front+0.020, BRACKET_Y, 240);
+  addLine(brX1+0.001, brY-tabH-0.001, brZ_back-0.020,
+          brX1+0.001, brY-tabH-0.001, brZ_front+0.020, BRACKET_Y, 240);
+  addLine(brX1+0.001, brY+0.002,       brZ_back-0.020,
+          brX1+0.001, brY+0.002,       brZ_front+0.020, BRACKET_Y, 240);
+
+  // Labels
+  const ssdLbl = makeTextSprite('4× U.2 NVMe 1.92TB · Intel VROC RAID5',  '#0B5FA8');
+  ssdLbl.position.set(-0.090, brY+0.040, +0.080); ssdLbl.scale.set(0.300, 0.020, 1); scene.add(ssdLbl);
+  const asgLbl = makeTextSprite('GPU Anti-Sag Bracket', '#5F6970');
+  asgLbl.position.set(+0.135, brY+0.040, brZ_back+0.020);
+  asgLbl.scale.set(0.170, 0.016, 1); scene.add(asgLbl);
+}
+
+// (Old separate GPU Anti-Sag block removed — now integrated into the unified
+//  SSD/Anti-Sag bracket section above)
+
+// ============================================================================
+// Assemble main wireframe geometry → THREE.Points (single draw call)
+// ============================================================================
+const mainGeo = new THREE.BufferGeometry();
+mainGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePos), 3));
+mainGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(lineCol), 3));
+const mainMat = new THREE.PointsMaterial({size:0.0048, vertexColors:true, transparent:true,
+  opacity:0.92, blending:THREE.NormalBlending, sizeAttenuation:true, depthWrite:false});
+const mainPoints = new THREE.Points(mainGeo, mainMat);
+scene.add(mainPoints);
+
+// XYZ AXIS GIZMO
+const axisOrigin = new THREE.Vector3(-cwL-0.20, FLOOR_Y, -cd-0.20);
+const AXIS_LEN = 0.20, AXIS_HEAD = 0.025;
+const axisPos = [], axisCol = [];
+function addAxisLine(x1,y1,z1,x2,y2,z2,rgb){const N=160;
+  for(let i=0;i<=N;i++){const t=i/N;
+    axisPos.push(x1+(x2-x1)*t,y1+(y2-y1)*t,z1+(z2-z1)*t);
+    axisCol.push(rgb[0],rgb[1],rgb[2]);}}
+const ox=axisOrigin.x, oy=axisOrigin.y, oz=axisOrigin.z;
+addAxisLine(ox,oy,oz, ox+AXIS_LEN,oy,oz, BLUEPRINT);
+addAxisLine(ox,oy,oz, ox,oy+AXIS_LEN,oz, BLUEPRINT);
+addAxisLine(ox,oy,oz, ox,oy,oz+AXIS_LEN, BLUEPRINT);
+scene.add(makePoints(axisPos, axisCol, 0.006, 1.0));
+const lX = makeTextSprite('X','#0B5FA8'); lX.position.set(ox+AXIS_LEN+0.04, oy, oz); scene.add(lX);
+const lY = makeTextSprite('Y','#0B5FA8'); lY.position.set(ox, oy+AXIS_LEN+0.04, oz); scene.add(lY);
+const lZ = makeTextSprite('Z','#0B5FA8'); lZ.position.set(ox, oy, oz+AXIS_LEN+0.04); scene.add(lZ);
+const nameSprite = makeTextSprite('PILLETs Birch Stream Platform', '#0F1419');
+nameSprite.position.set(0, caseCenterY+ch+0.090, 0); nameSprite.scale.set(0.42, 0.044, 1); scene.add(nameSprite);
+const subSprite = makeTextSprite('RM51 D3060 Xeon 6761P H200 NVL x 4', '#0B5FA8');
+subSprite.position.set(0, caseCenterY+ch+0.050, 0); subSprite.scale.set(0.40, 0.028, 1); scene.add(subSprite);
+const clock = new THREE.Clock();
+
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  const t = clock.getElapsedTime();
+  fanBladeGroups.forEach(function(item){
+    var g=item.group, s=item.speed, ax=item.axis;
+    if(ax==='z') g.rotation.z = t*s;
+    else if(ax==='x') g.rotation.x = t*s;
+    else g.rotation.y = t*s;
+  });
+  renderer.render(scene, camera);
+  const p = camera.position, tg = controls.target;
+}
+animate();
+
+window.addEventListener('keydown', function(e){
+  if(e.key==='r'||e.key==='R') controls.autoRotate = !controls.autoRotate;
+});
+
+window.addEventListener('resize', function(){
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  applyViewOffset();
+});
+</script>
+</body>
+</html>
+nction(){
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
+;
+</script>
+</body>
+</html>

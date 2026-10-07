@@ -1,0 +1,9 @@
+# 서버에서 직접 수정할 때 생긴 백업 파일
+*.bak*
+# 비밀 정보 — 절대 올리지 않는다
+wp-config.php
+.env
+ssl/
+*.pem
+*.key
+Thumbs.db

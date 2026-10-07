@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PILLS — Request Proposal</title>
+  <meta name="description" content="PILLS AI 인프라 프로포절 요청. GPU 서버, 냉각, DC 인프라 요구사항을 체크리스트로 정리해 제출하세요." />
+  <link rel="stylesheet" href="./styles/main.css" />
+</head>
+<body class="pills-paper">
+
+  <div class="page">
+
+    <!-- Sheet Bar -->
+    <div style="height: 12px;"></div>
+    <div class="sheet-bar">
+      <span>PILLS CORPORATION · REQUEST PROPOSAL</span>
+      <span>REV.2026.Q2</span>
+    </div>
+
+    <!-- Single-page proposal layout -->
+    <section class="proposal-page" id="proposal-form">
+
+      <!-- Left column: Header + Contact + Submit -->
+      <div class="proposal-col-left">
+
+        <a class="cta cta--continue cta--back" href="index.html" style="animation-delay: 0s;">
+          <span class="mv">
+            <span class="ar">←</span>
+            <span class="tx">PILLS Home</span>
+          </span>
+        </a>
+
+        <div class="section-label" style="margin-top: var(--space-xs);">
+          <span class="rule"></span>
+          <span class="label">Request Proposal</span>
+        </div>
+
+        <h1 class="proposal-h1">
+          프로젝트 요구사항을<br><strong>체크리스트</strong>로 정리하세요.
+        </h1>
+        <p class="proposal-body">
+          해당 항목을 선택하고 제출하면, 선택 내용이<br>
+          이메일 본문으로 구성됩니다.<br>
+          담당 엔지니어가 확인 후 1영업일 내 회신합니다.
+        </p>
+
+        <!-- 06. Contact -->
+        <div class="proposal-group proposal-group--compact">
+          <div class="proposal-group__num">06</div>
+          <div class="proposal-group__title">Contact</div>
+          <div class="proposal-fields">
+            <input type="text" class="proposal-input" id="p-company" placeholder="회사명 (상호)" />
+            <input type="text" class="proposal-input" id="p-name" placeholder="담당자 성함" />
+            <input type="email" class="proposal-input" id="p-email" placeholder="이메일" />
+            <input type="tel" class="proposal-input" id="p-tel" placeholder="연락처 (선택)" />
+          </div>
+        </div>
+
+        <!-- 07. Additional Notes -->
+        <div class="proposal-group proposal-group--compact">
+          <div class="proposal-group__num">07</div>
+          <div class="proposal-group__title">Additional Notes</div>
+          <textarea class="proposal-textarea" rows="6" placeholder="추가 요구사항이 있으면 자유롭게 작성하세요."></textarea>
+        </div>
+
+        <!-- Submit CTA -->
+        <div class="proposal-submit proposal-submit--inline">
+          <a class="cta cta--continue cta--submit" href="#" id="proposal-submit-btn" style="animation-delay: 0.6s;">
+            <span class="rail-l"></span>
+            <span class="mv">
+              <span class="tx">Submit Proposal Request</span>
+              <span class="tail"><span class="ln"></span><span class="ar">→</span></span>
+            </span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Right column: Checklist grid -->
+      <div class="proposal-col-right">
+
+        <!-- 01. Server Platform -->
+        <div class="proposal-group proposal-group--compact">
+          <div class="proposal-group__num">01</div>
+          <div class="proposal-group__title">Server Platform</div>
+          <div class="proposal-checks proposal-checks--single">
+            <label class="proposal-check">
+              <input type="checkbox" value="HGX B200 (8-GPU)" />
+              <span class="proposal-check__label">HGX B200 (8-GPU)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="HGX B300 (8-GPU)" />
+              <span class="proposal-check__label">HGX B300 (8-GPU)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="MGX RTX 5090 (8-GPU Ingenious Model)" />
+              <span class="proposal-check__label">MGX (RTX 5090 8-GPU Ingenious Model)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="MGX RTX PRO 6000 (8-GPU Efficiency Model)" />
+              <span class="proposal-check__label">MGX (RTX PRO 6000 8-GPU Efficiency Model)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="MGX H200 NVL (8-GPU Standard Model)" />
+              <span class="proposal-check__label">MGX (H200 NVL 8-GPU Standard Model)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="PILLETs AI (1~4-GPU HPC Adaptive Model)" />
+              <span class="proposal-check__label">PILLETs AI (1~4-GPU HPC Adaptive Model)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="IGX Thor (Infrastructure for Physical AI)" />
+              <span class="proposal-check__label">IGX Thor (Infrastructure for Physical AI)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="DGX Platform (GB300 / GB10)" />
+              <span class="proposal-check__label">DGX Platform (GB300 / GB10)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 02. Scale -->
+        <div class="proposal-group proposal-group--compact">
+          <div class="proposal-group__num">02</div>
+          <div class="proposal-group__title">Scale (GPU Count)</div>
+          <div class="proposal-checks proposal-checks--single">
+            <label class="proposal-check">
+              <input type="radio" name="scale" value="1~8 GPU" />
+              <span class="proposal-check__label">1–8 GPU</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="scale" value="16~64 GPU" />
+              <span class="proposal-check__label">16–64 GPU</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="scale" value="128~512 GPU" />
+              <span class="proposal-check__label">128–512 GPU</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="scale" value="512+ GPU" />
+              <span class="proposal-check__label">512+ GPU</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="scale" value="POD / SuperPOD" />
+              <span class="proposal-check__label">POD / SuperPOD</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="scale" value="미정 (상담 필요)" />
+              <span class="proposal-check__label">미정 (상담 필요)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 03. Cooling -->
+        <div class="proposal-group proposal-group--compact">
+          <div class="proposal-group__num">03</div>
+          <div class="proposal-group__title">Cooling</div>
+          <div class="proposal-checks proposal-checks--single">
+            <label class="proposal-check">
+              <input type="checkbox" value="Air Cooling" />
+              <span class="proposal-check__label">Air Cooling</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="Direct Liquid Cooling (DLC)" />
+              <span class="proposal-check__label">Direct Liquid Cooling (DLC)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="Rear-Door Heat Exchanger" />
+              <span class="proposal-check__label">Rear-Door Heat Exchanger</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="Hybrid (Air + Liquid)" />
+              <span class="proposal-check__label">Hybrid (Air + Liquid)</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="CDU 포함" />
+              <span class="proposal-check__label">CDU (Coolant Distribution Unit) 포함</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="쿨링 컨설팅 요청" />
+              <span class="proposal-check__label">쿨링 방식 컨설팅 요청</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 04. DC Infrastructure -->
+        <div class="proposal-group proposal-group--compact">
+          <div class="proposal-group__num">04</div>
+          <div class="proposal-group__title">DC Infrastructure</div>
+          <div class="proposal-checks proposal-checks--single">
+            <label class="proposal-check">
+              <input type="checkbox" value="Rack & Enclosure" />
+              <span class="proposal-check__label">Rack &amp; Enclosure</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="CAC/HAC Containment" />
+              <span class="proposal-check__label">CAC / HAC Containment</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="Cable Management" />
+              <span class="proposal-check__label">Cable Management &amp; Network</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="High-Density PDU / Busway" />
+              <span class="proposal-check__label">High-Density PDU / Busway</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="UPS" />
+              <span class="proposal-check__label">UPS</span>
+            </label>
+            <label class="proposal-check">
+              <input type="checkbox" value="DC 통합 설계" />
+              <span class="proposal-check__label">DC 통합 설계 (턴키)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 05. Timeline -->
+        <div class="proposal-group proposal-group--compact" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+          <div class="proposal-group__num">05</div>
+          <div class="proposal-group__title">Timeline</div>
+          <div class="proposal-checks proposal-checks--single">
+            <label class="proposal-check">
+              <input type="radio" name="timeline" value="1개월 이내" />
+              <span class="proposal-check__label">1개월 이내</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="timeline" value="1~3개월" />
+              <span class="proposal-check__label">1–3개월</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="timeline" value="3~6개월" />
+              <span class="proposal-check__label">3–6개월</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="timeline" value="6개월 이상" />
+              <span class="proposal-check__label">6개월 이상</span>
+            </label>
+            <label class="proposal-check">
+              <input type="radio" name="timeline" value="일정 미정" />
+              <span class="proposal-check__label">일정 미정</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      © 2026 PILLS Corporation. All rights reserved.
+    </footer>
+
+  </div>
+
+  <!-- ——— Scripts ——— -->
+  <script src="./scripts/main.js"></script>
+  <script src="./scripts/proposal.js"></script>
+
+</body>
+</html>

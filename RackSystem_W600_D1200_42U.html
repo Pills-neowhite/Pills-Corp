@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PILLS CORP. — 42U Rack System (W600 × D1200) Wireframe</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; color: #fff; }
+  #canvas-container { position: fixed; inset: 0; }
+  #overlay { display: none !important; }
+  #usageHelp { display: none !important; }
+  #usageHelp .uh-title { font-size: 14px; color: #00d6b3; margin-bottom: 6px; font-weight: 800; letter-spacing: 1.5px; }
+  #usageHelp .uh-key { color: #ffd84d; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; font-weight: 700; }
+  #credits { display: none !important; }
+  #bottom-label {
+    position: fixed;
+    bottom: 28px;
+    right: 36px;
+    text-align: right;
+    max-width: 44%;
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+  }
+  #bottom-label h1 {
+    font-size: 21.6px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin: 0 0 4px 0;
+    color: #1a1a1a;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  #bottom-label h2 {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    margin: 0;
+    color: #444444;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div id="bottom-label">
+  <h1>PILLS CORP.</h1>
+  <h2>42U Rack System — W600 × D1200 mm · DGX Spark × 60 (30 Trays, 1.5U) + DGX STATION GB300 × 3 (6U) · Dell Z9664F-ON · Wireframe</h2>
+</div>
+<div id="usageHelp">
+  <div class="uh-title">NAVIGATION CONTROLS</div>
+  <div><span class="uh-key">L-Click + Drag</span> &nbsp;·&nbsp; Orbit View</div>
+  <div><span class="uh-key">R-Click + Drag</span> &nbsp;·&nbsp; Pan Camera</div>
+  <div><span class="uh-key">Scroll Wheel</span> &nbsp;·&nbsp; Zoom In / Out</div>
+</div>
+<div id="overlay">
+  <h1>PILLS CORP.</h1>
+  <h2>42U Rack System — W600 × D1200 mm · DGX Spark × 60 (30 Trays, 1.5U) + DGX STATION GB300 × 3 (6U) · Dell Z9664F-ON · Wireframe</h2>
+  <div id="legend">
+    <p style="color:#cccccc;">■ Rack Frame (600 W × 1867.9 H × 1200 D mm, 42U)</p>
+    <p style="color:#888888;">■ Caster Wheels × 4 (Ø 100 mm, swivel with brake)</p>
+    <p style="color:#ff8800;">■ Leveling Feet (Stand Flocker) × 4 (M12, Ø 50 mm pad)</p>
+    <p style="color:#00bfff;">■ 4-Post Mounting Frame (EIA-310, 465.1 mm rail spacing)</p>
+    <p style="opacity:0.7;font-size:12px;">
+      Rail setback: 75 mm (front &amp; rear, mirrored)<br/>
+      L-angle profile: 25 × 25 × 2 mm · 3 holes/U (EIA pattern)<br/>
+      Top &amp; bottom horizontal braces · Mid-depth cross-members
+    </p>
+    <p style="color:#ffe633;">■ DGX Spark Rack Mount (NVI 201) × 30 trays (60 nodes, 1.5U/tray) — F8+R22</p>
+    <p style="color:#22cc66;">■ NVIDIA DGX STATION GB300 × 3 (6U) — 20 PFLOPS AI each</p>
+    <p style="color:#668899;">■ Slide Rails × 100 (steel channel, 4mm profile)</p>
+    <p style="color:#3399ff;">■ Dell PowerSwitch Z9664F-ON (1U, 64×QSFP-DD, DC)</p>
+    <p style="color:#ee8833;">■ Headnode 1U (ConnectX-7 400G) + Raritan KVM 1U</p>
+    <p style="color:#8899aa;">■ Smart PDU × 4 (A+B Front, C+D Rear, 3U, 3φ 32A, 18×C19)</p>
+    <p style="color:#88bbbb;">■ Cable Manager (1U) + Patch Panel (1U)</p>
+    <p style="color:#4499dd;">■ Intake Fan × 4 (top) + × 20 (left side) — 200mm</p>
+    <p style="color:#dd6622;">■ Exhaust Fan × 4 (bottom) + × 20 (right side) — 200mm</p>
+    <p style="opacity:0.7;font-size:12px;">
+      GB10: 151 × 151 × 52 mm · 1U/tray · 2 Spark per tray<br/>
+      U42-41 CableMgr+Patch · U40 Z9664F · U39 HN · U38 KVM<br/>
+      U38-36 PDU-A · U35-30 GB300#1(6U) · U29-18 GB10×8(F) · U17-15 PDU-B · U14-9 GB300#2 · U8-3 GB300#3<br/>
+      U12-1 Cooling buffer · [R] U41-39 PDU-C · U38-36 PDU-D · U35 KVM · U33-1 GB10×22(R) · 60 nodes + GB300×3
+    </p>
+  </div>
+</div>
+<div id="credits">
+  <div><span class="cr-org">PILLS CORPORATION</span></div>
+  <div>Created by <span class="cr-author">YOUNGSIK KOO</span></div>
+  <div class="cr-copy">© 2026 PILLS Corporation. All Rights Reserved.</div>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ---- RACK SPECS ----
+const U_HEIGHT = 0.04445;
+const RACK_U   = 42;
+const RACK = { w: 0.6, h: RACK_U * U_HEIGHT, d: 1.2 };
+
+const CASTER = { wheelDia:0.100, wheelWidth:0.032, forkH:0.055, forkW:0.050, plateSize:0.060, plateH:0.005, totalH:0.130 };
+const FOOT   = { threadDia:0.012, threadH:0.060, padDia:0.050, padH:0.008, nutSize:0.022, nutH:0.012, totalH:0.068 };
+
+const FLOOR_Y = -(RACK.h / 2) - CASTER.totalH;
+const rw = RACK.w/2, rh = RACK.h/2, rd = RACK.d/2;
+const rackCenterY = CASTER.totalH + RACK.h/2 + FLOOR_Y;
+
+// ---- Scene / Camera / Renderer ----
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, innerWidth * 2 / innerHeight, 0.1, 100);
+camera.position.set(3.134, 0.131, -3.635);
+const renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true, alpha:true });
+renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(innerWidth, innerHeight);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.target.set(-0.179, -0.017, -0.122);
+// Shift render view right so rack appears in right half (cooling.html overlay layout)
+// target(0,0,0) = rack center = orbit pivot; view offset puts it at ~75% from left
+function applyViewOffset() {
+  camera.setViewOffset(innerWidth * 2, innerHeight, Math.round(innerWidth * 0.25), 0, innerWidth, innerHeight);
+}
+applyViewOffset();
+controls.autoRotate = false; controls.autoRotateSpeed = 2.0;
+
+// Zoom-in disabled
+
+// grid and floor removed for transparent embedding
+
+// ---- Point buffers ----
+const linePos = [], lineCol = [];
+let _tgtP = linePos, _tgtC = lineCol;
+
+// ---- Helpers ----
+function boxEdges(hw,hh,hd){return[
+  {s:[-hw,-hh,-hd],e:[-hw,hh,-hd]},{s:[hw,-hh,-hd],e:[hw,hh,-hd]},
+  {s:[-hw,-hh,hd],e:[-hw,hh,hd]},{s:[hw,-hh,hd],e:[hw,hh,hd]},
+  {s:[-hw,hh,-hd],e:[hw,hh,-hd]},{s:[hw,hh,-hd],e:[hw,hh,hd]},
+  {s:[hw,hh,hd],e:[-hw,hh,hd]},{s:[-hw,hh,hd],e:[-hw,hh,-hd]},
+  {s:[-hw,-hh,-hd],e:[hw,-hh,-hd]},{s:[hw,-hh,-hd],e:[hw,-hh,hd]},
+  {s:[hw,-hh,hd],e:[-hw,-hh,hd]},{s:[-hw,-hh,hd],e:[-hw,-hh,-hd]}];}
+
+function addLine(x1,y1,z1,x2,y2,z2,rgb,density){
+  const len=Math.hypot(x2-x1,y2-y1,z2-z1), N=Math.max(10,Math.round(len*(density||400)));
+  for(let i=0;i<=N;i++){const t=i/N;
+    _tgtP.push(x1+(x2-x1)*t,y1+(y2-y1)*t,z1+(z2-z1)*t); _tgtC.push(rgb[0],rgb[1],rgb[2]);}}
+
+function addBoxEdges(cx,cy,cz,hw,hh,hz,rgb,density){
+  boxEdges(hw,hh,hz).forEach(e=>{addLine(e.s[0]+cx,e.s[1]+cy,e.s[2]+cz,e.e[0]+cx,e.e[1]+cy,e.e[2]+cz,rgb,density);});}
+
+function addRing(cx,cy,cz,plane,diameter,rgb,N){
+  N=N||80; const r=diameter/2;
+  for(let i=0;i<=N;i++){const a=(i/N)*Math.PI*2;
+    let x1=cx,y1=cy,z1=cz;
+    if(plane==='xz'){x1+=Math.cos(a)*r;z1+=Math.sin(a)*r;}
+    else if(plane==='yz'){y1+=Math.cos(a)*r;z1+=Math.sin(a)*r;}
+    else{x1+=Math.cos(a)*r;y1+=Math.sin(a)*r;}
+    _tgtP.push(x1,y1,z1); _tgtC.push(rgb[0],rgb[1],rgb[2]);}}
+
+function addCylinderWire(cx,cy,cz,axis,length,diameter,rgb,rings,stripes){
+  rings=rings||6; stripes=stripes||12; const r=diameter/2, halfL=length/2;
+  for(let ri=0;ri<=rings;ri++){const tL=-halfL+(ri/rings)*length;
+    for(let i=0;i<=40;i++){const a=(i/40)*Math.PI*2, c1=Math.cos(a)*r, c2=Math.sin(a)*r;
+      let px=cx,py=cy,pz=cz;
+      if(axis==='x'){px+=tL;py+=c1;pz+=c2;}else if(axis==='y'){px+=c1;py+=tL;pz+=c2;}else{px+=c1;py+=c2;pz+=tL;}
+      _tgtP.push(px,py,pz); _tgtC.push(rgb[0],rgb[1],rgb[2]);}}
+  for(let si=0;si<stripes;si++){const a=(si/stripes)*Math.PI*2, c1=Math.cos(a)*r, c2=Math.sin(a)*r;
+    const N=Math.max(20,Math.round(length*200));
+    for(let i=0;i<=N;i++){const tL=-halfL+(i/N)*length;
+      let px=cx,py=cy,pz=cz;
+      if(axis==='x'){px+=tL;py+=c1;pz+=c2;}else if(axis==='y'){px+=c1;py+=tL;pz+=c2;}else{px+=c1;py+=c2;pz+=tL;}
+      _tgtP.push(px,py,pz); _tgtC.push(rgb[0],rgb[1],rgb[2]);}}}
+
+function addHexNutWire(cx,cy,cz,af,h,rgb,rot){
+  rot=rot||0; const nr=af/2, hh=h/2, tv=[], bv=[];
+  for(let i=0;i<6;i++){const a=(i/6)*Math.PI*2+rot;
+    tv.push([cx+Math.cos(a)*nr,cy+hh,cz+Math.sin(a)*nr]);
+    bv.push([cx+Math.cos(a)*nr,cy-hh,cz+Math.sin(a)*nr]);}
+  for(let i=0;i<6;i++){const j=(i+1)%6;
+    addLine(tv[i][0],tv[i][1],tv[i][2],tv[j][0],tv[j][1],tv[j][2],rgb,250);
+    addLine(bv[i][0],bv[i][1],bv[i][2],bv[j][0],bv[j][1],bv[j][2],rgb,250);
+    addLine(tv[i][0],tv[i][1],tv[i][2],bv[i][0],bv[i][1],bv[i][2],rgb,250);}}
+
+// ---- makeTextSprite (hoisted for DGX labels) ----
+function makeTextSprite(text,color){
+  const cw=Math.max(128,text.length*32); const c=document.createElement('canvas'); c.width=cw; c.height=64;
+  const fs=Math.min(48,Math.floor(cw*0.85/text.length)*1.6);
+  const ctx=c.getContext('2d'); ctx.font='bold '+fs+'px Consolas,monospace';
+  ctx.fillStyle=color; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,cw/2,32);
+  const tex=new THREE.CanvasTexture(c); tex.minFilter=THREE.LinearFilter;
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});
+  const s=new THREE.Sprite(mat); s.scale.set(0.18,0.09,1); return s;}
+
+// ===================================================================
+// 1. RACK FRAME — open front & rear (no doors)
+// ===================================================================
+const RACK_RGB = [0.059,0.078,0.098]; // INK
+addLine(-rw,rackCenterY-rh,-rd,-rw,rackCenterY+rh,-rd,RACK_RGB,450);
+addLine( rw,rackCenterY-rh,-rd, rw,rackCenterY+rh,-rd,RACK_RGB,450);
+addLine(-rw,rackCenterY-rh, rd,-rw,rackCenterY+rh, rd,RACK_RGB,450);
+addLine( rw,rackCenterY-rh, rd, rw,rackCenterY+rh, rd,RACK_RGB,450);
+addLine(-rw,rackCenterY+rh,-rd,-rw,rackCenterY+rh, rd,RACK_RGB,450);
+addLine( rw,rackCenterY+rh,-rd, rw,rackCenterY+rh, rd,RACK_RGB,450);
+addLine(-rw,rackCenterY-rh,-rd,-rw,rackCenterY-rh, rd,RACK_RGB,450);
+addLine( rw,rackCenterY-rh,-rd, rw,rackCenterY-rh, rd,RACK_RGB,450);
+
+// Rack bottom panel (semi-transparent)
+const rackBotY=rackCenterY-rh;
+const botPanelGeo=new THREE.PlaneGeometry(RACK.w,RACK.d);
+const botPanelMat=new THREE.MeshBasicMaterial({color:0xE6DFD1,transparent:true,opacity:0.18,side:THREE.DoubleSide,depthWrite:false});
+const botPanel=new THREE.Mesh(botPanelGeo,botPanelMat);
+botPanel.rotation.x=-Math.PI/2; botPanel.position.set(0,rackBotY+0.001,0); scene.add(botPanel);
+
+// Rack bottom panel particle fill
+{
+  const bpPos=[],bpCol=[], density=3000;
+  const bpRGB=[0.373,0.412,0.439]; // GRAPHITE
+  for(let i=0;i<density;i++){
+    const px=(Math.random()-0.5)*RACK.w, pz=(Math.random()-0.5)*RACK.d;
+    bpPos.push(px,rackBotY+0.002,pz);
+    const v=0.85+Math.random()*0.15;
+    bpCol.push(bpRGB[0]*v,bpRGB[1]*v,bpRGB[2]*v);
+  }
+  // Edge grid lines as denser particles
+  const edgeN=120;
+  for(let i=0;i<=edgeN;i++){
+    const t=i/edgeN;
+    const ex=(-0.5+t)*RACK.w, ez=(-0.5+t)*RACK.d;
+    bpPos.push(ex,rackBotY+0.002,-RACK.d/2); bpCol.push(0.059,0.078,0.098);
+    bpPos.push(ex,rackBotY+0.002, RACK.d/2); bpCol.push(0.059,0.078,0.098);
+    bpPos.push(-RACK.w/2,rackBotY+0.002,ez); bpCol.push(0.059,0.078,0.098);
+    bpPos.push( RACK.w/2,rackBotY+0.002,ez); bpCol.push(0.059,0.078,0.098);
+  }
+  const bpGeo=new THREE.BufferGeometry();
+  bpGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(bpPos),3));
+  bpGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(bpCol),3));
+  const bpMat=new THREE.PointsMaterial({size:0.005,vertexColors:true,transparent:true,opacity:0.45,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false});
+  scene.add(new THREE.Points(bpGeo,bpMat));
+}
+
+// Rack top panel (semi-transparent + particles, same as bottom)
+const rackTopY=rackCenterY+rh;
+const topPanelGeo=new THREE.PlaneGeometry(RACK.w,RACK.d);
+const topPanelMat=new THREE.MeshBasicMaterial({color:0xE6DFD1,transparent:true,opacity:0.18,side:THREE.DoubleSide,depthWrite:false});
+const topPanel=new THREE.Mesh(topPanelGeo,topPanelMat);
+topPanel.rotation.x=-Math.PI/2; topPanel.position.set(0,rackTopY-0.001,0); scene.add(topPanel);
+
+{
+  const tpPos=[],tpCol=[], density=3000;
+  const tpRGB=[0.373,0.412,0.439]; // GRAPHITE
+  for(let i=0;i<density;i++){
+    const px=(Math.random()-0.5)*RACK.w, pz=(Math.random()-0.5)*RACK.d;
+    tpPos.push(px,rackTopY-0.002,pz);
+    const v=0.85+Math.random()*0.15;
+    tpCol.push(tpRGB[0]*v,tpRGB[1]*v,tpRGB[2]*v);
+  }
+  const edgeN=120;
+  for(let i=0;i<=edgeN;i++){
+    const t=i/edgeN;
+    const ex=(-0.5+t)*RACK.w, ez=(-0.5+t)*RACK.d;
+    tpPos.push(ex,rackTopY-0.002,-RACK.d/2); tpCol.push(0.059,0.078,0.098);
+    tpPos.push(ex,rackTopY-0.002, RACK.d/2); tpCol.push(0.059,0.078,0.098);
+    tpPos.push(-RACK.w/2,rackTopY-0.002,ez); tpCol.push(0.059,0.078,0.098);
+    tpPos.push( RACK.w/2,rackTopY-0.002,ez); tpCol.push(0.059,0.078,0.098);
+  }
+  const tpGeo=new THREE.BufferGeometry();
+  tpGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(tpPos),3));
+  tpGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(tpCol),3));
+  const tpMat=new THREE.PointsMaterial({size:0.005,vertexColors:true,transparent:true,opacity:0.45,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false});
+  scene.add(new THREE.Points(tpGeo,tpMat));
+}
+
+// Rack LEFT side panel (semi-transparent + particles)
+const sidePanelH=RACK.h, sidePanelD=RACK.d;
+const leftPanelGeo=new THREE.PlaneGeometry(sidePanelD,sidePanelH);
+const sidePanelMat=new THREE.MeshBasicMaterial({color:0x2a2a3a,transparent:true,opacity:0.25,side:THREE.DoubleSide,depthWrite:false});
+const leftPanel=new THREE.Mesh(leftPanelGeo,sidePanelMat);
+leftPanel.rotation.y=Math.PI/2; leftPanel.position.set(-rw+0.001,rackCenterY,0); scene.add(leftPanel);
+
+// Rack RIGHT side panel
+const rightPanel=new THREE.Mesh(leftPanelGeo.clone(),sidePanelMat.clone());
+rightPanel.rotation.y=Math.PI/2; rightPanel.position.set(rw-0.001,rackCenterY,0); scene.add(rightPanel);
+
+// Side panel particles
+[-1,1].forEach(side=>{
+  const spPos=[],spCol=[], density=4000;
+  const spRGB=[0.373,0.412,0.439]; // GRAPHITE
+  const px=side*rw+(side===-1?0.002:-0.002);
+  for(let i=0;i<density;i++){
+    const pz=(Math.random()-0.5)*RACK.d;
+    const py=rackCenterY+(Math.random()-0.5)*RACK.h;
+    spPos.push(px,py,pz);
+    const v=0.85+Math.random()*0.15;
+    spCol.push(spRGB[0]*v,spRGB[1]*v,spRGB[2]*v);
+  }
+  // Edge outline particles
+  const edgeN=150;
+  for(let i=0;i<=edgeN;i++){
+    const t=i/edgeN;
+    const ez=(-0.5+t)*RACK.d, ey=rackCenterY+(-0.5+t)*RACK.h;
+    spPos.push(px,rackCenterY-rh,ez); spCol.push(0.059,0.078,0.098);
+    spPos.push(px,rackCenterY+rh,ez); spCol.push(0.059,0.078,0.098);
+    spPos.push(px,ey,-rd); spCol.push(0.059,0.078,0.098);
+    spPos.push(px,ey, rd); spCol.push(0.059,0.078,0.098);
+  }
+  const spGeo=new THREE.BufferGeometry();
+  spGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(spPos),3));
+  spGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(spCol),3));
+  const spMat=new THREE.PointsMaterial({size:0.005,vertexColors:true,transparent:true,opacity:0.40,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false});
+  scene.add(new THREE.Points(spGeo,spMat));
+});
+
+const U_LINE_RGB=[0.059,0.078,0.098];
+for(let u=0;u<=RACK_U;u+=3){const ly=rackCenterY-rh+u*U_HEIGHT;
+  addLine(-rw,ly,-rd,-rw,ly,rd,U_LINE_RGB,200); addLine(rw,ly,-rd,rw,ly,rd,[0.059,0.078,0.098],200);}
+
+// ===================================================================
+// 1b. 4-POST MOUNTING FRAME (EIA-310)
+// ===================================================================
+const MOUNT={railSpacing:0.4651,frontSetback:0.075,frRearDist:0.720,railW:0.025,railT:0.002};
+const FRAME_RGB=[0.373,0.412,0.439], FRAME_DIM=[0.059,0.078,0.098], HOLE_RGB=[0.059,0.078,0.098], BRACE_RGB=[0.373,0.412,0.439];
+const railHalfGap=MOUNT.railSpacing/2, mRailXL=-railHalfGap, mRailXR=+railHalfGap;
+const mFrontZ=-rd+MOUNT.frontSetback, mRearZ=rd-MOUNT.frontSetback;
+const mBotY=rackCenterY-rh, mTopY=rackCenterY+rh;
+
+[{x:mRailXL,z:mFrontZ,f:'front'},{x:mRailXR,z:mFrontZ,f:'front'},
+ {x:mRailXL,z:mRearZ,f:'rear'},{x:mRailXR,z:mRearZ,f:'rear'}].forEach(({x,z,f})=>{
+  const rW=MOUNT.railW, rT=MOUNT.railT, zD=f==='front'?1:-1, xD=x<0?1:-1;
+  addLine(x,mBotY,z,x,mTopY,z,FRAME_RGB,600);
+  addLine(x+xD*rW,mBotY,z,x+xD*rW,mTopY,z,FRAME_RGB,600);
+  addLine(x,mBotY,z+zD*rW,x,mTopY,z+zD*rW,FRAME_RGB,600);
+  [mBotY,mTopY].forEach(y=>{
+    addLine(x,y,z,x+xD*rW,y,z,FRAME_RGB,200); addLine(x,y,z,x,y,z+zD*rW,FRAME_RGB,200);
+    addLine(x+xD*rW,y,z,x+xD*rW,y,z+zD*rT,FRAME_DIM,150);
+    addLine(x,y,z+zD*rW,x+xD*rT,y,z+zD*rW,FRAME_DIM,150);});
+  for(let u=0;u<=RACK_U;u+=6){const y=mBotY+u*U_HEIGHT;
+    addLine(x,y,z,x+xD*rW,y,z,FRAME_DIM,150); addLine(x,y,z,x,y,z+zD*rW,FRAME_DIM,150);}
+  const hzf=z+zD*(rT/2), hp=[0.00635,0.02223,0.03810];
+  for(let u=0;u<RACK_U;u++){const ub=mBotY+u*U_HEIGHT;
+    hp.forEach(h=>{const hy=ub+h, hx=x+xD*(rW/2), hs=0.004;
+      addLine(hx-hs,hy,hzf,hx+hs,hy,hzf,HOLE_RGB,30); addLine(hx,hy-hs,hzf,hx,hy+hs,hzf,HOLE_RGB,30);});}});
+
+[mBotY,mTopY].forEach(y=>{
+  addLine(mRailXL,y,mFrontZ,mRailXL,y,mRearZ,BRACE_RGB,400);
+  addLine(mRailXR,y,mFrontZ,mRailXR,y,mRearZ,BRACE_RGB,400);
+  addLine(mRailXL,y,mFrontZ,mRailXR,y,mFrontZ,BRACE_RGB,350);
+  addLine(mRailXL,y,mRearZ,mRailXR,y,mRearZ,BRACE_RGB,350);});
+[14,28].forEach(u=>{const y=mBotY+u*U_HEIGHT;
+  addLine(mRailXL,y,mFrontZ,mRailXL,y,mRearZ,FRAME_DIM,300);
+  addLine(mRailXR,y,mFrontZ,mRailXR,y,mRearZ,FRAME_DIM,300);});
+addLine(mRailXL,mBotY,mFrontZ,mRailXL,mTopY,mRearZ,[0.059,0.078,0.098],300);
+addLine(mRailXL,mTopY,mFrontZ,mRailXL,mBotY,mRearZ,[0.059,0.078,0.098],300);
+addLine(mRailXR,mBotY,mFrontZ,mRailXR,mTopY,mRearZ,[0.059,0.078,0.098],300);
+addLine(mRailXR,mTopY,mFrontZ,mRailXR,mBotY,mRearZ,[0.059,0.078,0.098],300);
+
+// Center mounting frame (Z midpoint between front & rear)
+const mCenterZ=(mFrontZ+mRearZ)/2;
+[{x:mRailXL},{x:mRailXR}].forEach(({x})=>{
+  const rW=MOUNT.railW, rT=MOUNT.railT, xD=x<0?1:-1;
+  addLine(x,mBotY,mCenterZ,x,mTopY,mCenterZ,FRAME_RGB,600);
+  addLine(x+xD*rW,mBotY,mCenterZ,x+xD*rW,mTopY,mCenterZ,FRAME_RGB,600);
+  addLine(x,mBotY,mCenterZ+rW,x,mTopY,mCenterZ+rW,FRAME_RGB,600);
+  addLine(x,mBotY,mCenterZ-rW,x,mTopY,mCenterZ-rW,FRAME_RGB,600);
+  [mBotY,mTopY].forEach(y=>{
+    addLine(x,y,mCenterZ,x+xD*rW,y,mCenterZ,FRAME_RGB,200);
+    addLine(x,y,mCenterZ,x,y,mCenterZ+rW,FRAME_RGB,200);
+    addLine(x,y,mCenterZ,x,y,mCenterZ-rW,FRAME_RGB,200);});
+  for(let u=0;u<=RACK_U;u+=6){const y=mBotY+u*U_HEIGHT;
+    addLine(x,y,mCenterZ,x+xD*rW,y,mCenterZ,FRAME_DIM,150);
+    addLine(x,y,mCenterZ,x,y,mCenterZ+rW,FRAME_DIM,150);
+    addLine(x,y,mCenterZ,x,y,mCenterZ-rW,FRAME_DIM,150);}
+  const hp=[0.00635,0.02223,0.03810];
+  for(let u=0;u<RACK_U;u++){const ub=mBotY+u*U_HEIGHT;
+    hp.forEach(h=>{const hy=ub+h, hx=x+xD*(rW/2), hs=0.004;
+      addLine(hx-hs,hy,mCenterZ,hx+hs,hy,mCenterZ,HOLE_RGB,30);
+      addLine(hx,hy-hs,mCenterZ,hx,hy+hs,mCenterZ,HOLE_RGB,30);});}});
+[mBotY,mTopY].forEach(y=>{
+  addLine(mRailXL,y,mCenterZ,mRailXR,y,mCenterZ,BRACE_RGB,350);});
+
+// ===================================================================
+// ===================================================================
+// 1c. DGX SPARK RACK MOUNT UNITS (NVI 201) — v3.0: 50 nodes (25 trays)
+// Front: 8 trays (1.5U each, 12U) · Rear: 22 trays (1.5U each, 33U)
+// Front-mount only · 1U per tray spacing
+// ===================================================================
+{
+  const STEP=U_HEIGHT*1.5;
+  const UNIT_H=STEP*0.92, GAP_H=STEP*0.08;
+  const FPANEL_W=0.4826, FPANEL_T=0.002, TRAY_D=0.320;
+  const SP_W=0.151, SP_H=0.052, SP_D=0.151, SP_SEP=0.058;
+  const PSU_W=0.060, PSU_H=0.038, PSU_D=0.080, PORT_SZ=0.0077;
+  const cPnl=[0.373,0.412,0.439], cTr=[0.059,0.078,0.098], cSp=[0.043,0.373,0.659];
+  const cMs=[0.373,0.412,0.439], cPt=[0.059,0.078,0.098], cPs=[0.373,0.412,0.439];
+  const cSc=[0.373,0.412,0.439], cNv=[0.043,0.373,0.659], cSt=[0.373,0.412,0.439], cCbl=[0.059,0.078,0.098];
+  const fpHW=FPANEL_W/2, fpZ=mFrontZ;
+
+  // Upper group: starts at top of U29 = mTopY - 13*U_HEIGHT
+  const upperTopY=mTopY-13*U_HEIGHT;
+  const FRONT_N=8, REAR_N=22;
+
+  function drawTray(topY){
+    const bY=topY-UNIT_H, cY=(topY+bY)/2, hH=UNIT_H/2;
+    addBoxEdges(0,cY,fpZ-FPANEL_T/2,fpHW,hH,FPANEL_T/2,cPnl,220);
+    addLine(-fpHW,cY,fpZ-FPANEL_T,fpHW,cY,fpZ-FPANEL_T,[0.059,0.078,0.098],150);
+    const eiL=-(SP_SEP/2+SP_W), eiR=SP_SEP/2+SP_W;
+    [eiL,eiR,-SP_SEP/2,SP_SEP/2].forEach(ex=>{addLine(ex,bY,fpZ-FPANEL_T,ex,topY,fpZ-FPANEL_T,[0.059,0.078,0.098],100);});
+    [-1,1].forEach(s=>{const sx=s*railHalfGap;
+      [cY-hH*0.50,cY+hH*0.50].forEach(sy=>{
+        addRing(sx,sy,fpZ-FPANEL_T-0.001,'xy',0.007,cSc,14);
+        addLine(sx-0.002,sy,fpZ-FPANEL_T-0.001,sx+0.002,sy,fpZ-FPANEL_T-0.001,cSc,20);});});
+    const t0=fpZ+FPANEL_T, tCZ=t0+TRAY_D/2, tHW=MOUNT.railSpacing*0.47;
+    addBoxEdges(0,cY,tCZ,tHW,hH,TRAY_D/2,cTr,150);
+    addLine(0,bY+0.002,t0+0.03,0,bY+0.002,t0+TRAY_D-0.03,cTr,100);
+    addLine(0,topY-0.002,t0+0.03,0,topY-0.002,t0+TRAY_D-0.03,cTr,100);
+    [-1,1].forEach(sd=>{const bx=sd*(SP_SEP/2+SP_W/2);
+      for(let s=0;s<3;s++){const sz=t0+0.04+s*0.09;
+        addLine(bx-SP_W*0.30,bY+0.001,sz,bx+SP_W*0.30,bY+0.001,sz,cTr,80);}});
+    [-tHW,tHW].forEach(sx=>{addLine(sx,bY,t0,sx,bY,t0+TRAY_D,cTr,100);
+      addLine(sx,bY,t0,sx,bY+hH*0.4,t0,cTr,60); addLine(sx,bY,t0+TRAY_D,sx,bY+hH*0.4,t0+TRAY_D,cTr,60);});
+    const spZ=t0+0.025+SP_D/2, spLX=-(SP_SEP/2+SP_W/2), spRX=SP_SEP/2+SP_W/2;
+    [spLX,spRX].forEach((sx,idx)=>{
+      addBoxEdges(sx,cY,spZ,SP_W/2,SP_H/2,SP_D/2,cSp,200);
+      addLine(sx-SP_W*0.45,cY+SP_H/2,spZ-SP_D*0.3,sx+SP_W*0.45,cY+SP_H/2,spZ-SP_D*0.3,[0.373,0.412,0.439],120);
+      const mZ=fpZ-FPANEL_T-0.0005, mHW=SP_W*0.35, mHH=hH*0.65;
+      for(let m=0;m<5;m++){const my=cY-mHH+m*(2*mHH/4); addLine(sx-mHW,my,mZ,sx+mHW,my,mZ,cMs,110);}
+      addLine(sx-mHW,cY-mHH,mZ,sx-mHW,cY+mHH,mZ,cMs,80); addLine(sx+mHW,cY-mHH,mZ,sx+mHW,cY+mHH,mZ,cMs,80);
+      addLine(sx-mHW,cY-mHH,mZ,sx+mHW,cY-mHH,mZ,cMs,80); addLine(sx+mHW,cY+mHH,mZ,sx-mHW,cY+mHH,mZ,cMs,80);
+      addRing(sx+(idx===0?SP_W*0.28:-SP_W*0.28),cY+mHH*0.5,mZ,'xy',0.003,cNv,10);
+      const psY=cY, psZ=spZ+SP_D/2+0.015+PSU_D/2;
+      addBoxEdges(sx,psY,psZ,PSU_W/2,PSU_H/2,PSU_D/2,cPs,130);
+      addLine(sx+(idx===0?SP_W*0.3:-SP_W*0.3),psY,psZ-PSU_D*0.3,0,psY,psZ-PSU_D*0.3,cCbl,80);
+      const stY2=cY+SP_H/2+0.001;
+      addLine(sx-SP_W*0.38,stY2,spZ-SP_D*0.15,sx+SP_W*0.38,stY2,spZ-SP_D*0.15,cSt,80);
+      addLine(sx-SP_W*0.38,stY2,spZ+SP_D*0.15,sx+SP_W*0.38,stY2,spZ+SP_D*0.15,cSt,80);});
+    const ptZ2=fpZ-FPANEL_T-0.0005, ptGX=0.013, ptGY=0.014;
+    for(let pr=0;pr<2;pr++){for(let pc=0;pc<2;pc++){
+      const px=-ptGX/2+pc*ptGX, py=cY+ptGY/2-pr*ptGY;
+      addBoxEdges(px,py,ptZ2,PORT_SZ/2,PORT_SZ/2,0.001,cPt,80);
+      if(pr===0) addLine(px-PORT_SZ*0.3,py+PORT_SZ*0.35,ptZ2,px+PORT_SZ*0.3,py+PORT_SZ*0.35,ptZ2,[0.059,0.078,0.098],30);
+      else addLine(px-PORT_SZ*0.25,py,ptZ2,px+PORT_SZ*0.25,py,ptZ2,[0.059,0.078,0.098],30);}}
+  }
+
+  // Draw FRONT upper trays (skip index 7 for animation)
+  for(let i=0;i<FRONT_N;i++){ if(i===4) continue; drawTray(upperTopY-i*STEP); }
+
+  // Front animated tray (upper index 7)
+  const slidePos=[], slideCol=[];
+  _tgtP=slidePos; _tgtC=slideCol;
+  drawTray(upperTopY-4*STEP);
+  _tgtP=linePos; _tgtC=lineCol;
+  const animTrayCY=upperTopY-4*STEP-UNIT_H/2;
+  const slideGeo=new THREE.BufferGeometry();
+  slideGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(slidePos),3));
+  slideGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(slideCol),3));
+  const slideMat=new THREE.PointsMaterial({size:0.006,vertexColors:true,transparent:true,opacity:0.90,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false});
+  const slideGroup=new THREE.Group();
+  slideGroup.add(new THREE.Points(slideGeo,slideMat));
+  scene.add(slideGroup);
+  window._slideGroup=slideGroup;
+
+  // ---- REAR TRAYS: 180° mirrored, mounted on rear rail ----
+  const rpZ=mRearZ;
+  function drawRearTray(topY){
+    const bY=topY-UNIT_H, cY=(topY+bY)/2, hH=UNIT_H/2;
+    addBoxEdges(0,cY,rpZ+FPANEL_T/2,fpHW,hH,FPANEL_T/2,cPnl,220);
+    addLine(-fpHW,cY,rpZ+FPANEL_T,fpHW,cY,rpZ+FPANEL_T,[0.059,0.078,0.098],150);
+    const eiL=-(SP_SEP/2+SP_W), eiR=SP_SEP/2+SP_W;
+    [eiL,eiR,-SP_SEP/2,SP_SEP/2].forEach(ex=>{addLine(ex,bY,rpZ+FPANEL_T,ex,topY,rpZ+FPANEL_T,[0.059,0.078,0.098],100);});
+    [-1,1].forEach(s=>{const sx=s*railHalfGap;
+      [cY-hH*0.50,cY+hH*0.50].forEach(sy=>{
+        addRing(sx,sy,rpZ+FPANEL_T+0.001,'xy',0.007,cSc,14);
+        addLine(sx-0.002,sy,rpZ+FPANEL_T+0.001,sx+0.002,sy,rpZ+FPANEL_T+0.001,cSc,20);});});
+    const rt0=rpZ-FPANEL_T, rtCZ=rt0-TRAY_D/2, tHW=MOUNT.railSpacing*0.47;
+    addBoxEdges(0,cY,rtCZ,tHW,hH,TRAY_D/2,cTr,150);
+    addLine(0,bY+0.002,rt0-0.03,0,bY+0.002,rt0-TRAY_D+0.03,cTr,100);
+    addLine(0,topY-0.002,rt0-0.03,0,topY-0.002,rt0-TRAY_D+0.03,cTr,100);
+    [-1,1].forEach(sd=>{const bx=sd*(SP_SEP/2+SP_W/2);
+      for(let s=0;s<3;s++) addLine(bx-SP_W*0.30,bY+0.001,rt0-0.04-s*0.09,bx+SP_W*0.30,bY+0.001,rt0-0.04-s*0.09,cTr,80);});
+    [-tHW,tHW].forEach(sx=>{addLine(sx,bY,rt0,sx,bY,rt0-TRAY_D,cTr,100);
+      addLine(sx,bY,rt0,sx,bY+hH*0.4,rt0,cTr,60); addLine(sx,bY,rt0-TRAY_D,sx,bY+hH*0.4,rt0-TRAY_D,cTr,60);});
+    const rspZ=rt0-0.025-SP_D/2, spLX=-(SP_SEP/2+SP_W/2), spRX=SP_SEP/2+SP_W/2;
+    [spLX,spRX].forEach((sx,idx)=>{
+      addBoxEdges(sx,cY,rspZ,SP_W/2,SP_H/2,SP_D/2,cSp,200);
+      addLine(sx-SP_W*0.45,cY+SP_H/2,rspZ+SP_D*0.3,sx+SP_W*0.45,cY+SP_H/2,rspZ+SP_D*0.3,[0.373,0.412,0.439],120);
+      const rmZ=rpZ+FPANEL_T+0.0005, mHW=SP_W*0.35, mHH=hH*0.65;
+      for(let m=0;m<5;m++) addLine(sx-mHW,cY-mHH+m*(2*mHH/4),rmZ,sx+mHW,cY-mHH+m*(2*mHH/4),rmZ,cMs,110);
+      addLine(sx-mHW,cY-mHH,rmZ,sx-mHW,cY+mHH,rmZ,cMs,80); addLine(sx+mHW,cY-mHH,rmZ,sx+mHW,cY+mHH,rmZ,cMs,80);
+      addLine(sx-mHW,cY-mHH,rmZ,sx+mHW,cY-mHH,rmZ,cMs,80); addLine(sx+mHW,cY+mHH,rmZ,sx-mHW,cY+mHH,rmZ,cMs,80);
+      addRing(sx+(idx===0?SP_W*0.28:-SP_W*0.28),cY+mHH*0.5,rmZ,'xy',0.003,cNv,10);
+      const rpsZ=rspZ-SP_D/2-0.015-PSU_D/2;
+      addBoxEdges(sx,cY,rpsZ,PSU_W/2,PSU_H/2,PSU_D/2,cPs,130);
+      addLine(sx+(idx===0?SP_W*0.3:-SP_W*0.3),cY,rpsZ+PSU_D*0.3,0,cY,rpsZ+PSU_D*0.3,cCbl,80);
+      const stY2=cY+SP_H/2+0.001;
+      addLine(sx-SP_W*0.38,stY2,rspZ-SP_D*0.15,sx+SP_W*0.38,stY2,rspZ-SP_D*0.15,cSt,80);
+      addLine(sx-SP_W*0.38,stY2,rspZ+SP_D*0.15,sx+SP_W*0.38,stY2,rspZ+SP_D*0.15,cSt,80);});
+    const rptZ=rpZ+FPANEL_T+0.0005;
+    for(let pr=0;pr<2;pr++){for(let pc=0;pc<2;pc++){
+      const px=-0.013/2+pc*0.013, py=cY+0.014/2-pr*0.014;
+      addBoxEdges(px,py,rptZ,PORT_SZ/2,PORT_SZ/2,0.001,cPt,80);
+      if(pr===0) addLine(px-PORT_SZ*0.3,py+PORT_SZ*0.35,rptZ,px+PORT_SZ*0.3,py+PORT_SZ*0.35,rptZ,[0.059,0.078,0.098],30);
+      else addLine(px-PORT_SZ*0.25,py,rptZ,px+PORT_SZ*0.25,py,rptZ,[0.059,0.078,0.098],30);}}
+  }
+
+  // Draw REAR trays — 22 trays from U33 (mTopY-9*U_HEIGHT)
+  const rearTrayTopY=mTopY-9*U_HEIGHT;
+  for(let i=0;i<REAR_N;i++){ if(i===7) continue; drawRearTray(rearTrayTopY-i*STEP); }
+
+  // Rear animated tray (upper index 7)
+  const rearSlidePos=[], rearSlideCol=[];
+  _tgtP=rearSlidePos; _tgtC=rearSlideCol;
+  drawRearTray(rearTrayTopY-7*STEP);
+  _tgtP=linePos; _tgtC=lineCol;
+  const rearSlideGeo=new THREE.BufferGeometry();
+  rearSlideGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(rearSlidePos),3));
+  rearSlideGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(rearSlideCol),3));
+  const rearSlideMat=new THREE.PointsMaterial({size:0.006,vertexColors:true,transparent:true,opacity:0.90,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false});
+  const rearSlideGroup=new THREE.Group();
+  rearSlideGroup.add(new THREE.Points(rearSlideGeo,rearSlideMat));
+  scene.add(rearSlideGroup);
+  window._rearSlideGroup=rearSlideGroup;
+
+  // Labels — front upper
+  const lz=fpZ-FPANEL_T-0.005;
+  [0,4,7].forEach(idx=>{const tY=upperTopY-idx*STEP, cY2=tY-UNIT_H/2;
+    const p=makeTextSprite('PILLS','#0B5FA8'); p.position.set(-fpHW+0.025,cY2,lz); p.scale.set(0.06,0.03,1); scene.add(p);
+    const n=makeTextSprite('NVI 201','#5F6970'); n.position.set(fpHW-0.030,cY2,lz); n.scale.set(0.07,0.03,1); scene.add(n);});
+  const p4=makeTextSprite('PILLS','#0B5FA8'); p4.position.set(-fpHW+0.025,animTrayCY,lz); p4.scale.set(0.06,0.03,1); slideGroup.add(p4);
+  const n4=makeTextSprite('NVI 201','#5F6970'); n4.position.set(fpHW-0.030,animTrayCY,lz); n4.scale.set(0.07,0.03,1); slideGroup.add(n4);
+  // Labels — rear upper
+  const rlz=rpZ+FPANEL_T+0.005;
+  [0,7,14,21].forEach(idx=>{if(idx===7) return; const tY=rearTrayTopY-idx*STEP, cY2=tY-UNIT_H/2;
+    const rp=makeTextSprite('PILLS','#0B5FA8'); rp.position.set(-fpHW+0.025,cY2,rlz); rp.scale.set(0.06,0.03,1); scene.add(rp);
+    const rn=makeTextSprite('NVI 201','#5F6970'); rn.position.set(fpHW-0.030,cY2,rlz); rn.scale.set(0.07,0.03,1); scene.add(rn);});
+  const rearAnimCY=rearTrayTopY-7*STEP-UNIT_H/2;
+  const rp7=makeTextSprite('PILLS','#0B5FA8'); rp7.position.set(-fpHW+0.025,rearAnimCY,rlz); rp7.scale.set(0.06,0.03,1); rearSlideGroup.add(rp7);
+  const rn7=makeTextSprite('NVI 201','#5F6970'); rn7.position.set(fpHW-0.030,rearAnimCY,rlz); rn7.scale.set(0.07,0.03,1); rearSlideGroup.add(rn7);
+
+  // Slide rails — front + rear
+  const RAIL_RGB=[0.059,0.078,0.098], RAIL_T=0.004;
+  function drawFrontRails(topY){
+    const bY=topY-UNIT_H, tHW=MOUNT.railSpacing*0.47;
+    const z0=fpZ-0.005, z1=fpZ+FPANEL_T+TRAY_D+0.02;
+    [-tHW,tHW].forEach(sx=>{
+      addLine(sx,topY-0.002,z0,sx,topY-0.002,z1,RAIL_RGB,180);
+      addLine(sx,bY+0.002,z0,sx,bY+0.002,z1,RAIL_RGB,180);
+      const inX=sx>0?sx-RAIL_T:sx+RAIL_T;
+      addLine(inX,topY-0.002,z0,inX,topY-0.002,z1,RAIL_RGB,130);
+      addLine(inX,bY+0.002,z0,inX,bY+0.002,z1,RAIL_RGB,130);
+      addLine(sx,bY+0.002,z1,sx,topY-0.002,z1,RAIL_RGB,60);
+      addLine(inX,bY+0.002,z1,inX,topY-0.002,z1,RAIL_RGB,60);
+    });
+  }
+  function drawRearRails(topY){
+    const bY=topY-UNIT_H, tHW=MOUNT.railSpacing*0.47;
+    const z0=rpZ+0.005, z1=rpZ-FPANEL_T-TRAY_D-0.02;
+    [-tHW,tHW].forEach(sx=>{
+      addLine(sx,topY-0.002,z0,sx,topY-0.002,z1,RAIL_RGB,180);
+      addLine(sx,bY+0.002,z0,sx,bY+0.002,z1,RAIL_RGB,180);
+      const inX=sx>0?sx-RAIL_T:sx+RAIL_T;
+      addLine(inX,topY-0.002,z0,inX,topY-0.002,z1,RAIL_RGB,130);
+      addLine(inX,bY+0.002,z0,inX,bY+0.002,z1,RAIL_RGB,130);
+      addLine(sx,bY+0.002,z1,sx,topY-0.002,z1,RAIL_RGB,60);
+      addLine(inX,bY+0.002,z1,inX,topY-0.002,z1,RAIL_RGB,60);
+    });
+  }
+  for(let i=0;i<FRONT_N;i++){ drawFrontRails(upperTopY-i*STEP); }
+  for(let i=0;i<REAR_N;i++){ drawRearRails(rearTrayTopY-i*STEP); }
+}
+
+// ===================================================================
+// 1d. RACK EQUIPMENT (v3.0 layout)
+// U42 CableMgr · U41 PatchPanel · U40 Z9664F-ON · U39 Headnode
+// U38-36 PDU-A · U35-30 GB300#1(6U) · U17-15 PDU-B · [R] U41-36 PDU-C/D · U35 KVM
+// ===================================================================
+{
+  const EQ_W=0.4826, EQ_T=0.002, railHG=MOUNT.railSpacing/2;
+  const swHW=EQ_W/2, swHD=0.406/2;
+  const PDU_3U=3*U_HEIGHT, PDU_HH=PDU_3U/2;
+  const PDU_D=0.400;
+  const cPdu=[0.373,0.412,0.439], cPduD=[0.059,0.078,0.098];
+  const cBrk=[0.690,0.290,0.118], cOut=[0.373,0.412,0.439], cPduIn=[0.690,0.290,0.118];
+
+  // PDU drawing function (front only in v3.0)
+  function drawPDU(label,topY,face){
+    const botY=topY-PDU_3U, cY=(topY+botY)/2;
+    const fpZ=(face==='front')?mFrontZ:mRearZ;
+    const dir=(face==='front')?-1:1;
+    addBoxEdges(0,cY,fpZ+dir*EQ_T/2,swHW,PDU_HH,EQ_T/2,cPdu,250);
+    const bodyZ=fpZ-dir*(EQ_T+PDU_D/2);
+    addBoxEdges(0,cY,bodyZ,swHW*0.95,PDU_HH*0.90,PDU_D/2,cPduD,140);
+    [-1,1].forEach(s=>{const sx=s*railHG;
+      [cY-PDU_HH*0.85,cY+PDU_HH*0.85].forEach(sy=>{
+        addRing(sx,sy,fpZ+dir*(EQ_T+0.001),'xy',0.007,[0.373,0.412,0.439],14);});});
+    const fpFaceZ=fpZ+dir*(EQ_T+0.001);
+    const lblSp=makeTextSprite(label,'#5F6970');
+    lblSp.position.set(-swHW+0.070,cY+PDU_HH*0.70,fpFaceZ+dir*0.003);
+    lblSp.scale.set(0.08,0.025,1); scene.add(lblSp);
+    for(let br=0;br<6;br++){
+      const bCol=br%3, bRow=Math.floor(br/3);
+      const bx=swHW*0.05+bCol*0.055;
+      const by=cY+PDU_HH*0.35-bRow*PDU_HH*0.65;
+      addBoxEdges(bx,by,fpFaceZ,0.012,0.018,0.004,cBrk,70);
+      addLine(bx-0.008,by+0.012,fpFaceZ+dir*0.005,bx+0.008,by+0.012,fpFaceZ+dir*0.005,cBrk,25);
+      addLine(bx,by-0.005,fpFaceZ+dir*0.002,bx,by+0.008,fpFaceZ+dir*0.002,[0.690,0.290,0.118],20);}
+    addRing(-swHW+0.020,cY+PDU_HH*0.80,fpFaceZ,'xy',0.004,[0.043,0.373,0.659],12);
+    const posL=makeTextSprite('The POS','#B04A1E');
+    posL.position.set(-swHW+0.055,cY-PDU_HH*0.75,fpFaceZ+dir*0.003);
+    posL.scale.set(0.06,0.020,1); scene.add(posL);
+    const rearZ=fpZ-dir*(EQ_T+PDU_D+0.001);
+    for(let row=0;row<3;row++){
+      const oy=cY+PDU_HH*0.50-row*PDU_HH*0.45;
+      const phases=['L1','L2','L3'];
+      const phL=makeTextSprite(phases[row],'#5F6970');
+      phL.position.set(-swHW-0.015,oy,rearZ); phL.scale.set(0.025,0.015,1); scene.add(phL);
+      for(let col=0;col<6;col++){
+        const ox=-swHW+0.050+col*0.072;
+        addBoxEdges(ox,oy,rearZ,0.018,0.012,0.001,cOut,45);
+        addLine(ox-0.008,oy+0.004,rearZ-dir*0.001,ox-0.008,oy-0.004,rearZ-dir*0.001,[0.373,0.412,0.439],18);
+        addLine(ox+0.008,oy+0.004,rearZ-dir*0.001,ox+0.008,oy-0.004,rearZ-dir*0.001,[0.373,0.412,0.439],18);
+        addLine(ox-0.005,oy-0.006,rearZ-dir*0.001,ox+0.005,oy-0.006,rearZ-dir*0.001,[0.373,0.412,0.439],18);}}
+    addRing(swHW-0.045,cY-PDU_HH*0.40,rearZ,'xy',0.022,cPduIn,24);
+    addRing(swHW-0.045,cY-PDU_HH*0.40,rearZ,'xy',0.015,cPduIn,16);
+    return {topY,botY,cY};
+  }
+
+  // --- U42 [F]: Cable Manager (1U) ---
+  const cmTopY=mTopY, cmBotY=cmTopY-U_HEIGHT, cmCY=(cmTopY+cmBotY)/2, cmHH=U_HEIGHT/2;
+  const cCm=[0.373,0.412,0.439], cCmD=[0.059,0.078,0.098];
+  addBoxEdges(0,cmCY,mFrontZ-EQ_T/2,EQ_W/2,cmHH,EQ_T/2,cCm,180);
+  addBoxEdges(0,cmCY,mFrontZ+EQ_T+0.10,EQ_W/2*0.95,cmHH*0.85,0.10,cCmD,80);
+  for(let r=0;r<8;r++){const rx=-EQ_W/2+0.035+r*0.060;
+    addRing(rx,cmCY,mFrontZ-EQ_T-0.002,'xy',0.012,[0.373,0.412,0.439],10);
+    addLine(rx-0.010,cmCY-0.008,mFrontZ-EQ_T-0.002,rx+0.010,cmCY-0.008,mFrontZ-EQ_T-0.002,[0.373,0.412,0.439],20);}
+  [-1,1].forEach(s=>{const sx=s*railHG;
+    [cmCY-cmHH*0.45,cmCY+cmHH*0.45].forEach(sy=>{
+      addRing(sx,sy,mFrontZ-EQ_T-0.001,'xy',0.007,[0.373,0.412,0.439],14);});});
+  const cmL=makeTextSprite('CABLE MGR','#5F6970');
+  cmL.position.set(EQ_W/2-0.055,cmCY+cmHH*0.60,mFrontZ-EQ_T-0.005); cmL.scale.set(0.08,0.03,1); scene.add(cmL);
+
+  // --- U41 [F]: Patch Panel (1U, 24-port) ---
+  const ppTopY=cmBotY, ppBotY=ppTopY-U_HEIGHT, ppCY=(ppTopY+ppBotY)/2, ppHH=U_HEIGHT/2;
+  const cPp=[0.043,0.373,0.659], cPpPt=[0.043,0.373,0.659];
+  addBoxEdges(0,ppCY,mFrontZ-EQ_T/2,EQ_W/2,ppHH,EQ_T/2,cPp,200);
+  for(let row=0;row<2;row++){
+    const py=ppCY+(row===0?ppHH*0.30:-ppHH*0.30);
+    for(let col=0;col<12;col++){const px=-EQ_W/2+0.035+col*0.038;
+      addBoxEdges(px,py,mFrontZ-EQ_T-0.0005,0.006,0.004,0.001,cPpPt,35);}}
+  [-1,1].forEach(s=>{const sx=s*railHG;
+    [ppCY-ppHH*0.45,ppCY+ppHH*0.45].forEach(sy=>{
+      addRing(sx,sy,mFrontZ-EQ_T-0.001,'xy',0.007,[0.373,0.412,0.439],14);});});
+  const ppL=makeTextSprite('PATCH PANEL','#0B5FA8');
+  ppL.position.set(EQ_W/2-0.070,ppCY+ppHH*0.60,mFrontZ-EQ_T-0.005); ppL.scale.set(0.08,0.03,1); scene.add(ppL);
+
+  // --- U40 [F]: Dell PowerSwitch Z9664F-ON (1U, 64×QSFP-DD) ---
+  const swTopY=ppBotY, swBotY2=swTopY-U_HEIGHT, swCY=(swTopY+swBotY2)/2, swHH2=U_HEIGHT/2;
+  const cSw=[0.043,0.373,0.659], cSwD=[0.031,0.247,0.443], cSwPt=[0.043,0.373,0.659];
+  addBoxEdges(0,swCY,mFrontZ-EQ_T/2,swHW,swHH2,EQ_T/2,cSw,250);
+  addBoxEdges(0,swCY,mFrontZ+EQ_T+swHD,swHW*0.95,swHH2*0.85,swHD,cSwD,140);
+  [-1,1].forEach(s=>{const sx=s*railHG;
+    [swCY-swHH2*0.45,swCY+swHH2*0.45].forEach(sy=>{
+      addRing(sx,sy,mFrontZ-EQ_T-0.001,'xy',0.007,[0.373,0.412,0.439],14);});});
+  for(let row=0;row<2;row++){
+    const py=swCY+swHH2*0.30-row*swHH2*0.60;
+    for(let col=0;col<16;col++){const px=-swHW+0.025+col*0.028;
+      addBoxEdges(px,py,mFrontZ-EQ_T-0.0005,0.008,0.005,0.001,cSwPt,30);}}
+  for(let d=0;d<6;d++){const dx=-swHW+0.012+d*0.007;
+    addRing(dx,swCY+swHH2*0.75,mFrontZ-EQ_T-0.001,'xy',0.002,[0.043,0.373,0.659],8);}
+  const dcInL=makeTextSprite('DC','#B04A1E');
+  dcInL.position.set(swHW-0.020,swCY-swHH2*0.60,mFrontZ-EQ_T-0.005); dcInL.scale.set(0.03,0.02,1); scene.add(dcInL);
+  const swL=makeTextSprite('DELL Z9664F-ON','#0B5FA8');
+  swL.position.set(swHW-0.085,swCY+swHH2*0.75,mFrontZ-EQ_T-0.005); swL.scale.set(0.10,0.03,1); scene.add(swL);
+
+  // --- U39 [F]: Headnode 1U + ConnectX-7 400G ---
+  const hnTopY=mTopY-3*U_HEIGHT, hnBotY=hnTopY-U_HEIGHT, hnCY=(hnTopY+hnBotY)/2, hnHH=U_HEIGHT/2;
+  const cHn=[0.690,0.290,0.118], cHnD=[0.478,0.184,0.051], cHnPt=[0.690,0.290,0.118];
+  addBoxEdges(0,hnCY,mFrontZ-EQ_T/2,swHW,hnHH,EQ_T/2,cHn,200);
+  addBoxEdges(0,hnCY,mFrontZ+EQ_T+swHD,swHW*0.95,hnHH*0.85,swHD,cHnD,120);
+  [-1,1].forEach(s=>{const sx=s*railHG;
+    [hnCY-hnHH*0.45,hnCY+hnHH*0.45].forEach(sy=>{
+      addRing(sx,sy,mFrontZ-EQ_T-0.001,'xy',0.007,[0.373,0.412,0.439],14);});});
+  for(let p=0;p<2;p++){const px=-swHW+0.030+p*0.020;
+    addBoxEdges(px,hnCY,mFrontZ-EQ_T-0.0005,0.006,0.004,0.001,cHnPt,40);}
+  for(let p=0;p<2;p++){const px=-swHW+0.080+p*0.018;
+    addBoxEdges(px,hnCY,mFrontZ-EQ_T-0.0005,0.007,0.005,0.001,[0.373,0.412,0.439],50);}
+  addRing(-swHW+0.015,hnCY,mFrontZ-EQ_T-0.001,'xy',0.005,[0.043,0.373,0.659],12);
+  addRing(swHW-0.015,hnCY,mFrontZ-EQ_T-0.001,'xy',0.004,[0.043,0.373,0.659],10);
+  const hnL=makeTextSprite('HEADNODE + CX-7','#B04A1E');
+  hnL.position.set(swHW-0.085,hnCY+hnHH*0.60,mFrontZ-EQ_T-0.005); hnL.scale.set(0.12,0.03,1); scene.add(hnL);
+
+  // --- U38-36 [F]: PDU-A (3U, front, 3φ 32A) — KVM moved to rear ---
+  drawPDU('PDU-A',mTopY-4*U_HEIGHT,'front');
+
+  // --- WS300 drawing function ---
+  const WS_6U=6*U_HEIGHT, WS_HH=WS_6U/2;
+  const WS_D=0.582; // 582.7mm depth
+  const cWs=[0.043,0.373,0.659], cWsD=[0.031,0.247,0.443], cWsB=[0.031,0.247,0.443];
+  const cGpu=[0.690,0.290,0.118], cLiq=[0.043,0.373,0.659];
+  function drawWS300(topY, label){
+    const botY=topY-WS_6U, cY=(topY+botY)/2;
+    // Faceplate (5U)
+    addBoxEdges(0,cY,mFrontZ-EQ_T/2,swHW,WS_HH,EQ_T/2,cWs,300);
+    // Body
+    const bodyZ=mFrontZ+EQ_T+WS_D/2;
+    addBoxEdges(0,cY,bodyZ,swHW*0.95,WS_HH*0.92,WS_D/2,cWsD,160);
+    // Mounting ears
+    [-1,1].forEach(s=>{const sx=s*railHG;
+      [cY-WS_HH*0.85,cY-WS_HH*0.40,cY+WS_HH*0.40,cY+WS_HH*0.85].forEach(sy=>{
+        addRing(sx,sy,mFrontZ-EQ_T-0.001,'xy',0.007,[0.373,0.412,0.439],14);});});
+    // Front panel details
+    const fZ=mFrontZ-EQ_T-0.001;
+    addRing(-swHW+0.020,cY+WS_HH*0.80,fZ,'xy',0.006,[0.043,0.373,0.659],16);
+    addRing(-swHW+0.040,cY+WS_HH*0.80,fZ,'xy',0.004,[0.690,0.290,0.118],12);
+    addRing(-swHW+0.060,cY+WS_HH*0.80,fZ,'xy',0.003,[0.373,0.412,0.439],10);
+    for(let u=0;u<2;u++){const ux=-swHW+0.025+u*0.022;
+      addBoxEdges(ux,cY+WS_HH*0.55,fZ,0.006,0.003,0.001,[0.373,0.412,0.439],40);}
+    for(let u=0;u<2;u++){const ux=-swHW+0.080+u*0.022;
+      addBoxEdges(ux,cY+WS_HH*0.55,fZ,0.007,0.004,0.001,[0.373,0.412,0.439],40);}
+    for(let gy=-3;gy<=3;gy++){
+      for(let gx=-6;gx<=6;gx++){
+        const hx=0.020*gx+(gy%2?0.010:0), hy=cY+gy*0.018;
+        if(Math.abs(hx)<swHW*0.70 && hy>cY-WS_HH*0.70 && hy<cY+WS_HH*0.30)
+          addRing(hx,hy,fZ,'xy',0.006,[0.373,0.412,0.439],8);}}
+    const nv=makeTextSprite('NVIDIA','#0B5FA8');
+    nv.position.set(0,cY-WS_HH*0.30,fZ-0.003); nv.scale.set(0.10,0.04,1); scene.add(nv);
+    const ms=makeTextSprite('NVIDIA','#0B5FA8');
+    ms.position.set(swHW-0.035,cY+WS_HH*0.80,fZ-0.003); ms.scale.set(0.05,0.025,1); scene.add(ms);
+    const wl=makeTextSprite(label,'#083F71');
+    wl.position.set(0,cY-WS_HH*0.55,fZ-0.003); wl.scale.set(0.14,0.04,1); scene.add(wl);
+    // Internal — GPU/SoC
+    const gpZ=bodyZ-WS_D*0.15;
+    addBoxEdges(0,cY+WS_HH*0.15,gpZ,swHW*0.50,WS_HH*0.35,WS_D*0.18,cGpu,100);
+    const gl=makeTextSprite('GB300 SoC','#B04A1E');
+    gl.position.set(0,cY+WS_HH*0.55,gpZ); gl.scale.set(0.10,0.03,1); scene.add(gl);
+    // Liquid cooling
+    const lqZ=bodyZ+WS_D*0.10;
+    addBoxEdges(0,cY+WS_HH*0.15,lqZ,swHW*0.40,WS_HH*0.30,WS_D*0.08,cLiq,80);
+    addLine(-swHW*0.30,cY+WS_HH*0.50,lqZ,swHW*0.30,cY+WS_HH*0.50,lqZ,cLiq,100);
+    addLine(-swHW*0.30,cY-WS_HH*0.20,lqZ,swHW*0.30,cY-WS_HH*0.20,lqZ,cLiq,100);
+    const ll=makeTextSprite('LIQUID COOLING','#0B5FA8');
+    ll.position.set(0,cY-WS_HH*0.40,lqZ); ll.scale.set(0.12,0.03,1); scene.add(ll);
+    // PSU
+    addBoxEdges(swHW*0.50,cY-WS_HH*0.55,bodyZ,swHW*0.35,WS_HH*0.30,WS_D*0.15,[0.373,0.412,0.439],80);
+    const pl=makeTextSprite('1600W PSU','#5F6970');
+    pl.position.set(swHW*0.50,cY-WS_HH*0.85,bodyZ); pl.scale.set(0.08,0.03,1); scene.add(pl);
+    // Rear I/O
+    const rZ=mFrontZ+EQ_T+WS_D+0.001;
+    for(let q=0;q<2;q++){const qx=-swHW+0.060+q*0.035;
+      addBoxEdges(qx,cY+WS_HH*0.50,rZ,0.012,0.008,0.001,[0.043,0.373,0.659],50);}
+    const ql=makeTextSprite('QSFP112×2','#0B5FA8');
+    ql.position.set(-swHW+0.078,cY+WS_HH*0.70,rZ+0.003); ql.scale.set(0.08,0.025,1); scene.add(ql);
+    addBoxEdges(-swHW+0.130,cY+WS_HH*0.50,rZ,0.008,0.006,0.001,[0.373,0.412,0.439],40);
+    addBoxEdges(-swHW+0.160,cY+WS_HH*0.50,rZ,0.008,0.006,0.001,[0.373,0.412,0.439],40);
+    for(let u=0;u<4;u++){const ux=swHW-0.100+u*0.022;
+      addBoxEdges(ux,cY+WS_HH*0.50,rZ,0.006,0.005,0.001,[0.373,0.412,0.439],35);}
+    addBoxEdges(swHW-0.030,cY+WS_HH*0.50,rZ,0.006,0.004,0.001,[0.373,0.412,0.439],35);
+    addBoxEdges(swHW-0.060,cY-WS_HH*0.60,rZ,0.018,0.012,0.001,[0.690,0.290,0.118],45);
+    const cl=makeTextSprite('C19 1600W','#B04A1E');
+    cl.position.set(swHW-0.060,cY-WS_HH*0.80,rZ+0.003); cl.scale.set(0.08,0.025,1); scene.add(cl);
+    // 30% orange fill particles inside body volume
+    const fillW=swHW*0.90, fillH=WS_HH*0.85, fillD=WS_D*0.45;
+    const fillN=Math.floor(fillW*fillH*fillD*2e6*0.30);
+    for(let fi=0;fi<fillN;fi++){
+      const fx2=(Math.random()-0.5)*2*fillW;
+      const fy2=cY+(Math.random()-0.5)*2*fillH;
+      const fz2=bodyZ+(Math.random()-0.5)*2*fillD;
+      linePos.push(fx2,fy2,fz2);
+      lineCol.push(0.690,0.290,0.118);
+    }
+  }
+
+  // --- U34-30 [F]: DGX STATION GB300 #1 (GB300, 5U) ---
+  drawWS300(mTopY-7*U_HEIGHT, 'DGX STATION GB300 #1');
+
+  // --- U12-8 [F]: DGX STATION GB300 #2 (GB300, 5U) ---
+  drawWS300(mTopY-28*U_HEIGHT, 'DGX STATION GB300 #2');
+
+  // --- U7-3 [F]: DGX STATION GB300 #3 (GB300, 5U) ---
+  drawWS300(mTopY-34*U_HEIGHT, 'DGX STATION GB300 #3');
+
+  // --- U15-13 [F]: PDU-B (3U, front, 3φ 32A) ---
+  drawPDU('PDU-B',mTopY-25*U_HEIGHT,'front');
+
+  // --- U41-39 [R]: PDU-C (3U, rear, 3φ 32A) ---
+  drawPDU('PDU-C',mTopY-1*U_HEIGHT,'rear');
+
+  // --- U38-36 [R]: PDU-D (3U, rear, 3φ 32A) — stacked below PDU-C ---
+  drawPDU('PDU-D',mTopY-4*U_HEIGHT,'rear');
+
+  // --- U35 [R]: Raritan KX IV-101 KVM-over-IP (1U, rear) ---
+  {const kvRTopY=mTopY-7*U_HEIGHT, kvRBotY=kvRTopY-U_HEIGHT, kvRCY=(kvRTopY+kvRBotY)/2, kvRHH=U_HEIGHT/2;
+  const cKv=[0.373,0.412,0.439], cKvD=[0.059,0.078,0.098], cKvPt=[0.373,0.412,0.439];
+  addBoxEdges(0,kvRCY,mRearZ+EQ_T/2,swHW,kvRHH,EQ_T/2,cKv,200);
+  addBoxEdges(0,kvRCY,mRearZ-EQ_T-swHD*0.9,swHW*0.95,kvRHH*0.85,swHD*0.9,cKvD,100);
+  for(let col=0;col<16;col++){const px=-swHW+0.030+col*0.027;
+    addRing(px,kvRCY+kvRHH*0.25,mRearZ+EQ_T+0.001,'xy',0.003,[0.373,0.412,0.439],10);
+    addBoxEdges(px,kvRCY-kvRHH*0.25,mRearZ+EQ_T+0.001,0.004,0.003,0.001,cKvPt,35);}
+  [-1,1].forEach(s=>{const sx=s*railHG;
+    [kvRCY-kvRHH*0.45,kvRCY+kvRHH*0.45].forEach(sy=>{
+      addRing(sx,sy,mRearZ+EQ_T+0.001,'xy',0.007,[0.373,0.412,0.439],14);});});
+  const kvRL=makeTextSprite('RARITAN KVM [R]','#083F71');
+  kvRL.position.set(swHW-0.075,kvRCY+kvRHH*0.60,mRearZ+EQ_T+0.005); kvRL.scale.set(0.12,0.03,1); scene.add(kvRL);}
+}
+
+
+// ===================================================================
+// 1e. COOLING FANS — Top 4× Intake / Bottom 4× Exhaust (200mm)
+//     Blades are separate THREE.Groups for spin animation
+// ===================================================================
+const fanBladeGroups=[]; // {group, speed} for animate()
+{
+  const FAN_DIA=0.200, FAN_R=FAN_DIA/2, HUB_R=0.030;
+  const cIntak=[0.043,0.373,0.659], cInD=[0.031,0.247,0.443], cHub=[0.373,0.412,0.439]; // BLUEPRINT, BLUE_DEEP, GRAPHITE
+  const cExhst=[0.690,0.290,0.118], cExD=[0.50,0.18,0.07]; // RUST
+  const BLADES=7;
+
+  // Draw static parts (frame, guard, hub ring) into main buffer
+  // plane: 'xz' (horizontal top/bottom) or 'yz' (vertical side)
+  function drawFanStatic(cx,cy,cz,fanRGB,guardRGB,hubRGB,plane){
+    plane=plane||'xz';
+    const fH=FAN_DIA/2+0.008;
+    if(plane==='xz'){
+      addLine(cx-fH,cy,cz-fH,cx+fH,cy,cz-fH,guardRGB,200);
+      addLine(cx+fH,cy,cz-fH,cx+fH,cy,cz+fH,guardRGB,200);
+      addLine(cx+fH,cy,cz+fH,cx-fH,cy,cz+fH,guardRGB,200);
+      addLine(cx-fH,cy,cz+fH,cx-fH,cy,cz-fH,guardRGB,200);
+    } else {
+      addLine(cx,cy-fH,cz-fH,cx,cy+fH,cz-fH,guardRGB,200);
+      addLine(cx,cy+fH,cz-fH,cx,cy+fH,cz+fH,guardRGB,200);
+      addLine(cx,cy+fH,cz+fH,cx,cy-fH,cz+fH,guardRGB,200);
+      addLine(cx,cy-fH,cz+fH,cx,cy-fH,cz-fH,guardRGB,200);
+    }
+    addRing(cx,cy,cz,plane,FAN_DIA,fanRGB,80);
+    addRing(cx,cy,cz,plane,FAN_DIA*0.75,guardRGB,60);
+    addRing(cx,cy,cz,plane,FAN_DIA*0.50,guardRGB,50);
+    addRing(cx,cy,cz,plane,HUB_R*2,hubRGB,40);
+    for(let s=0;s<4;s++){
+      const ang=(s/4)*Math.PI*2+Math.PI/8;
+      if(plane==='xz'){
+        addLine(cx+Math.cos(ang)*HUB_R,cy,cz+Math.sin(ang)*HUB_R,
+                cx+Math.cos(ang)*FAN_R,cy,cz+Math.sin(ang)*FAN_R,guardRGB,120);
+      } else {
+        addLine(cx,cy+Math.cos(ang)*HUB_R,cz+Math.sin(ang)*HUB_R,
+                cx,cy+Math.cos(ang)*FAN_R,cz+Math.sin(ang)*FAN_R,guardRGB,120);
+      }
+    }
+  }
+
+  // Build blade particles (local coords, centered at origin)
+  // plane: 'xz' → blades in XZ, rotate Y | 'yz' → blades in YZ, rotate X
+  function makeBladesPoints(fanRGB,hubRGB,plane){
+    plane=plane||'xz';
+    const bPos=[],bCol=[];
+    for(let a=0;a<20;a++){const ang=a/20*Math.PI*2, r=HUB_R*0.5;
+      if(plane==='xz') bPos.push(Math.cos(ang)*r,0,Math.sin(ang)*r);
+      else bPos.push(0,Math.cos(ang)*r,Math.sin(ang)*r);
+      bCol.push(hubRGB[0]*0.8,hubRGB[1]*0.8,hubRGB[2]*0.8);}
+    for(let b=0;b<BLADES;b++){
+      const baseAng=(b/BLADES)*Math.PI*2;
+      const N=30;
+      for(let i=0;i<=N;i++){
+        const t=i/N;
+        const r=HUB_R+(FAN_R-HUB_R)*t;
+        const ang=baseAng+t*0.6;
+        if(plane==='xz') bPos.push(Math.cos(ang)*r,0,Math.sin(ang)*r);
+        else bPos.push(0,Math.cos(ang)*r,Math.sin(ang)*r);
+        const v=0.7+t*0.3;
+        bCol.push(fanRGB[0]*v,fanRGB[1]*v,fanRGB[2]*v);
+      }
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(bPos),3));
+    g.setAttribute('color',new THREE.BufferAttribute(new Float32Array(bCol),3));
+    return new THREE.Points(g,new THREE.PointsMaterial({size:0.006,vertexColors:true,transparent:true,opacity:0.90,
+      blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false}));
+  }
+
+  // Create a spinning fan — axis: 'y' for xz-plane fans, 'x' for yz-plane fans
+  function createFan(cx,cy,cz,fanRGB,hubRGB,guardRGB,speed,plane){
+    plane=plane||'xz';
+    drawFanStatic(cx,cy,cz,fanRGB,guardRGB,hubRGB,plane);
+    const bladeGroup=new THREE.Group();
+    bladeGroup.position.set(cx,cy,cz);
+    bladeGroup.add(makeBladesPoints(fanRGB,hubRGB,plane));
+    scene.add(bladeGroup);
+    const axis=(plane==='xz')?'y':'x';
+    fanBladeGroups.push({group:bladeGroup, speed, axis});
+  }
+
+  const topFanY=rackCenterY+rh+0.005;
+  const botFanY=rackCenterY-rh-0.005;
+  const fanSpX=0.105, fanSpZ=0.105;
+
+  // Top intake fans (blue, spin CW viewed from top → rotation.y positive)
+  [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([sx,sz],i)=>{
+    createFan(sx*fanSpX, topFanY, sz*fanSpZ, cIntak, cHub, cInD, 4.0+i*0.3);
+  });
+  // Intake arrows
+  [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([sx,sz])=>{
+    const ax=sx*fanSpX, az=sz*fanSpZ;
+    addLine(ax,topFanY+0.015,az,ax,topFanY-0.020,az,[0.25,0.70,1.00],60);
+    addLine(ax-0.012,topFanY-0.008,az,ax,topFanY-0.020,az,[0.25,0.70,1.00],30);
+    addLine(ax+0.012,topFanY-0.008,az,ax,topFanY-0.020,az,[0.25,0.70,1.00],30);
+  });
+  const topFanL=makeTextSprite('INTAKE FAN ×4 (200mm)','#0B5FA8');
+  topFanL.position.set(0,topFanY+0.06,0); topFanL.scale.set(0.22,0.05,1); scene.add(topFanL);
+
+  // Bottom exhaust fans (orange, spin CCW → rotation.y negative)
+  [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([sx,sz],i)=>{
+    createFan(sx*fanSpX, botFanY, sz*fanSpZ, cExhst, cHub, cExD, -(4.0+i*0.3));
+  });
+  // Exhaust arrows
+  [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([sx,sz])=>{
+    const ax=sx*fanSpX, az=sz*fanSpZ;
+    addLine(ax,botFanY+0.020,az,ax,botFanY-0.015,az,[1.00,0.50,0.15],60);
+    addLine(ax-0.012,botFanY-0.003,az,ax,botFanY-0.015,az,[1.00,0.50,0.15],30);
+    addLine(ax+0.012,botFanY-0.003,az,ax,botFanY-0.015,az,[1.00,0.50,0.15],30);
+  });
+  const botFanL=makeTextSprite('EXHAUST FAN ×4 (200mm)','#B04A1E');
+  botFanL.position.set(0,botFanY-0.06,0); botFanL.scale.set(0.22,0.05,1); scene.add(botFanL);
+
+  // ---- SIDE PANEL FANS: 2 cols × 10 rows per side (YZ plane) ----
+  const SIDE_ROWS=10, SIDE_COLS=2;
+  const sideFanSpZ=0.250; // Z spacing between 2 columns
+  const sideFanSpY=RACK.h/(SIDE_ROWS+0.5); // Y spacing for 10 rows within rack height
+  const sideBaseY=rackCenterY-rh+sideFanSpY*0.75; // first row Y
+
+  // Left side (X = -rw) — INTAKE (blue)
+  const leftX=-rw-0.005;
+  for(let row=0;row<SIDE_ROWS;row++){
+    const fy=sideBaseY+row*sideFanSpY;
+    for(let col=0;col<SIDE_COLS;col++){
+      const fz=-sideFanSpZ/2+col*sideFanSpZ;
+      createFan(leftX,fy,fz, cIntak,cHub,cInD, 4.5+row*0.15+col*0.3, 'yz');
+    }
+  }
+  const lSideLbl=makeTextSprite('INTAKE ×20','#0B5FA8');
+  lSideLbl.position.set(leftX-0.08,rackCenterY,0); lSideLbl.scale.set(0.14,0.05,1); scene.add(lSideLbl);
+
+  // Right side (X = +rw) — EXHAUST (orange)
+  const rightX=rw+0.005;
+  for(let row=0;row<SIDE_ROWS;row++){
+    const fy=sideBaseY+row*sideFanSpY;
+    for(let col=0;col<SIDE_COLS;col++){
+      const fz=-sideFanSpZ/2+col*sideFanSpZ;
+      createFan(rightX,fy,fz, cExhst,cHub,cExD, -(4.5+row*0.15+col*0.3), 'yz');
+    }
+  }
+  const rSideLbl=makeTextSprite('EXHAUST ×20','#B04A1E');
+  rSideLbl.position.set(rightX+0.08,rackCenterY,0); rSideLbl.scale.set(0.14,0.05,1); scene.add(rSideLbl);
+}
+
+// ===================================================================
+// 1f. DGX SPARK TRAY — 300% SCALE XYZ EXPLODED VIEW (removed)
+// ===================================================================
+if(false){
+  const S=3.0; // scale factor
+  const OX=rw+2.5, OY=rackCenterY-0.2, OZ=0; // origin offset (well separated from rack)
+
+  // XYZ axis colors for edge classification
+  const cX=[1.0,0.25,0.25], cY=[0.25,1.0,0.25], cZ=[0.30,0.50,1.0];
+  const cXd=[0.70,0.18,0.18], cYd=[0.18,0.70,0.18], cZd=[0.20,0.35,0.70];
+
+  // Box with XYZ-colored edges: X-parallel=Red, Y-parallel=Green, Z-parallel=Blue
+  function addBoxXYZ(cx,cy,cz,hw,hh,hd,den){
+    // 4 edges parallel to X (top/bottom of front/back faces)
+    addLine(cx-hw,cy+hh,cz-hd,cx+hw,cy+hh,cz-hd,cX,den);
+    addLine(cx-hw,cy-hh,cz-hd,cx+hw,cy-hh,cz-hd,cX,den);
+    addLine(cx-hw,cy+hh,cz+hd,cx+hw,cy+hh,cz+hd,cX,den);
+    addLine(cx-hw,cy-hh,cz+hd,cx+hw,cy-hh,cz+hd,cX,den);
+    // 4 edges parallel to Y (vertical corners)
+    addLine(cx-hw,cy-hh,cz-hd,cx-hw,cy+hh,cz-hd,cY,den);
+    addLine(cx+hw,cy-hh,cz-hd,cx+hw,cy+hh,cz-hd,cY,den);
+    addLine(cx-hw,cy-hh,cz+hd,cx-hw,cy+hh,cz+hd,cY,den);
+    addLine(cx+hw,cy-hh,cz+hd,cx+hw,cy+hh,cz+hd,cY,den);
+    // 4 edges parallel to Z (depth corners)
+    addLine(cx-hw,cy+hh,cz-hd,cx-hw,cy+hh,cz+hd,cZ,den);
+    addLine(cx+hw,cy+hh,cz-hd,cx+hw,cy+hh,cz+hd,cZ,den);
+    addLine(cx-hw,cy-hh,cz-hd,cx-hw,cy-hh,cz+hd,cZ,den);
+    addLine(cx+hw,cy-hh,cz-hd,cx+hw,cy-hh,cz+hd,cZ,den);
+  }
+
+  // Scaled dimensions
+  const uH=1.5*U_HEIGHT*S, fpW=0.4826*S, fpT=0.002*S, trD=0.320*S;
+  const spW=0.151*S, spH=0.052*S, spD=0.151*S, spSep=0.058*S;
+  const psuW=0.060*S, psuH=0.038*S, psuD=0.080*S;
+  const hH=uH/2, fpHW=fpW/2;
+
+  // Tray center
+  const tCY=OY+uH/2, bY=OY, tY=OY+uH;
+
+  // 1) FACEPLATE — front panel
+  const fpZ=OZ-trD/2-fpT;
+  addBoxXYZ(OX,tCY,fpZ,fpHW,hH,fpT/2,250);
+  // Faceplate center divider (X-line)
+  addLine(OX-fpHW,tCY,fpZ-fpT,OX+fpHW,tCY,fpZ-fpT,cXd,180);
+
+  // Ear dividers (Y-lines)
+  const eiL=-(spSep/2+spW), eiR=spSep/2+spW;
+  [eiL,eiR,-spSep/2,spSep/2].forEach(ex=>{
+    addLine(OX+ex,bY,fpZ-fpT,OX+ex,tY,fpZ-fpT,cYd,120);});
+
+  // Screws on ears
+  const railHG=MOUNT.railSpacing/2*S;
+  [-1,1].forEach(s=>{const sx=OX+s*railHG;
+    [tCY-hH*0.50,tCY+hH*0.50].forEach(sy=>{
+      addRing(sx,sy,fpZ-fpT-0.003,'xy',0.021,[0.373,0.412,0.439],20);});});
+
+  // 2) TRAY BODY
+  const t0=fpZ+fpT, trCZ=t0+trD/2, tHW=MOUNT.railSpacing*0.47*S;
+  addBoxXYZ(OX,tCY,trCZ,tHW,hH,trD/2,180);
+  // Bottom cross-braces (Z-lines)
+  [-1,1].forEach(sd=>{const bx=OX+sd*(spSep/2+spW/2);
+    for(let ss=0;ss<3;ss++){const sz=t0+0.12*S+ss*0.09*S;
+      addLine(bx-spW*0.30,bY+0.003*S,sz,bx+spW*0.30,bY+0.003*S,sz,cXd,100);}});
+  // Side rails (Z-lines)
+  [-tHW,tHW].forEach(sx=>{
+    addLine(OX+sx,bY,t0,OX+sx,bY,t0+trD,cZd,130);
+    addLine(OX+sx,bY,t0,OX+sx,bY+hH*0.4,t0,cYd,80);
+    addLine(OX+sx,bY,t0+trD,OX+sx,bY+hH*0.4,t0+trD,cYd,80);});
+
+  // 3) DGX SPARK × 2
+  const spZ=t0+0.025*S+spD/2;
+  const spLX=OX-(spSep/2+spW/2), spRX=OX+(spSep/2+spW/2);
+  [spLX,spRX].forEach((sx,idx)=>{
+    addBoxXYZ(sx,tCY,spZ,spW/2,spH/2,spD/2,220);
+    // Top ridge (X-line)
+    addLine(sx-spW*0.45,tCY+spH/2,spZ-spD*0.3,sx+spW*0.45,tCY+spH/2,spZ-spD*0.3,[0.373,0.412,0.439],150);
+    // Mesh vent on faceplate (XY plane)
+    const mZ=fpZ-fpT-0.002*S, mHW=spW*0.35, mHH=hH*0.65;
+    for(let m=0;m<5;m++){const my=tCY-mHH+m*(2*mHH/4);
+      addLine(sx-mHW,my,mZ,sx+mHW,my,mZ,cXd,130);}
+    addLine(sx-mHW,tCY-mHH,mZ,sx-mHW,tCY+mHH,mZ,cYd,100);
+    addLine(sx+mHW,tCY-mHH,mZ,sx+mHW,tCY+mHH,mZ,cYd,100);
+    addLine(sx-mHW,tCY-mHH,mZ,sx+mHW,tCY-mHH,mZ,cXd,100);
+    addLine(sx+mHW,tCY+mHH,mZ,sx-mHW,tCY+mHH,mZ,cXd,100);
+    // NVIDIA LED
+    addRing(sx+(idx===0?spW*0.28:-spW*0.28),tCY+mHH*0.5,mZ,'xy',0.009,[0.043,0.373,0.659],14);
+
+    // 4) DC-POWER (purple, behind Spark)
+    const psZ=spZ+spD/2+0.015*S+psuD/2;
+    addBoxXYZ(sx,tCY,psZ,psuW/2,psuH/2,psuD/2,160);
+    // Adapter fill tint
+    addLine(sx-psuW/2,tCY,psZ-psuD/2,sx+psuW/2,tCY,psZ-psuD/2,[0.373,0.412,0.439],100);
+    addLine(sx-psuW/2,tCY,psZ+psuD/2,sx+psuW/2,tCY,psZ+psuD/2,[0.373,0.412,0.439],100);
+    addLine(sx,tCY-psuH/2,psZ,sx,tCY+psuH/2,psZ,[0.373,0.412,0.439],80);
+    // Cable
+    addLine(sx+(idx===0?spW*0.3:-spW*0.3),tCY,psZ-psuD*0.3,OX,tCY,psZ-psuD*0.3,[0.12,0.12,0.14],100);
+    // Straps
+    const stY=tCY+spH/2+0.003*S;
+    addLine(sx-spW*0.38,stY,spZ-spD*0.15,sx+spW*0.38,stY,spZ-spD*0.15,cXd,100);
+    addLine(sx-spW*0.38,stY,spZ+spD*0.15,sx+spW*0.38,stY,spZ+spD*0.15,cXd,100);
+  });
+
+  // 5) PORTS (4-port network center on faceplate)
+  const ptZ=fpZ-fpT-0.002*S, ptGX=0.013*S, ptGY=0.014*S, ptSZ=0.0077*S;
+  for(let pr=0;pr<2;pr++){for(let pc=0;pc<2;pc++){
+    const px=OX-ptGX/2+pc*ptGX, py=tCY+ptGY/2-pr*ptGY;
+    addBoxXYZ(px,py,ptZ,ptSZ/2,ptSZ/2,0.003,100);}}
+
+  // 6) XYZ AXIS indicator for the scaled model
+  const axLen=0.40, axOX=OX-fpHW-0.15, axOY=OY-0.15, axOZ=OZ-trD/2-fpT-0.15;
+  addLine(axOX,axOY,axOZ,axOX+axLen,axOY,axOZ,cX,300);
+  addLine(axOX,axOY,axOZ,axOX,axOY+axLen,axOZ,cY,300);
+  addLine(axOX,axOY,axOZ,axOX,axOY,axOZ+axLen,cZ,300);
+  // axis labels removed
+
+  // annotations removed
+  const adZ=spZ+spD/2+0.015*S+psuD/2; // kept for geometry references
+
+  // annotations and dimension lines removed
+}
+
+// ===================================================================
+// 2. CASTER WHEELS
+// ===================================================================
+const WHEEL_RGB=[0.373,0.412,0.439], FORK_RGB=[0.373,0.412,0.439], HUB_RGB=[0.373,0.412,0.439];
+const PLATE_RGB=[0.373,0.412,0.439], BRAKE_RGB=[0.690,0.290,0.118];
+const wheelCY=FLOOR_Y+CASTER.wheelDia/2, plateTopY=FLOOR_Y+CASTER.totalH;
+
+[{x:-rw+0.06,z:-rd+0.08},{x:rw-0.06,z:-rd+0.08},{x:-rw+0.06,z:rd-0.08},{x:rw-0.06,z:rd-0.08}].forEach(({x,z})=>{
+  addCylinderWire(x,wheelCY,z,'z',CASTER.wheelWidth,CASTER.wheelDia,WHEEL_RGB,4,8);
+  addRing(x,wheelCY,z-CASTER.wheelWidth/2,'xz',0.030,HUB_RGB,30);
+  addRing(x,wheelCY,z+CASTER.wheelWidth/2,'xz',0.030,HUB_RGB,30);
+  addLine(x,wheelCY,z-CASTER.wheelWidth/2-0.010,x,wheelCY,z+CASTER.wheelWidth/2+0.010,HUB_RGB,200);
+  const fTopY=wheelCY+CASTER.wheelDia/2+CASTER.forkH*0.3, fSpread=CASTER.wheelWidth/2+0.008;
+  addLine(x,wheelCY,z-fSpread,x,fTopY,z-fSpread,FORK_RGB,300);
+  addLine(x,wheelCY,z+fSpread,x,fTopY,z+fSpread,FORK_RGB,300);
+  addLine(x,fTopY,z-fSpread,x,fTopY,z+fSpread,FORK_RGB,300);
+  const swY=fTopY+0.010; addCylinderWire(x,swY,z,'y',0.020,0.035,FORK_RGB,3,6);
+  addLine(x,swY+0.010,z,x,plateTopY-CASTER.plateH,z,FORK_RGB,300);
+  addBoxEdges(x,plateTopY-CASTER.plateH/2,z,CASTER.plateSize/2,CASTER.plateH/2,CASTER.plateSize/2,PLATE_RGB,300);
+  addBoxEdges(x,wheelCY+CASTER.wheelDia*0.35,z+fSpread+0.010,0.010,0.006,0.003,BRAKE_RGB,250);});
+
+// ===================================================================
+// 3. LEVELING FEET
+// ===================================================================
+const ROD_RGB=[0.373,0.412,0.439], NUT_RGB=[0.373,0.412,0.439], PAD_RGB=[0.690,0.290,0.118];
+const footMountY=rackCenterY-rh, footPadTopY=FLOOR_Y+0.005;
+
+[{x:-rw+0.04,z:-rd+0.06},{x:rw-0.04,z:-rd+0.06},{x:-rw+0.04,z:rd-0.06},{x:rw-0.04,z:rd-0.06}].forEach(({x,z})=>{
+  const rodCY=(footMountY+footPadTopY+FOOT.padH)/2, rodL=footMountY-footPadTopY-FOOT.padH;
+  addCylinderWire(x,rodCY,z,'y',rodL,FOOT.threadDia,ROD_RGB,8,4);
+  const tPitch=0.00175, tTurns=Math.floor(rodL/tPitch);
+  for(let t=0;t<tTurns;t+=3){const ty=footMountY-t*tPitch, ang=t*0.35;
+    _tgtP.push(x+Math.cos(ang)*(FOOT.threadDia/2+0.001),ty,z+Math.sin(ang)*(FOOT.threadDia/2+0.001));
+    _tgtC.push(ROD_RGB[0]*0.7,ROD_RGB[1]*0.7,ROD_RGB[2]*0.7);}
+  addHexNutWire(x,footMountY-0.015,z,FOOT.nutSize,FOOT.nutH,NUT_RGB,0);
+  addHexNutWire(x,footMountY-0.015+FOOT.nutH+0.003,z,FOOT.nutSize,FOOT.nutH,NUT_RGB,Math.PI/6);
+  const padCY=footPadTopY+FOOT.padH/2;
+  addCylinderWire(x,padCY,z,'y',FOOT.padH,FOOT.padDia,PAD_RGB,3,8);
+  addRing(x,padCY+FOOT.padH/2,z,'xz',FOOT.padDia,PAD_RGB,50);
+  addRing(x,padCY-FOOT.padH/2,z,'xz',FOOT.padDia,[0.60,0.40,0.08],50);
+  addBoxEdges(x,footMountY+0.003,z,0.020,0.003,0.020,[0.373,0.412,0.439],200);});
+
+// RACK SYSTEM ANNOTATION LEADER LINES removed
+if(false){
+  const annC=[0.55,0.55,0.60], annDen=80;
+  function rackAnnot(label,color,fx,fy,fz,ex,ey,ez,sc){
+    addRing(fx,fy,fz,'xy',0.008,annC,8);
+    addLine(fx,fy,fz,ex,ey,ez,annC,annDen);
+    const tail=0.15;
+    addLine(ex,ey,ez,ex+tail,ey,ez,annC,annDen);
+    const lb=makeTextSprite(label,color);
+    lb.position.set(ex+tail+0.10,ey,ez); lb.scale.set(sc||0.14,0.05,1); scene.add(lb);
+  }
+
+  // Dell Z9664F-ON (U40)
+  const swAnnotY=mTopY-2*U_HEIGHT-U_HEIGHT/2;
+  rackAnnot('Z9664F-ON','#0B5FA8', 0,swAnnotY,mFrontZ-0.01, -rw-0.20,swAnnotY+0.10,mFrontZ-0.20, 0.18);
+
+  // Headnode (U39)
+  const hnAnnotY=mTopY-3*U_HEIGHT-U_HEIGHT/2;
+  rackAnnot('HEADNODE','#B04A1E', 0,hnAnnotY,mFrontZ-0.01, -rw-0.20,hnAnnotY-0.02,mFrontZ-0.20, 0.16);
+
+  // PDU-A (U37-35)
+  const pduAY=mTopY-4*U_HEIGHT-1.5*U_HEIGHT;
+  rackAnnot('PDU-A [F]','#5F6970', 0,pduAY,mFrontZ-0.01, -rw-0.20,pduAY+0.08,mFrontZ-0.25, 0.16);
+
+  // WS300 (U34-30)
+  const ws300Y=mTopY-8*U_HEIGHT-2.5*U_HEIGHT;
+  rackAnnot('DGX STATION GB300','#083F71', 0,ws300Y,mFrontZ-0.01, -rw-0.20,ws300Y+0.12,mFrontZ-0.30, 0.22);
+
+  // GB10 upper top tray (U29)
+  const dgxUpY=mTopY-13*U_HEIGHT-U_HEIGHT/2;
+  rackAnnot('NVI 201 ×14','#083F71', 0,dgxUpY,mFrontZ-0.01, -rw-0.20,dgxUpY+0.05,mFrontZ-0.30, 0.18);
+
+  // GB10 upper bottom tray (U16)
+  const dgxUpBotY=mTopY-13*U_HEIGHT-U_HEIGHT*1.5*0.92/2;
+  rackAnnot('NVI 201','#083F71', 0,dgxUpBotY,mFrontZ-0.01, -rw-0.20,dgxUpBotY-0.05,mFrontZ-0.30, 0.14);
+
+  // PDU-B (U15-13)
+  const pduBY=mTopY-25*U_HEIGHT-1.5*U_HEIGHT;
+  rackAnnot('PDU-B [F]','#5F6970', 0,pduBY,mFrontZ-0.01, -rw-0.20,pduBY+0.08,mFrontZ-0.25, 0.16);
+
+  // PDU-C (U40-38 Rear)
+  const pduCY=mTopY-1*U_HEIGHT-1.5*U_HEIGHT;
+  rackAnnot('PDU-C [R]','#5F6970', 0,pduCY,mRearZ+0.01, rw+0.20,pduCY+0.08,mRearZ+0.25, 0.16);
+
+  // PDU-D (U36-34 Rear)
+  const pduDY=mTopY-4*U_HEIGHT-1.5*U_HEIGHT;
+  rackAnnot('PDU-D [R]','#5F6970', 0,pduDY,mRearZ+0.01, rw+0.20,pduDY+0.08,mRearZ+0.25, 0.16);
+
+
+  // Caster Wheel
+  rackAnnot('CASTER','#5F6970', -rw+0.06,FLOOR_Y+CASTER.wheelDia/2,-rd+0.08, -rw-0.20,FLOOR_Y+0.05,-rd-0.15, 0.14);
+
+  // Leveling Foot
+  rackAnnot('LEVEL FOOT','#B04A1E', rw-0.04,FLOOR_Y+0.03,-rd+0.06, rw+0.20,FLOOR_Y+0.05,-rd-0.15, 0.18);
+
+  // Mounting Frame
+  rackAnnot('4-POST FRAME','#0B5FA8', -MOUNT.railSpacing/2,rackCenterY,mFrontZ, -rw-0.20,rackCenterY+0.20,mFrontZ-0.15, 0.20);
+
+  // Center Frame
+  const mCenterZ=(mFrontZ+mRearZ)/2;
+  rackAnnot('CENTER FRAME','#0B5FA8', -MOUNT.railSpacing/2,rackCenterY,mCenterZ, -rw-0.20,rackCenterY-0.10,mCenterZ-0.20, 0.22);
+}
+
+
+// ===================================================================
+// BUILD STATIC POINTS
+// ===================================================================
+function makePoints(pos,col,size,opacity){
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(pos),3));
+  g.setAttribute('color',new THREE.BufferAttribute(new Float32Array(col),3));
+  return new THREE.Points(g,new THREE.PointsMaterial({size,vertexColors:true,transparent:true,opacity,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false}));}
+scene.add(makePoints(linePos,lineCol,0.006,0.90));
+
+// ===================================================================
+// PERFORATED DOORS (front & rear, particle-based)
+// ===================================================================
+function buildDoorParticles(dW,dH,dirX){
+  const dPos=[],dCol=[];
+  // Dark charcoal/anthracite matching reference (snx-ai.jpg)
+  const dRGB=[0.373,0.412,0.439];
+  const frameRGB=[0.373,0.412,0.439];
+  // Hexagonal honeycomb perforation pattern
+  const hexR=0.007, hexSpX=0.019, hexSpY=0.019*0.866;
+  // 3 horizontal divider bar positions (splitting door into 3 sections)
+  const divY1=(-dH/6), divY2=(dH/6);
+  const divBarH=0.012;
+  for(let i=0;i<14000;i++){
+    const px=dirX*Math.random()*dW;
+    const py=(Math.random()-0.5)*dH;
+    // Hex grid: offset every other row
+    const row=Math.round(py/hexSpY);
+    const offX=(row%2===0)?0:hexSpX*0.5;
+    const hx=Math.round((px-offX)/hexSpX)*hexSpX+offX;
+    const hy=row*hexSpY;
+    // Skip if inside hex hole (unless on divider bar)
+    const onDiv=Math.abs(py-divY1)<divBarH/2||Math.abs(py-divY2)<divBarH/2;
+    if(!onDiv && Math.hypot(px-hx,py-hy)<hexR) continue;
+    dPos.push(px,py,0);
+    const v=0.80+Math.random()*0.20;
+    if(onDiv){ dCol.push(frameRGB[0]*v,frameRGB[1]*v,frameRGB[2]*v); }
+    else { dCol.push(dRGB[0]*v,dRGB[1]*v,dRGB[2]*v); }
+  }
+  // Frame edges (darker than side panels)
+  const edgeN=200;
+  for(let i=0;i<=edgeN;i++){const t=i/edgeN;
+    dPos.push(dirX*t*dW,-dH/2,0); dCol.push(frameRGB[0],frameRGB[1],frameRGB[2]);
+    dPos.push(dirX*t*dW, dH/2,0); dCol.push(frameRGB[0],frameRGB[1],frameRGB[2]);
+    dPos.push(0,(-0.5+t)*dH,0); dCol.push(frameRGB[0],frameRGB[1],frameRGB[2]);
+    dPos.push(dirX*dW,(-0.5+t)*dH,0); dCol.push(frameRGB[0],frameRGB[1],frameRGB[2]);
+  }
+  // Horizontal divider bars (dense particles)
+  for(let d=0;d<2;d++){
+    const barY=d===0?divY1:divY2;
+    for(let i=0;i<=120;i++){const t=i/120;
+      dPos.push(dirX*t*dW,barY-divBarH/2,0); dCol.push(frameRGB[0],frameRGB[1],frameRGB[2]);
+      dPos.push(dirX*t*dW,barY+divBarH/2,0); dCol.push(frameRGB[0],frameRGB[1],frameRGB[2]);
+      dPos.push(dirX*t*dW,barY,0); dCol.push(frameRGB[0]*0.9,frameRGB[1]*0.9,frameRGB[2]*0.9);
+    }
+  }
+  // Handle frame (vertical bar, left side as in reference)
+  const handleX=dirX*0.04, handleH=0.14;
+  for(let i=0;i<=80;i++){const t=i/80;
+    const hy=(-0.04)*dH+t*handleH;
+    dPos.push(handleX,hy,0.012); dCol.push(0.373,0.412,0.439);
+    dPos.push(handleX,hy,-0.005); dCol.push(0.373,0.412,0.439);
+  }
+  // Lock circle indicators (like reference image)
+  for(let ly of [dH*0.15, -dH*0.15]){
+    const lx=dirX*(dW-0.05);
+    for(let a=0;a<20;a++){const ang=a/20*Math.PI*2;
+      dPos.push(lx+Math.cos(ang)*0.006,ly+Math.sin(ang)*0.006,0.001);
+      dCol.push(0.373,0.412,0.439);
+    }
+  }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(dPos),3));
+  g.setAttribute('color',new THREE.BufferAttribute(new Float32Array(dCol),3));
+  return new THREE.Points(g,new THREE.PointsMaterial({size:0.005,vertexColors:true,transparent:true,opacity:0.55,
+    blending:THREE.NormalBlending,sizeAttenuation:true,depthWrite:false}));
+}
+
+// Front door — hinge at left edge (-rw), panel extends to +X
+const frontDoorGroup=new THREE.Group();
+frontDoorGroup.position.set(-rw,rackCenterY,-rd);
+frontDoorGroup.add(buildDoorParticles(RACK.w,RACK.h,1));
+scene.add(frontDoorGroup);
+window._frontDoor=frontDoorGroup;
+
+// Rear door — hinge at right edge (+rw), panel extends to -X
+const rearDoorGroup=new THREE.Group();
+rearDoorGroup.position.set(rw,rackCenterY,rd);
+rearDoorGroup.add(buildDoorParticles(RACK.w,RACK.h,-1));
+scene.add(rearDoorGroup);
+window._rearDoor=rearDoorGroup;
+
+// Door annotation labels removed
+
+// ===================================================================
+// XYZ AXIS GIZMO
+// ===================================================================
+const axisOrigin=new THREE.Vector3(-rw-0.25,FLOOR_Y,-rd-0.25);
+const AXIS_LEN=0.35, AXIS_HEAD=0.04;
+const axisPos=[], axisCol=[];
+function addAxisLine(x1,y1,z1,x2,y2,z2,rgb){const N=200;
+  for(let i=0;i<=N;i++){const t=i/N; axisPos.push(x1+(x2-x1)*t,y1+(y2-y1)*t,z1+(z2-z1)*t); axisCol.push(rgb[0],rgb[1],rgb[2]);}}
+function addArrowHead(tx,ty,tz,dx,dy,dz,rgb){
+  const l=Math.hypot(dx,dy,dz); dx/=l;dy/=l;dz/=l;
+  let px=0,py,pz; if(Math.abs(dy)<0.9){py=1;pz=0;}else{px=1;py=0;pz=0;}
+  let p1x=dy*pz-dz*py,p1y=dz*px-dx*pz,p1z=dx*py-dy*px;
+  const p1l=Math.hypot(p1x,p1y,p1z); p1x/=p1l;p1y/=p1l;p1z/=p1l;
+  let p2x=dy*p1z-dz*p1y,p2y=dz*p1x-dx*p1z,p2z=dx*p1y-dy*p1x;
+  const bx=tx-dx*AXIS_HEAD,by=ty-dy*AXIS_HEAD,bz=tz-dz*AXIS_HEAD,r=AXIS_HEAD*0.35;
+  for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2;
+    addAxisLine(bx+(Math.cos(a)*p1x+Math.sin(a)*p2x)*r,by+(Math.cos(a)*p1y+Math.sin(a)*p2y)*r,
+                bz+(Math.cos(a)*p1z+Math.sin(a)*p2z)*r,tx,ty,tz,rgb);}
+  for(let i=0;i<=40;i++){const a=(i/40)*Math.PI*2;
+    axisPos.push(bx+(Math.cos(a)*p1x+Math.sin(a)*p2x)*r,by+(Math.cos(a)*p1y+Math.sin(a)*p2y)*r,
+                 bz+(Math.cos(a)*p1z+Math.sin(a)*p2z)*r); axisCol.push(rgb[0],rgb[1],rgb[2]);}}
+
+const ox=axisOrigin.x,oy=axisOrigin.y,oz=axisOrigin.z;
+const RED=[0.059,0.078,0.098],GREEN=[0.059,0.078,0.098],BLUE=[0.059,0.078,0.098];
+addAxisLine(ox,oy,oz,ox+AXIS_LEN,oy,oz,RED); addArrowHead(ox+AXIS_LEN,oy,oz,1,0,0,RED);
+addAxisLine(ox,oy,oz,ox,oy+AXIS_LEN,oz,GREEN); addArrowHead(ox,oy+AXIS_LEN,oz,0,1,0,GREEN);
+addAxisLine(ox,oy,oz,ox,oy,oz+AXIS_LEN,BLUE); addArrowHead(ox,oy,oz+AXIS_LEN,0,0,1,BLUE);
+for(let i=0;i<80;i++){const r=Math.sqrt(Math.random())*0.008,a=Math.random()*Math.PI*2,b=Math.acos(2*Math.random()-1);
+  axisPos.push(ox+Math.sin(b)*Math.cos(a)*r,oy+Math.sin(b)*Math.sin(a)*r,oz+Math.cos(b)*r); axisCol.push(0.059,0.078,0.098);}
+scene.add(makePoints(axisPos,axisCol,0.007,1.0));
+
+// XYZ axis labels removed
+
+// ===================================================================
+// ANIMATE — v3.0: Front door+tray + Rear door+tray (both sides)
+// 순서: 앞문열림→앞트레이출→앞트레이입→앞문닫힘→뒷문열림→뒷트레이출→뒷트레이입→뒷문닫힘→반복
+// ===================================================================
+const slideClock=new THREE.Clock();
+const SEQ={
+  doorT:1.5,
+  outT:2.0,
+  pause:1.0,
+  inT:2.0,
+  gap:0.5,
+  dist:0.30,
+  doorAngle:Math.PI*2/3
+};
+const phaseDurations=[SEQ.doorT, SEQ.outT+SEQ.pause+SEQ.inT, SEQ.doorT, SEQ.gap,
+                      SEQ.doorT, SEQ.outT+SEQ.pause+SEQ.inT, SEQ.doorT, SEQ.gap];
+const totalCycle=phaseDurations.reduce((a,b)=>a+b,0);
+
+function easeInOut(t){return t<0.5?2*t*t:(1-Math.pow(-2*t+2,2)/2);}
+function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+function easeSmoothstep(t){return t*t*(3-2*t);}
+
+function animate(){
+  requestAnimationFrame(animate); controls.update();
+  const elapsed=slideClock.getElapsedTime();
+  fanBladeGroups.forEach(({group,speed,axis})=>{
+    if(axis==='x') group.rotation.x=elapsed*speed;
+    else group.rotation.y=elapsed*speed;
+  });
+  const t=elapsed%totalCycle;
+
+  let acc=0, phase=0;
+  for(let i=0;i<phaseDurations.length;i++){
+    if(t<acc+phaseDurations[i]){phase=i; break;}
+    acc+=phaseDurations[i];
+    if(i===phaseDurations.length-1) phase=i;
+  }
+  const localT=(t-acc)/phaseDurations[phase];
+
+  const fDoor=window._frontDoor, rDoor=window._rearDoor;
+  const fTray=window._slideGroup, rTray=window._rearSlideGroup;
+  if(fDoor) fDoor.rotation.y=0;
+  if(rDoor) rDoor.rotation.y=0;
+  if(fTray) fTray.position.z=0;
+  if(rTray) rTray.position.z=0;
+
+  switch(phase){
+    case 0: // Front door opens
+      if(fDoor) fDoor.rotation.y=SEQ.doorAngle*easeInOut(localT);
+      break;
+    case 1: // Front tray slides out→pause→in
+      if(fDoor) fDoor.rotation.y=SEQ.doorAngle;
+      if(fTray){
+        const totalSlide=SEQ.outT+SEQ.pause+SEQ.inT;
+        const st=localT*totalSlide;
+        let zOff=0;
+        if(st<SEQ.outT) zOff=SEQ.dist*easeOutCubic(st/SEQ.outT);
+        else if(st<SEQ.outT+SEQ.pause) zOff=SEQ.dist;
+        else { const p=(st-SEQ.outT-SEQ.pause)/SEQ.inT; zOff=SEQ.dist*(1-easeSmoothstep(p)); }
+        fTray.position.z=-zOff;
+      }
+      break;
+    case 2: // Front door closes
+      if(fDoor) fDoor.rotation.y=SEQ.doorAngle*(1-easeInOut(localT));
+      break;
+    case 3: break; // Gap
+    case 4: // Rear door opens
+      if(rDoor) rDoor.rotation.y=SEQ.doorAngle*easeInOut(localT);
+      break;
+    case 5: // Rear tray slides out→pause→in
+      if(rDoor) rDoor.rotation.y=SEQ.doorAngle;
+      if(rTray){
+        const totalSlide=SEQ.outT+SEQ.pause+SEQ.inT;
+        const st=localT*totalSlide;
+        let zOff=0;
+        if(st<SEQ.outT) zOff=SEQ.dist*easeOutCubic(st/SEQ.outT);
+        else if(st<SEQ.outT+SEQ.pause) zOff=SEQ.dist;
+        else { const p=(st-SEQ.outT-SEQ.pause)/SEQ.inT; zOff=SEQ.dist*(1-easeSmoothstep(p)); }
+        rTray.position.z=zOff;
+      }
+      break;
+    case 6: // Rear door closes
+      if(rDoor) rDoor.rotation.y=SEQ.doorAngle*(1-easeInOut(localT));
+      break;
+    case 7: break; // Gap
+  }
+  renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener('resize',()=>{camera.aspect=innerWidth*2/innerHeight; applyViewOffset(); camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight);});
+</script>
+</body>
+</html>

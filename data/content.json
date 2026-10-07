@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "version": "2.0.0",
+    "lastUpdated": "2026-04-24",
+    "designSystem": "v1.1",
+    "architecture": "Plan C — Hub + Depth"
+  },
+
+  "company": {
+    "name": "PILLS Corporation",
+    "nameKo": "필즈주식회사",
+    "slogan": "AI Infrastructure, Engineered.",
+    "founded": 2010,
+    "wordmark": "PILLS",
+    "email": "info@pills.co.kr",
+    "website": "www.pills.co.kr",
+    "address": "서울특별시 용산구 한남대로 98, 2층 (한남동)",
+    "tel": "02-749-5765"
+  },
+
+  "landing": {
+    "sheetBar": {
+      "left": "PILLS CORPORATION · AI INFRASTRUCTURE",
+      "right": "REV.2026.Q2 · SCALE 1:1"
+    },
+
+    "hero": {
+      "ghost": "AI\nINFRASTRUCTURE",
+      "sectionLabel": "AI · HPC Infrastructure Engineering",
+      "headline": "AI 인프라,\n설계대로 작동하게.",
+      "headlineAccent": "설계대로",
+      "body": "NVIDIA HGX GPU 서버부터 고밀도 전력·냉각 인프라까지.\n15년간 한국 AI·HPC 데이터센터가 계획대로 가동되도록\n통합 책임지는 기술 기반 인프라 파트너.",
+      "stats": [
+        { "index": "a", "number": "1,300", "suffix": "+", "label": "HGX Units Delivered" },
+        { "index": "b", "number": "4", "suffix": "", "label": "Samsung Divisions" },
+        { "index": "c", "number": "15", "suffix": "+", "label": "Years in Operation" },
+        { "index": "d", "number": "2", "suffix": "", "label": "Countries (KR · AU)" }
+      ]
+    },
+
+    "capabilities": {
+      "sectionLabel": "What We Engineer",
+      "cards": [
+        {
+          "id": "hpc-ai-server",
+          "title": "HPC AI Server",
+          "subtitle": "HGX, MGX, PILLETs AI\n컴퓨팅 엔지니어링",
+          "specs": [
+            "HGX H200 / B200 / B300 (8-GPU)",
+            "MGX (1~10 GPU)",
+            "PILLETs AI — Proprietary Design HPC",
+            "NVIDIA DGX Platform (B300, GB10, DGX STATION GB300)"
+          ],
+          "partners": ["Inventec", "MSI", "ASUS", "GIGACOMPUTING"],
+          "href": "capabilities.html#hpc-ai-server",
+          "figure": "fig-hpc-server.svg"
+        },
+        {
+          "id": "cooling",
+          "title": "Cooling",
+          "subtitle": "한 공간에서 공냉과 칩쿨링을\n함께 운영하는 하이브리드 쿨링",
+          "specs": [
+            "Direct Liquid Cooling (DLC)",
+            "CDU (Coolant Distribution Unit)",
+            "Rear-Door Heat Exchanger",
+            "Air + Liquid 하이브리드 운영"
+          ],
+          "partners": [],
+          "href": "capabilities.html#cooling",
+          "figure": "fig-cooling.svg"
+        },
+        {
+          "id": "dc-infra",
+          "title": "DC Infrastructure",
+          "subtitle": "CAC · HAC 컨테인먼트 시스템\nRack · Cable · Network 통합",
+          "specs": [
+            "CAC / HAC Containment",
+            "Rack & Enclosure",
+            "Cable Management · Network",
+            "High-Density PDU · Busway · UPS"
+          ],
+          "partners": ["DCKorea", "Legrand", "Schneider", "Delta Electronics", "POS"],
+          "href": "capabilities.html#dc-infra",
+          "figure": "fig-dc-infra.svg"
+        }
+      ]
+    },
+
+    "trust": {
+      "sectionLabel": "Trusted By",
+      "samsung": {
+        "headline": "Samsung Electronics",
+        "body": "DS · MX · DA · DSR 4개 사업부 공식 협력사",
+        "badges": ["OGPMS", "BQMS"],
+        "divisions": [
+          "DS (Device Solutions)",
+          "MX (Mobile eXperience)",
+          "DA (Digital Appliances)",
+          "DSR (DS Research)"
+        ],
+        "href": "samsung.html"
+      },
+      "partners": [
+        { "name": "Inventec", "role": "국내 독점 총판 (Distributor)" },
+        { "name": "ASUS", "role": "Server & Workstation" },
+        { "name": "MSI", "role": "Server & Workstation" },
+        { "name": "AMD", "role": "CPU & GPU Platform" },
+        { "name": "GIGACOMPUTING", "role": "Server Solutions" },
+        { "name": "xFusion", "role": "Server Solutions" },
+        { "name": "Moack", "role": "고객사 (IDC)" },
+        { "name": "Legrand", "role": "PDU & Rack" },
+        { "name": "Schneider Electric", "role": "Power & Cooling" },
+        { "name": "Delta Electronics", "role": "Power Systems" },
+        { "name": "POS", "role": "Infrastructure" },
+        { "name": "DCKorea", "role": "DC Infrastructure" }
+      ],
+      "partnersHref": "partners.html"
+    },
+
+    "contact": {
+      "sectionLabel": "Get in Touch",
+      "offices": [
+        {
+          "location": "Seoul, Korea",
+          "company": "PILLS Corporation",
+          "address": "서울특별시 용산구 한남대로 98, 2층",
+          "email": "info@pills.co.kr",
+          "tel": "02-749-5765"
+        },
+        {
+          "location": "Sydney, Australia",
+          "company": "NEXPILLS International",
+          "address": "Newington, NSW, Australia",
+          "email": "info@nexpills.com",
+          "description": "IDC · AI 의료영상 · PACS · HPC"
+        }
+      ]
+    }
+  },
+
+  "detailPages": {
+    "capabilities": {
+      "title": "Capabilities",
+      "file": "capabilities.html"
+    },
+    "samsung": {
+      "title": "Samsung Partnership",
+      "file": "samsung.html",
+      "note": "진행중인 프로젝트는 대표이사 확인 후 추가"
+    },
+    "partners": {
+      "title": "Partners & Ecosystem",
+      "file": "partners.html"
+    },
+    "about": {
+      "title": "About PILLS",
+      "file": "about.html",
+      "milestones": [
+        { "year": 2010, "event": "PILLS Corporation 설립" },
+        { "year": 2022, "event": "AI 인프라 전문화 전환" },
+        { "year": 2023, "event": "Inventec 국내 독점 총판 계약" },
+        { "year": 2024, "event": "NEXPILLS International 호주 법인 설립" },
+        { "year": 2025, "event": "누적 1,300+ HGX 유닛 공급 달성" }
+      ],
+      "earlyShip": [
+        { "name": "NVIDIA Vera / Rubin", "description": "차세대 GPU 아키텍처" },
+        { "name": "AMD Venice SP7", "description": "차세대 서버 CPU 플랫폼" },
+        { "name": "PCIe Gen6", "description": "차세대 인터커넥트 표준" }
+      ]
+    }
+  }
+}

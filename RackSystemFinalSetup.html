@@ -1,0 +1,4199 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PILLS CORP. — DC Hybrid Cooling Infrastructure (rev 2.0)</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; color: #fff; }
+  #canvas-container { position: fixed; inset: 0; }
+  #overlay { position: fixed; bottom: 10px; right: 40px; text-align: right; pointer-events: none; user-select: none; }
+  body.hero-mode #overlay { bottom: 180px; }
+  #overlay h1 { font-size: 26px; font-weight: 700; letter-spacing: 3px; margin: 0; color: #2b343b; }
+  #overlay h2 { font-size: 14px; font-weight: 500; opacity: 1; margin: 4px 0 0 0; color: #2b343b; }
+  #legend { display: none !important; } #legend_x { margin-top: 20px; border-left: 2px solid #555; padding-left: 15px; }
+  #legend p { font-size: 13px; margin: 8px 0; }
+  #usageHelp { display: none !important; } #usageHelp_x {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    pointer-events: none;
+    user-select: none;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.85);
+  }
+  #usageHelp .uh-title {
+    font-size: 14px;
+    color: #00d6b3;
+    margin-bottom: 6px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+  }
+  #usageHelp .uh-key {
+    color: #ffd84d;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  #credits { display: none !important; } #credits_x {
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    pointer-events: none;
+    user-select: none;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.55;
+    color: #b8bcc4;
+    text-align: right;
+    letter-spacing: 0.4px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+  }
+  #credits .cr-author {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  #credits .cr-org {
+    color: #00d6b3;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+  }
+  #credits .cr-copy {
+    opacity: 0.65;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div id="usageHelp">
+  <div class="uh-title">NAVIGATION CONTROLS</div>
+  <div><span class="uh-key">L-Click + Drag</span> &nbsp;·&nbsp; Orbit View</div>
+  <div><span class="uh-key">R-Click + Drag</span> &nbsp;·&nbsp; Pan Camera</div>
+  <div><span class="uh-key">Ctrl</span> + <span class="uh-key">L-Click + Drag</span> &nbsp;·&nbsp; Pan Camera</div>
+  <div><span class="uh-key">Scroll Wheel</span> &nbsp;·&nbsp; Zoom In / Out</div>
+  <div><span class="uh-key">Shift</span> + <span class="uh-key">Drag</span> &nbsp;·&nbsp; Fine-Tune Viewpoint</div>
+</div>
+<div id="overlay">
+  <h1>PILLS CORP. <span style="font-size:13px;font-weight:700;color:#007a66;letter-spacing:2px;margin-left:14px;">REV 2.0</span></h1>
+  <h2>DC Hybrid Cooling Infrastructure — 2× Hybrid Rack Sets + Network Rack, 2-tier mesh trays + busway overhead</h2>
+  <div id="legend">
+    <p style="color:#ffffff;">■ Rack Frame (800 W × 1955.8 H × 1200 D mm, 44U)</p>
+    <p style="color:#0088ff;">■ RDC · 60 kW (Signature Blue — Rear, fine particles)</p>
+    <p style="color:#ff6600;">■ 10U GPU Servers · Rack #1 &nbsp;/&nbsp; 8U Servers · Rack #2 (bottom-aligned)</p>
+    <p style="color:#00a68c;">■ CDU · 80 kW (4U, Teal, Rack #2 / 2U base gap)</p>
+    <p><span style="color:#9a33f2;">■</span> Rack Manifold Supply &nbsp;/&nbsp; <span style="color:#f21e1e;">■</span> Return &nbsp;(Ø 38 mm round, inside rack)</p>
+    <p><span style="color:#16339a;">■</span> Chiller Supply (Navy) &nbsp;/&nbsp; <span style="color:#f21e1e;">■</span> Return &nbsp;(Ø 200 mm round, 200 mm under access floor)</p>
+    <p style="font-size:12px;opacity:0.8;">Flow: Chiller → <span style="color:#5a79d1;">Supply branch</span> → RDC Water In → RDC Water Out → CDU Water In → CDU Water Out → <span style="color:#f21e1e;">Return</span> &nbsp;(both sets identical)</p>
+    <p style="color:#b0b0b8;">■ Partition Wall (300 mm × 4 m, along grid line)</p>
+    <p style="color:#a0a4ad;">■ External Chiller — body 1320 × 684 × 1230 mm + top twin-fans, parallel to wall</p>
+    <p>
+      <span style="color:#f2cc1a;">■</span> Cable Tray — Lower (Yellow, HI-MESH wire basket)
+      &nbsp;/&nbsp;
+      <span style="color:#268cf2;">■</span> Cable Tray — Upper (Blue, HI-MESH wire basket)
+      &nbsp;/&nbsp;
+      <span style="color:#1a1a1f;">■</span> Tray Support-C (black saddle)
+      <br/>
+      <span style="opacity:0.75;font-size:12px;">Stack: Rack → Support-C → Lower channel → Spacer Support → Upper channel · 400 mm W, 100 mm H per tier</span>
+    </p>
+    <p>
+      <span style="color:#c7ccd9;">■</span> Busway (Track) — overhead modular power distribution, 150 × 80 mm housing
+      &nbsp;/&nbsp;
+      <span style="color:#cdd0d8;">■</span> Tap-off Box · 2-outlet (M70-style, smart, with breaker sensing)
+      &nbsp;/&nbsp;
+      <span style="color:#eb1e26;">■</span> IEC 309 plug cable (2 per box → PDU2 + PDU1)
+      <br/>
+      <span style="opacity:0.75;font-size:12px;">Each tap-off box plugs into the busway slot (Turn-n-Lock) on top, and feeds two PDUs via red IEC 309 plug cables on the front · 250–1,250 A · 600 V · 4-pole copper</span>
+    </p>
+    <p>
+      <span style="color:#1a1a25;">■</span> PDU · 42 kVA (3U, 380 V 3φ, 24× Cx_Type) — 2 units per rack, top-of-rack
+      &nbsp;
+      <span style="color:#338cf2;">■L1</span>
+      <span style="color:#f23333;">■L2</span>
+      <span style="color:#33d94d;">■L3</span>
+      <br/>
+      <span style="opacity:0.75;font-size:12px;">All 5 racks: U44 empty · PDU2 U41–43 · PDU1 U38–40 · &nbsp;Network rack also has switches below: U37 gap · IB U36 · L3 U34 · L2 U32</span>
+    </p>
+  </div>
+</div>
+<div id="credits">
+  <div><span class="cr-org">PILLS CORPORATION</span></div>
+  <div>Created by <span class="cr-author">YOUNGSIK KOO</span></div>
+  <div class="cr-copy">© 2026 PILLS Corporation. All Rights Reserved.</div>
+  <div class="cr-copy">Unauthorized reproduction, distribution, or modification is strictly prohibited.</div>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const HERO_MODE = new URLSearchParams(window.location.search).get('mode') === 'hero';
+if (HERO_MODE) document.body.classList.add('hero-mode');
+
+// ---- CANONICAL RACK SPECS — Do not change (see MEMORY.md) ----
+const U_HEIGHT = 0.04445;                                // 1U = 44.45 mm
+const RACK_U   = 44;
+const RACK   = { w: 0.8,   h: RACK_U * U_HEIGHT, d: 1.2 };   // 800 × 1955.8 × 1200 mm
+const RDC    = { w: 0.8,   h: RACK_U * U_HEIGHT, d: 0.3 };   // 800 × 1955.8 × 300 mm (rear)
+const SERVER = { w: 0.448, h: 10 * U_HEIGHT,     d: 0.85 }; // 448 × 441 × 850 mm (10U)
+// 8U server variant — installed in Rack #2 (CDU rack) above the CDU
+const SERVER8 = { w: 0.448, h: 8 * U_HEIGHT,     d: 0.85 };
+// CoolIT CHx80 4U liquid-to-liquid CDU — handle face = front (see cdu_chx80_spec.md)
+const CDU    = { w: 0.448, h: 4 * U_HEIGHT,      d: 0.85 };
+// CoolIT Rack Manifold (blind-mate, Project Olympus)
+// 38 mm square tube × 2 (supply + return), 83 mm overall assembly width, 1905 mm tall
+const MANIFOLD = {
+  tube: 0.038,              // 38 mm square cross-section
+  height: 1.905,            // 1905 mm
+  assemblyWidth: 0.083,     // 83 mm outer-to-outer
+};
+// Center-to-center spacing between the two tubes (edge-to-edge gap of 7 mm)
+const MANIFOLD_PITCH = MANIFOLD.assemblyWidth - MANIFOLD.tube; // = 0.045 m
+
+// ---- Scene / Camera / Renderer ----
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+// Camera at a back-right 3/4 angle.
+// In this angle Three.js aligns screen-right with world +X and screen-left with world -X,
+// which matches the user's mental model ("-X = left, +X = right").
+// (The pure frontal view looking in +Z reverses this because of Three.js's `up × z` right-vector.)
+// Base position (before rotation/zoom): back-right 3/4 angle
+camera.position.set(3.0, -2.0, 9.43);
+// Rotate 135° around target (Y-axis) and zoom OUT 20 %
+{
+  // Rotation center = AC server in Set 2 Rack A (two racks over from the central CDU rack).
+  //   X = SET_OFFSET = 1.30  (Set 2 Rack A position)
+  //   Y = midpoint between the two stacked AC servers (uBase 8 & 20) ≈ -0.135
+  const _target = new THREE.Vector3(1.30, -0.135, 0);
+  const _offset = camera.position.clone().sub(_target);
+  const _ang = 160 * Math.PI / 180;    // 160°
+  const _c = Math.cos(_ang), _s = Math.sin(_ang);
+  const _rx = _offset.x * _c - _offset.z * _s;
+  const _rz = _offset.x * _s + _offset.z * _c;
+  const _ry = _offset.y;
+  // X-axis tilt (pitch)
+  const _pitch = 25 * Math.PI / 180;
+  const _cp = Math.cos(_pitch), _sp = Math.sin(_pitch);
+  const _ry2 = _ry * _cp - _rz * _sp;
+  const _rz2 = _ry * _sp + _rz * _cp;
+  const _zoom = 1.141;                 // 35% further out (was 0.82)
+  camera.position.set(
+    _target.x + _rx  * _zoom,
+    _target.y + _ry2 * _zoom,
+    _target.z + _rz2 * _zoom
+  );
+}
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(1);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+// ----- Output position WITHIN the monitor (not a camera move) -----
+// Negative X offset shifts rendered content to the RIGHT on screen.
+// Negative Y offset shifts rendered content DOWN on screen.
+const VIEW_SHIFT_X_PCT = -0.10;   // shifted right
+const VIEW_SHIFT_Y_PCT = 0.00;   // centered
+function applyViewOffset() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  camera.setViewOffset(w, h, VIEW_SHIFT_X_PCT * w, VIEW_SHIFT_Y_PCT * h, w, h);
+}
+applyViewOffset();
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enabled = true;
+// Aim at the center of the 5-rack row (= star marker location).
+// Midpoint X = RACK.w + SET_GAP = 0.85 when RACK.w = 0.8, SET_GAP = 0.05.
+controls.target.set(1.30, -0.135, 0);  // OrbitControls rotates around Set 2 Rack A AC server
+
+// grid removed
+
+// ---- Separate buffers per category so we can render with different point sizes ----
+// Rack edges are split from rack volume so we can make the silver edge line thinner
+// without affecting the interior haze (additive stacking was keeping edges bright).
+const rackEdgePos = [],   rackEdgeCol = [];
+const rackVolPos  = [],   rackVolCol  = [];
+const rdcPos = [],        rdcCol = [];
+const serverPos = [],     serverCol = [];
+const cduPos = [],        cduCol = [];
+const manifoldPos = [],   manifoldCol = [];
+const wallPos = [],       wallCol = [];
+const chillerPos = [],    chillerCol = [];
+const trayPos = [],       trayCol = [];   // 2-tier ladder cable trays above all 5 racks
+const buswayPos = [],     buswayCol = []; // overhead modular Track busway (Starline T5-style)
+const pduPos = [],        pduCol = [];    // 3U Smart PDU — 2 per rack at top (3-phase 380V / 24× C13)
+const srvFacePos = [],    srvFaceCol = []; // Server FRONT-PANEL detail (zones, LEDs, bezels) — NormalBlending so colors don't get washed out by additive stacking
+const ibCablePos = [],    ibCableCol = []; // InfiniBand network cables — own buffer + bigger point size so thickness changes read visibly
+
+// 12-edge template for a box centered at origin
+function boxEdges(hw, hh, hd) {
+  return [
+    { s: [-hw, -hh, -hd], e: [-hw,  hh, -hd] }, { s: [ hw, -hh, -hd], e: [ hw,  hh, -hd] },
+    { s: [-hw, -hh,  hd], e: [-hw,  hh,  hd] }, { s: [ hw, -hh,  hd], e: [ hw,  hh,  hd] },
+    { s: [-hw,  hh, -hd], e: [ hw,  hh, -hd] }, { s: [ hw,  hh, -hd], e: [ hw,  hh,  hd] },
+    { s: [ hw,  hh,  hd], e: [-hw,  hh,  hd] }, { s: [-hw,  hh,  hd], e: [-hw,  hh, -hd] },
+    { s: [-hw, -hh, -hd], e: [ hw, -hh, -hd] }, { s: [ hw, -hh, -hd], e: [ hw, -hh,  hd] },
+    { s: [ hw, -hh,  hd], e: [-hw, -hh,  hd] }, { s: [-hw, -hh,  hd], e: [-hw, -hh, -hd] },
+  ];
+}
+
+// ---- 1. Rack (Silver) ----
+const rw = RACK.w/2, rh = RACK.h/2, rd = RACK.d/2;
+// Rack frame builder — xOffset lets us place multiple racks side by side
+function addRack(xOffset = 0) {
+  boxEdges(rw, rh, rd).forEach(e => {
+    for (let i = 0; i < 260; i++) { // density further reduced (420 → 260) to stop additive saturation
+      const t = i / 260;
+      rackEdgePos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t,
+        e.s[2]+(e.e[2]-e.s[2])*t
+      );
+      rackEdgeCol.push(0.0, 0.0, 0.0); // +5% from (0.2916, 0.2916, 0.3332)
+    }
+  });
+  // Rack interior volume (unchanged — keeps the interior haze character)
+  for (let i = 0; i < 4200; i++) {
+    rackVolPos.push(
+      (Math.random()-0.5)*RACK.w + xOffset,
+      (Math.random()-0.5)*RACK.h,
+      (Math.random()-0.5)*RACK.d
+    );
+    rackVolCol.push(0.12, 0.12, 0.15);
+  }
+}
+
+// A "set" = two paired racks (RDC rack + CDU rack) with a 50 mm internal gap.
+// Two sets are placed side by side with another 50 mm gap between sets.
+const SET_GAP    = 0.05;                  // gap between rack #1 and rack #2 inside a set
+const SET_WIDTH  = 2 * RACK.w + SET_GAP;  // total X footprint of one set (= 1.25 m)
+const SET_OFFSET = SET_WIDTH + SET_GAP;   // X shift between adjacent sets (= 1.30 m)
+
+// Rack frames — two sets × two racks each
+addRack(0);                         // Set 1, Rack A (RDC rack)
+addRack(RACK.w + SET_GAP);          // Set 1, Rack B (CDU rack) → x = 0.65
+addRack(SET_OFFSET);                // Set 2, Rack A → x = 1.30
+addRack(SET_OFFSET + RACK.w + SET_GAP); // Set 2, Rack B → x = 1.95
+
+// Extra empty rack (leftmost, visible from the front), 50 mm gap from Set 1 Rack A
+addRack(-(RACK.w + SET_GAP));       // x = -0.65
+
+// Network switches at the top of the leftmost empty rack — 1U each, front-aligned
+function addSwitch(xOffset, uBase, uHeight, edgeRGB, volRGB) {
+  const sw = 0.448 / 2;
+  const sh = (uHeight * U_HEIGHT) / 2;
+  const sd = 0.50 / 2;                 // typical 500 mm switch depth
+  const sY = -rh + (uBase * U_HEIGHT) + sh;
+  const sZ = -rd + sd;                 // front-aligned
+  // Body edges
+  boxEdges(sw, sh, sd).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(25, Math.round(len * 320));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      serverPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + sY,
+        e.s[2]+(e.e[2]-e.s[2])*t + sZ
+      );
+      serverCol.push(edgeRGB[0], edgeRGB[1], edgeRGB[2]);
+    }
+  });
+  // Interior volume
+  for (let i = 0; i < 420; i++) {
+    serverPos.push(
+      (Math.random() - 0.5) * 0.448 + xOffset,
+      (Math.random() - 0.5) * (uHeight * U_HEIGHT) + sY,
+      (Math.random() - 0.5) * 0.50 + sZ
+    );
+    serverCol.push(volRGB[0], volRGB[1], volRGB[2]);
+  }
+  // 48-port pattern on front face (2 rows × 24 cols RJ45-style rectangles)
+  const frontZ    = -rd - 0.002;       // just in front of front face
+  const portW     = 0.013;             // ~13 mm (RJ45)
+  const portH     = 0.010;             // ~10 mm
+  const colSpacing = 0.017;            // 17 mm pitch between port centers
+  const rowOffsetY = 0.011;            // 11 mm between the two rows
+  const cols = 24, rows = 2;
+  const startX = -((cols - 1) * colSpacing) / 2;
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const cx = xOffset + startX + col * colSpacing;
+      const cy = sY + (row === 0 ? -rowOffsetY / 2 : +rowOffsetY / 2);
+      // draw a rectangular outline for each port (dark)
+      const ring = 24;
+      for (let k = 0; k < ring; k++) {
+        const t = k / ring;
+        // sample rectangle perimeter
+        let px, py;
+        if (t < 0.25) { px = -portW / 2 + (t * 4) * portW; py = -portH / 2; }
+        else if (t < 0.50) { px = +portW / 2; py = -portH / 2 + ((t - 0.25) * 4) * portH; }
+        else if (t < 0.75) { px = +portW / 2 - ((t - 0.50) * 4) * portW; py = +portH / 2; }
+        else               { px = -portW / 2; py = +portH / 2 - ((t - 0.75) * 4) * portH; }
+        serverPos.push(cx + px, cy + py, frontZ);
+        serverCol.push(0.02, 0.02, 0.03);   // dark port cavity
+      }
+    }
+  }
+}
+// ---- NVIDIA Quantum-2 QM9700 InfiniBand switch — 1U 32×OSFP, matte black ----
+// See `switch_qm9700_spec.md`. Port layout: 2 rows × 16 cols, 4 banks of 8 (vertical gap every 4 cols).
+// Right-end: small management area (RJ45 mgmt, USB, status LEDs).
+// Body color: matte black (replaces the cyan edge used for the generic switch).
+function addIBSwitch(xOffset, uBase) {
+  const uHeight = 1;
+  const sw = 0.448 / 2;
+  const sh = (uHeight * U_HEIGHT) / 2;
+  const sd = 0.50 / 2;                  // ~500 mm switch depth
+  const sY = -rh + (uBase * U_HEIGHT) + sh;
+  const sZ = -rd + sd;                  // front-aligned
+
+  // Chassis edges (dark silver)
+  boxEdges(sw, sh, sd).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(25, Math.round(len * 320));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      serverPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + sY,
+        e.s[2]+(e.e[2]-e.s[2])*t + sZ
+      );
+      serverCol.push(0.25, 0.25, 0.28);
+    }
+  });
+  // Interior body — matte black haze
+  for (let i = 0; i < 420; i++) {
+    serverPos.push(
+      (Math.random() - 0.5) * 0.448 + xOffset,
+      (Math.random() - 0.5) * (uHeight * U_HEIGHT) + sY,
+      (Math.random() - 0.5) * 0.50 + sZ
+    );
+    serverCol.push(0.08, 0.08, 0.10);
+  }
+
+  // FRONT-PANEL detail (NormalBlending buffer for crisp colors)
+  const frontZ_sw = -rd - 0.002;
+  // Dark panel base
+  for (let i = 0; i < 840; i++) {
+    srvFacePos.push(
+      xOffset + (Math.random()-0.5) * 0.448,
+      sY + (Math.random()-0.5) * (uHeight * U_HEIGHT - 0.003),
+      frontZ_sw
+    );
+    srvFaceCol.push(0.07, 0.07, 0.10);
+  }
+
+  // 32 OSFP cages: 2 rows × 16 cols, grouped into 4 banks of 8 (bank-gap every 4 cols)
+  const totalCols   = 16;
+  const banksCount  = 4;
+  const colsPerBank = totalCols / banksCount;   // = 4
+  const portsAreaL  = xOffset - 0.448/2 + 0.006;
+  const portsAreaR  = xOffset + 0.448/2 - 0.060;  // reserve ~60 mm on the right for mgmt
+  const portsAreaW  = portsAreaR - portsAreaL;
+  const bankGap     = 0.003;
+  const bankWidth   = (portsAreaW - (banksCount - 1) * bankGap) / banksCount;
+  const cageGap     = 0.0008;
+  const cageW       = (bankWidth - (colsPerBank - 1) * cageGap) / colsPerBank;
+  const cageH       = 0.011;
+  const rowCenters  = [sY + 0.008, sY - 0.008];
+
+  for (let b = 0; b < banksCount; b++) {
+    const bankLX = portsAreaL + b * (bankWidth + bankGap);
+    for (let c = 0; c < colsPerBank; c++) {
+      const cageCx = bankLX + c * (cageW + cageGap) + cageW/2;
+      rowCenters.forEach(cageCy => {
+        // cage body (very dark — the inside of the OSFP cage)
+        for (let i = 0; i < 28; i++) {
+          srvFacePos.push(
+            cageCx + (Math.random()-0.5)*(cageW - 0.0008),
+            cageCy + (Math.random()-0.5)*(cageH - 0.0008),
+            frontZ_sw - 0.0009
+          );
+          srvFaceCol.push(0.03, 0.03, 0.04);
+        }
+        // silver cage frame (rectangle outline)
+        const ring = 28;
+        const w = cageW - 0.0005, h = cageH - 0.0005;
+        for (let k = 0; k < ring; k++) {
+          const t = k / ring;
+          let px, py;
+          if      (t < 0.25) { px = -w/2 + (t*4)*w;       py = -h/2; }
+          else if (t < 0.50) { px = +w/2;                  py = -h/2 + ((t-0.25)*4)*h; }
+          else if (t < 0.75) { px = +w/2 - ((t-0.50)*4)*w; py = +h/2; }
+          else               { px = -w/2;                  py = +h/2 - ((t-0.75)*4)*h; }
+          srvFacePos.push(cageCx + px, cageCy + py, frontZ_sw - 0.0016);
+          srvFaceCol.push(0.48, 0.48, 0.52);
+        }
+        // small green link LED next to each cage
+        const ledY = (cageCy > sY) ? cageCy + cageH/2 + 0.0015 : cageCy - cageH/2 - 0.0015;
+        for (let i = 0; i < 10; i++) {
+          const a = (i / 10) * Math.PI * 2;
+          srvFacePos.push(cageCx + Math.cos(a)*0.0013, ledY + Math.sin(a)*0.0013, frontZ_sw - 0.0022);
+          srvFaceCol.push(0.10, 0.95, 0.30);
+        }
+      });
+    }
+  }
+
+  // Right-end management area (RJ45 mgmt + console + USB + status LEDs)
+  const mgmtCx = portsAreaR + 0.028;
+  const mgmtCy = sY;
+  // slightly lighter mgmt sub-panel
+  for (let i = 0; i < 196; i++) {
+    srvFacePos.push(
+      mgmtCx + (Math.random()-0.5)*0.048,
+      mgmtCy + (Math.random()-0.5)*(uHeight * U_HEIGHT - 0.004),
+      frontZ_sw - 0.0005
+    );
+    srvFaceCol.push(0.12, 0.12, 0.15);
+  }
+  // RJ45 management port (dark square)
+  for (let i = 0; i < 49; i++) {
+    srvFacePos.push(
+      mgmtCx - 0.018 + (Math.random()-0.5)*0.009,
+      mgmtCy + 0.002 + (Math.random()-0.5)*0.007,
+      frontZ_sw - 0.0018
+    );
+    srvFaceCol.push(0.02, 0.02, 0.03);
+  }
+  // USB port (small dark rectangle)
+  for (let i = 0; i < 35; i++) {
+    srvFacePos.push(
+      mgmtCx + 0.001 + (Math.random()-0.5)*0.006,
+      mgmtCy + 0.002 + (Math.random()-0.5)*0.004,
+      frontZ_sw - 0.0018
+    );
+    srvFaceCol.push(0.02, 0.02, 0.03);
+  }
+  // 4 status LEDs stacked (PWR green / STAT green / FAN amber / UID cyan)
+  const mgmtLedColors = [[0.10,0.95,0.30], [0.10,0.95,0.30], [0.95,0.65,0.10], [0.10,0.85,0.95]];
+  mgmtLedColors.forEach((rgb, i) => {
+    const lx = mgmtCx + 0.018;
+    const ly = mgmtCy - 0.009 + i * 0.0055;
+    for (let k = 0; k < 14; k++) {
+      const a = (k / 14) * Math.PI * 2;
+      srvFacePos.push(lx + Math.cos(a)*0.0016, ly + Math.sin(a)*0.0016, frontZ_sw - 0.0022);
+      srvFaceCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+}
+
+// ---- Arista 7050X3-style L3 switch (1U, 24× 25GbE SFP28 + 4× 100GbE QSFP28) ----
+// Front-to-rear airflow, 2× AC PSU. Dark silver chassis, white labels.
+// UI label will be simply "L3 · 24× 25 GbE + 4× 100 GbE" (no brand per feedback_naming_convention.md)
+function addL3Switch(xOffset, uBase) {
+  const uHeight = 1;
+  const sw = 0.448 / 2;
+  const sh = (uHeight * U_HEIGHT) / 2;
+  const sd = 0.50 / 2;
+  const sY = -rh + (uBase * U_HEIGHT) + sh;
+  const sZ = -rd + sd;
+
+  // Chassis edges — dark gray
+  boxEdges(sw, sh, sd).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(25, Math.round(len * 320));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      serverPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + sY,
+        e.s[2]+(e.e[2]-e.s[2])*t + sZ
+      );
+      serverCol.push(0.22, 0.22, 0.26);
+    }
+  });
+  // Interior body
+  for (let i = 0; i < 420; i++) {
+    serverPos.push(
+      (Math.random()-0.5) * 0.448 + xOffset,
+      (Math.random()-0.5) * (uHeight * U_HEIGHT) + sY,
+      (Math.random()-0.5) * 0.50 + sZ
+    );
+    serverCol.push(0.10, 0.10, 0.13);
+  }
+
+  const frontZ_sw = -rd - 0.002;
+  // Dark front panel base
+  for (let i = 0; i < 770; i++) {
+    srvFacePos.push(
+      xOffset + (Math.random()-0.5) * 0.448,
+      sY + (Math.random()-0.5) * (uHeight * U_HEIGHT - 0.003),
+      frontZ_sw
+    );
+    srvFaceCol.push(0.09, 0.09, 0.12);
+  }
+
+  // Layout: left = 24 SFP (2×12), middle = 4 QSFP (1×4), right = mgmt
+  const sfpLeft  = xOffset - 0.448/2 + 0.006;
+  const sfpRight = sfpLeft + 0.448 * 0.62;                // 62 % of width for 24 SFP
+  const qsfpLeft = sfpRight + 0.005;
+  const qsfpRight = qsfpLeft + 0.448 * 0.22;              // 22 % for 4 QSFP
+  const mgmtLeft = qsfpRight + 0.005;
+
+  // 24× SFP28 cages — 2 rows × 12 cols, alternating up/down for visual effect
+  const sfpCols = 12, sfpRows = 2;
+  const sfpGapC = 0.0008;
+  const sfpCageW = ((sfpRight - sfpLeft) - (sfpCols - 1) * sfpGapC) / sfpCols;
+  const sfpCageH = 0.013;
+  const sfpRowCenters = [sY + 0.008, sY - 0.008];
+  for (let r = 0; r < sfpRows; r++) {
+    for (let c = 0; c < sfpCols; c++) {
+      const cx = sfpLeft + sfpCageW/2 + c * (sfpCageW + sfpGapC);
+      const cy = sfpRowCenters[r];
+      // dark cage interior
+      for (let i = 0; i < 22; i++) {
+        srvFacePos.push(
+          cx + (Math.random()-0.5) * (sfpCageW - 0.001),
+          cy + (Math.random()-0.5) * (sfpCageH - 0.001),
+          frontZ_sw - 0.0009
+        );
+        srvFaceCol.push(0.02, 0.02, 0.03);
+      }
+      // silver cage frame
+      const ring = 24;
+      const w = sfpCageW - 0.0006, h = sfpCageH - 0.0006;
+      for (let k = 0; k < ring; k++) {
+        const t = k / ring;
+        let px, py;
+        if      (t < 0.25) { px = -w/2 + (t*4)*w;       py = -h/2; }
+        else if (t < 0.50) { px = +w/2;                  py = -h/2 + ((t-0.25)*4)*h; }
+        else if (t < 0.75) { px = +w/2 - ((t-0.50)*4)*w; py = +h/2; }
+        else               { px = -w/2;                  py = +h/2 - ((t-0.75)*4)*h; }
+        srvFacePos.push(cx + px, cy + py, frontZ_sw - 0.0015);
+        srvFaceCol.push(0.48, 0.48, 0.52);
+      }
+      // small green link LED above (top row) / below (bottom row)
+      const ledY = (r === 0) ? cy + sfpCageH/2 + 0.0013 : cy - sfpCageH/2 - 0.0013;
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        srvFacePos.push(cx + Math.cos(a)*0.001, ledY + Math.sin(a)*0.001, frontZ_sw - 0.0020);
+        srvFaceCol.push(0.10, 0.95, 0.30);
+      }
+    }
+  }
+
+  // 4× QSFP28 cages — 1 row × 4 cols, larger than SFP
+  const qsfpCols = 4;
+  const qsfpGapC = 0.0012;
+  const qsfpCageW = ((qsfpRight - qsfpLeft) - (qsfpCols - 1) * qsfpGapC) / qsfpCols;
+  const qsfpCageH = 0.024;
+  for (let c = 0; c < qsfpCols; c++) {
+    const cx = qsfpLeft + qsfpCageW/2 + c * (qsfpCageW + qsfpGapC);
+    const cy = sY;
+    // dark interior
+    for (let i = 0; i < 63; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5) * (qsfpCageW - 0.001),
+        cy + (Math.random()-0.5) * (qsfpCageH - 0.001),
+        frontZ_sw - 0.0009
+      );
+      srvFaceCol.push(0.02, 0.02, 0.03);
+    }
+    // silver frame
+    const ring = 36;
+    const w = qsfpCageW - 0.0006, h = qsfpCageH - 0.0006;
+    for (let k = 0; k < ring; k++) {
+      const t = k / ring;
+      let px, py;
+      if      (t < 0.25) { px = -w/2 + (t*4)*w;       py = -h/2; }
+      else if (t < 0.50) { px = +w/2;                  py = -h/2 + ((t-0.25)*4)*h; }
+      else if (t < 0.75) { px = +w/2 - ((t-0.50)*4)*w; py = +h/2; }
+      else               { px = -w/2;                  py = +h/2 - ((t-0.75)*4)*h; }
+      srvFacePos.push(cx + px, cy + py, frontZ_sw - 0.0015);
+      srvFaceCol.push(0.55, 0.55, 0.60);
+    }
+    // amber activity LED inside upper-left corner of each QSFP
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      srvFacePos.push(cx - qsfpCageW*0.3 + Math.cos(a)*0.0014,
+                      cy + qsfpCageH*0.3 + Math.sin(a)*0.0014,
+                      frontZ_sw - 0.0022);
+      srvFaceCol.push(0.95, 0.70, 0.15);
+    }
+  }
+
+  // Mgmt area (right): RJ45 mgmt + console + USB + 4 status LEDs
+  const mgmtCx = (mgmtLeft + xOffset + 0.448/2 - 0.005) / 2;
+  const mgmtCy = sY;
+  for (let i = 0; i < 154; i++) {
+    srvFacePos.push(
+      mgmtLeft + Math.random() * ((xOffset + 0.448/2 - 0.005) - mgmtLeft),
+      mgmtCy + (Math.random()-0.5) * (uHeight * U_HEIGHT - 0.004),
+      frontZ_sw - 0.0005
+    );
+    srvFaceCol.push(0.14, 0.14, 0.17);
+  }
+  // RJ45 mgmt
+  for (let i = 0; i < 35; i++) {
+    srvFacePos.push(
+      mgmtCx - 0.010 + (Math.random()-0.5)*0.008,
+      mgmtCy + 0.003 + (Math.random()-0.5)*0.006,
+      frontZ_sw - 0.0018
+    );
+    srvFaceCol.push(0.02, 0.02, 0.03);
+  }
+  // USB
+  for (let i = 0; i < 28; i++) {
+    srvFacePos.push(
+      mgmtCx + 0.005 + (Math.random()-0.5)*0.005,
+      mgmtCy + 0.003 + (Math.random()-0.5)*0.003,
+      frontZ_sw - 0.0018
+    );
+    srvFaceCol.push(0.02, 0.02, 0.03);
+  }
+  // 4 status LEDs — PWR/STAT (green) / ALARM (amber) / UID (blue)
+  const l3LedColors = [[0.10,0.95,0.30], [0.10,0.95,0.30], [0.95,0.65,0.10], [0.20,0.55,0.95]];
+  l3LedColors.forEach((rgb, i) => {
+    const lx = mgmtCx - 0.003;
+    const ly = mgmtCy - 0.008 + i * 0.005;
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      srvFacePos.push(lx + Math.cos(a)*0.0014, ly + Math.sin(a)*0.0014, frontZ_sw - 0.0022);
+      srvFaceCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+}
+
+// ---- Cisco Catalyst 48P-style L2 switch (1U, 48× 1GbE RJ45 + 4× SFP+ uplink) ----
+// Signature Cisco layout: left-end mode panel (Cisco logo + mode button + status LEDs),
+// main area = 48 RJ45 ports in 2 rows × 24 cols grouped into 4 banks of 12 (bank gap every 12),
+// right-end = 4 SFP+ uplink cages + console/mgmt ports.
+function addL2Switch(xOffset, uBase) {
+  const uHeight = 1;
+  const sw = 0.448 / 2;
+  const sh = (uHeight * U_HEIGHT) / 2;
+  const sd = 0.50 / 2;
+  const sY = -rh + (uBase * U_HEIGHT) + sh;
+  const sZ = -rd + sd;
+
+  // Chassis edges — Cisco dark steel gray
+  boxEdges(sw, sh, sd).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(25, Math.round(len * 320));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      serverPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + sY,
+        e.s[2]+(e.e[2]-e.s[2])*t + sZ
+      );
+      serverCol.push(0.30, 0.32, 0.36);
+    }
+  });
+  // Body interior (dark gray haze)
+  for (let i = 0; i < 420; i++) {
+    serverPos.push(
+      (Math.random()-0.5) * 0.448 + xOffset,
+      (Math.random()-0.5) * (uHeight * U_HEIGHT) + sY,
+      (Math.random()-0.5) * 0.50 + sZ
+    );
+    serverCol.push(0.12, 0.13, 0.16);
+  }
+
+  const frontZ_sw = -rd - 0.002;
+  // Front panel base — dark silver
+  for (let i = 0; i < 840; i++) {
+    srvFacePos.push(
+      xOffset + (Math.random()-0.5) * 0.448,
+      sY + (Math.random()-0.5) * (uHeight * U_HEIGHT - 0.003),
+      frontZ_sw
+    );
+    srvFaceCol.push(0.30, 0.32, 0.36);
+  }
+
+  // Zone layout along X: 15% mode panel | 70% RJ45 ports | 15% SFP+ uplink + mgmt
+  const leftX   = xOffset - 0.448/2 + 0.004;
+  const modeR   = leftX + 0.448 * 0.12;
+  const portsL  = modeR + 0.003;
+  const portsR  = leftX + 0.448 * 0.82;
+  const sfpL    = portsR + 0.003;
+  const rightX  = xOffset + 0.448/2 - 0.004;
+
+  // ---- (A) MODE panel (left) — Cisco logo + mode button + SYST/STAT/MASTER/STACK/PoE LEDs
+  for (let i = 0; i < 175; i++) {
+    srvFacePos.push(
+      leftX + Math.random() * (modeR - leftX),
+      sY + (Math.random()-0.5) * (uHeight * U_HEIGHT - 0.003),
+      frontZ_sw - 0.0008
+    );
+    srvFaceCol.push(0.14, 0.14, 0.18);
+  }
+  // stack of 5 small status LEDs on the right side of the mode panel
+  const modeLedColors = [
+    [0.10, 0.95, 0.30],  // SYST — green
+    [0.10, 0.95, 0.30],  // STAT — green
+    [0.20, 0.55, 0.95],  // MASTER — blue
+    [0.10, 0.85, 0.95],  // STACK — cyan
+    [0.95, 0.65, 0.10],  // PoE — amber
+  ];
+  const modeLedX = modeR - 0.006;
+  modeLedColors.forEach((rgb, i) => {
+    const ly = sY + 0.014 - i * 0.006;
+    for (let k = 0; k < 14; k++) {
+      const a = (k / 14) * Math.PI * 2;
+      srvFacePos.push(modeLedX + Math.cos(a)*0.0014, ly + Math.sin(a)*0.0014, frontZ_sw - 0.0020);
+      srvFaceCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+  // Round "MODE" button on the lower-left of the mode panel
+  const btnCx = leftX + 0.010, btnCy = sY - 0.010;
+  for (let k = 0; k < 50; k++) {
+    const r = Math.sqrt(Math.random()) * 0.006;
+    const a = Math.random() * Math.PI * 2;
+    srvFacePos.push(btnCx + Math.cos(a)*r, btnCy + Math.sin(a)*r, frontZ_sw - 0.0020);
+    srvFaceCol.push(0.08, 0.08, 0.10);
+  }
+  // Thin cyan accent line at bottom of mode panel (Cisco branding hint, no text)
+  for (let i = 0; i < 42; i++) {
+    srvFacePos.push(
+      (leftX + modeR)/2 + (Math.random()-0.5)*(modeR - leftX - 0.004),
+      sY - 0.016 + (Math.random()-0.5)*0.002,
+      frontZ_sw - 0.0022
+    );
+    srvFaceCol.push(0.10, 0.70, 0.85);
+  }
+
+  // ---- (B) 48× RJ45 port area — 2 rows × 24 cols, grouped into 4 banks of 12 (bank gap every 12)
+  const portCols   = 24;
+  const portBanks  = 2;                      // visual split: left 12 + right 12
+  const portAreaW  = portsR - portsL;
+  const bankGap    = 0.004;
+  const colsPerBank = portCols / portBanks;  // = 12
+  const bankW      = (portAreaW - (portBanks - 1) * bankGap) / portBanks;
+  const portGap    = 0.0005;
+  const portW      = (bankW - (colsPerBank - 1) * portGap) / colsPerBank;
+  const portH      = 0.012;
+  const portRows   = [sY + 0.009, sY - 0.009];
+  for (let b = 0; b < portBanks; b++) {
+    const bLX = portsL + b * (bankW + bankGap);
+    for (let c = 0; c < colsPerBank; c++) {
+      const cx = bLX + portW/2 + c * (portW + portGap);
+      portRows.forEach((cy, r) => {
+        // very dark RJ45 cavity
+        for (let i = 0; i < 18; i++) {
+          srvFacePos.push(
+            cx + (Math.random()-0.5)*(portW - 0.0006),
+            cy + (Math.random()-0.5)*(portH - 0.0008),
+            frontZ_sw - 0.0010
+          );
+          srvFaceCol.push(0.02, 0.02, 0.03);
+        }
+        // silver port frame
+        const ring = 16;
+        const pW = portW - 0.0004, pH = portH - 0.0004;
+        for (let k = 0; k < ring; k++) {
+          const t = k / ring;
+          let px, py;
+          if      (t < 0.25) { px = -pW/2 + (t*4)*pW;        py = -pH/2; }
+          else if (t < 0.50) { px = +pW/2;                    py = -pH/2 + ((t-0.25)*4)*pH; }
+          else if (t < 0.75) { px = +pW/2 - ((t-0.50)*4)*pW;  py = +pH/2; }
+          else               { px = -pW/2;                    py = +pH/2 - ((t-0.75)*4)*pH; }
+          srvFacePos.push(cx + px, cy + py, frontZ_sw - 0.0016);
+          srvFaceCol.push(0.55, 0.57, 0.60);
+        }
+        // tiny green link LED at the corner of each port (bottom-left of upper row, etc.)
+        if (r === 0) {
+          for (let i = 0; i < 6; i++) {
+            srvFacePos.push(cx - portW*0.30 + (Math.random()-0.5)*0.0014,
+                            cy + portH*0.25 + (Math.random()-0.5)*0.0014,
+                            frontZ_sw - 0.0020);
+            srvFaceCol.push(0.10, 0.95, 0.30);
+          }
+        }
+      });
+    }
+  }
+
+  // ---- (C) 4× SFP+ uplink cages + console/mgmt (right end)
+  const sfpAreaW  = rightX - sfpL;
+  const sfpCols   = 4;
+  const sfpGap    = 0.0012;
+  // Reserve bottom row for 4 SFP+, top row for mgmt ports/LEDs (since 1U has limited vertical room)
+  const sfpW      = (sfpAreaW - (sfpCols - 1) * sfpGap) / sfpCols;
+  const sfpH      = 0.014;
+  const sfpCy     = sY - 0.008;
+  for (let c = 0; c < sfpCols; c++) {
+    const cx = sfpL + sfpW/2 + c * (sfpW + sfpGap);
+    // dark cage interior
+    for (let i = 0; i < 22; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5) * (sfpW - 0.0006),
+        sfpCy + (Math.random()-0.5) * (sfpH - 0.0008),
+        frontZ_sw - 0.0010
+      );
+      srvFaceCol.push(0.02, 0.02, 0.03);
+    }
+    // silver frame
+    const ring = 22;
+    const w = sfpW - 0.0005, h = sfpH - 0.0005;
+    for (let k = 0; k < ring; k++) {
+      const t = k / ring;
+      let px, py;
+      if      (t < 0.25) { px = -w/2 + (t*4)*w;       py = -h/2; }
+      else if (t < 0.50) { px = +w/2;                  py = -h/2 + ((t-0.25)*4)*h; }
+      else if (t < 0.75) { px = +w/2 - ((t-0.50)*4)*w; py = +h/2; }
+      else               { px = -w/2;                  py = +h/2 - ((t-0.75)*4)*h; }
+      srvFacePos.push(cx + px, sfpCy + py, frontZ_sw - 0.0016);
+      srvFaceCol.push(0.55, 0.57, 0.60);
+    }
+    // green link LED above each SFP+
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      srvFacePos.push(cx + Math.cos(a)*0.0013, sfpCy + sfpH/2 + 0.0025 + Math.sin(a)*0.0013, frontZ_sw - 0.0022);
+      srvFaceCol.push(0.10, 0.95, 0.30);
+    }
+  }
+  // mgmt RJ45 + console port on the upper portion of the right area
+  const mgmtRowY = sY + 0.010;
+  for (let i = 0; i < 49; i++) {
+    srvFacePos.push(
+      sfpL + 0.010 + (Math.random()-0.5)*0.008,
+      mgmtRowY + (Math.random()-0.5)*0.010,
+      frontZ_sw - 0.0018
+    );
+    srvFaceCol.push(0.02, 0.02, 0.03);
+  }
+  for (let i = 0; i < 38; i++) {
+    srvFacePos.push(
+      sfpL + 0.030 + (Math.random()-0.5)*0.006,
+      mgmtRowY + (Math.random()-0.5)*0.006,
+      frontZ_sw - 0.0018
+    );
+    srvFaceCol.push(0.02, 0.02, 0.03);
+  }
+}
+
+const emptyRackX = -(RACK.w + SET_GAP);  // -0.65
+// Layout from top (revised 2026-04-15 — switches and PDUs swapped):
+//   U44 empty / PDU2 U41-43 / PDU1 U38-40 / U37 empty / InfiniBand U36 (QM9700 32×OSFP) /
+//   U35 empty / L3 U34 / U33 empty / L2 U32 / below empty
+addIBSwitch(emptyRackX, 35);    // InfiniBand — QM9700 32×OSFP
+addL3Switch(emptyRackX, 33);    // L3 — Arista 7050X3 style (24× SFP28 + 4× QSFP28)
+addL2Switch(emptyRackX, 31);    // L2 — Cisco Catalyst 48P style (mode panel + 48× RJ45 + 4× SFP+ uplink + mgmt)
+
+// ---- 2. Delta RDC (Blue, rear-coupled) ----
+const dw = RDC.w/2, dh = RDC.h/2, dd = RDC.d/2;
+const rdcZOffset = rd + dd;   // behind the rack
+function addRDC(xOffset = 0) {
+  boxEdges(dw, dh, dd).forEach(e => {
+    for (let i = 0; i < 420; i++) { // density -30%
+      const t = i / 420;
+      rdcPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t,
+        e.s[2]+(e.e[2]-e.s[2])*t + rdcZOffset
+      );
+      rdcCol.push(0.0, 0.245, 0.49);
+    }
+  });
+  for (let i = 0; i < 6160; i++) {
+    rdcPos.push(
+      (Math.random()-0.5)*RDC.w + xOffset,
+      (Math.random()-0.5)*RDC.h,
+      rd + Math.random()*RDC.d
+    );
+    rdcCol.push(0.0, 0.25, 0.55);
+  }
+}
+
+// ---- 3. Servers (Orange, front-aligned) — 10U ----
+function addServer(xOffset, uBase) {
+  const sw = SERVER.w/2, sh = SERVER.h/2, sd = SERVER.d/2;
+  const sY = -rh + (uBase * U_HEIGHT) + sh;
+  const sZ = -rd + sd;                       // front face flush with rack front
+
+  boxEdges(sw, sh, sd).forEach(e => {
+    for (let i = 0; i < 350; i++) { // density -30% (500 → 350)
+      const t = i / 350;
+      serverPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + sY,
+        e.s[2]+(e.e[2]-e.s[2])*t + sZ
+      );
+      serverCol.push(0.49, 0.2205, 0.0);
+    }
+  });
+  for (let i = 0; i < 3500; i++) {
+    serverPos.push(
+      (Math.random()-0.5)*SERVER.w + xOffset,
+      (Math.random()-0.5)*SERVER.h + sY,
+      (Math.random()-0.5)*SERVER.d + sZ
+    );
+    serverCol.push(0.4, 0.2, 0.0);
+  }
+
+  // ---- AC server FRONT-PANEL detail (matches Inventec P9000 G7 AC layout) ----
+  // 4 functional zones, each color-coded for clarity (PDU-style):
+  //   ZONE 1 (top 1U)        : 6× PSU modules         — AMBER  (#f2a31a)
+  //   ZONE 2 (mesh grille)   : 8-port InfiniBand NIC  — CYAN   (#1ad6f2) — slot row inside grille
+  //   ZONE 3 (just below mesh): Compute-tray ports     — GREEN  (#33d94d)
+  //   ZONE 4 (bottom)        : Disk tray (NVMe bays)  — BLUE   (#268cf2)
+  const ZONE_PSU    = [0.95, 0.65, 0.10];   // amber
+  const ZONE_NIC    = [0.10, 0.85, 0.95];   // cyan (InfiniBand)
+  const ZONE_PORTS  = [0.20, 0.85, 0.30];   // green (compute tray ports)
+  const ZONE_DISK   = [0.15, 0.55, 0.95];   // blue (NVMe disk)
+
+  const frontZ_srv = -rd - 0.0015;
+  const sBottom = sY - sh;
+  const sTop    = sY + sh;
+  const sLeft   = xOffset - SERVER.w/2;
+  const sRight  = xOffset + SERVER.w/2;
+
+  // Front-panel base — light gray/silver bezel
+  for (let i = 0; i < 1680; i++) {
+    srvFacePos.push(
+      xOffset + (Math.random()-0.5)*SERVER.w,
+      sY      + (Math.random()-0.5)*SERVER.h,
+      frontZ_srv
+    );
+    srvFaceCol.push(0.55, 0.55, 0.58);
+  }
+
+  const margin = 0.008;
+  // Vertical zone heights (in U):
+  //   1U PSU  +  6.5U mesh (NIC is the bottom strip of the mesh) + 0.5U compute ports + 2U disk
+  const psuTopY    = sTop - margin;
+  const psuBotY    = sTop - 1 * U_HEIGHT;
+  const meshTopY   = psuBotY - 0.003;
+  const portsTopY  = sBottom + 2.5 * U_HEIGHT;
+  const meshBotY   = portsTopY + 0.003;
+  const portsBotY  = sBottom + 2 * U_HEIGHT;
+  const diskTopY   = portsBotY - 0.003;
+  const diskBotY   = sBottom + margin;
+
+  // ============================================================
+  // ZONE 1 — Top 1U: 6× PSU modules (AMBER)
+  // ============================================================
+  const psuCount = 6;
+  const psuAreaW = SERVER.w - 2 * margin;
+  const psuGap   = 0.003;
+  const psuW     = (psuAreaW - (psuCount - 1) * psuGap) / psuCount;
+  const psuCy    = (psuTopY + psuBotY) / 2;
+  const psuH     = psuTopY - psuBotY - 0.003;
+  for (let s = 0; s < psuCount; s++) {
+    const cx = sLeft + margin + psuW/2 + s * (psuW + psuGap);
+    // dark module body
+    for (let i = 0; i < 77; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5)*(psuW - 0.003),
+        psuCy + (Math.random()-0.5)*psuH,
+        frontZ_srv - 0.001
+      );
+      srvFaceCol.push(0.10, 0.10, 0.12);
+    }
+    // AMBER bezel strip across the top of each PSU (color zone marker)
+    for (let i = 0; i < 35; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5)*(psuW - 0.005),
+        psuCy + psuH/2 - 0.003 + (Math.random()-0.5)*0.003,
+        frontZ_srv - 0.002
+      );
+      srvFaceCol.push(ZONE_PSU[0], ZONE_PSU[1], ZONE_PSU[2]);
+    }
+    // small amber status LED in middle
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * Math.PI * 2;
+      srvFacePos.push(
+        cx + Math.cos(a)*0.0028,
+        psuCy + Math.sin(a)*0.0028,
+        frontZ_srv - 0.002
+      );
+      srvFaceCol.push(ZONE_PSU[0], ZONE_PSU[1], ZONE_PSU[2]);
+    }
+  }
+
+  // ============================================================
+  // ZONE 2 — Middle: large perforated mesh grille + 8-port InfiniBand NIC at bottom strip (CYAN)
+  // ============================================================
+  const meshLeft  = sLeft + margin;
+  const meshRight = sRight - margin;
+  const meshW     = meshRight - meshLeft;
+  const meshH     = meshTopY  - meshBotY;
+  // grille frame edges
+  for (let i = 0; i < 840; i++) {
+    const x = meshLeft + Math.random() * meshW;
+    const y = meshBotY + Math.random() * meshH;
+    const onEdge = (x < meshLeft + 0.003 || x > meshRight - 0.003 ||
+                    y < meshBotY + 0.003 || y > meshTopY - 0.003);
+    if (!onEdge) continue;
+    srvFacePos.push(x, y, frontZ_srv - 0.0005);
+    srvFaceCol.push(0.65, 0.65, 0.68);
+  }
+  // hole-pattern dots over the FULL mesh area
+  const holePitch = 0.012;
+  const cols = Math.floor(meshW / holePitch);
+  const rows = Math.floor(meshH / holePitch);
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cx = meshLeft + holePitch/2 + c * holePitch + (r % 2 === 0 ? 0 : holePitch/2);
+      const cy = meshBotY + holePitch/2 + r * holePitch;
+      if (cx > meshRight - 0.002) continue;
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2;
+        srvFacePos.push(cx + Math.cos(a)*0.0018, cy + Math.sin(a)*0.0018, frontZ_srv - 0.0008);
+        srvFaceCol.push(0.05, 0.05, 0.06);
+      }
+    }
+  }
+  // 8 InfiniBand NIC ports as a horizontal strip in the LOWER portion of the mesh — CYAN bezel
+  const nicY0      = meshBotY + meshH * 0.10;
+  const nicCount   = 8;
+  const nicSlotW   = meshW * 0.085;
+  const nicTotalW  = nicSlotW * nicCount + (nicCount - 1) * (meshW * 0.012);
+  const nicLeftX   = meshLeft + (meshW - nicTotalW) / 2;
+  const nicSlotH   = 0.014;
+  for (let s = 0; s < nicCount; s++) {
+    const cx = nicLeftX + nicSlotW/2 + s * (nicSlotW + meshW * 0.012);
+    // dark slot body
+    for (let i = 0; i < 63; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5)*nicSlotW,
+        nicY0 + (Math.random()-0.5)*nicSlotH,
+        frontZ_srv - 0.0014
+      );
+      srvFaceCol.push(0.05, 0.05, 0.07);
+    }
+    // CYAN bezel/LED outline (thin strip on top edge of slot)
+    for (let i = 0; i < 28; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5)*(nicSlotW - 0.003),
+        nicY0 + nicSlotH/2 - 0.001 + (Math.random()-0.5)*0.0025,
+        frontZ_srv - 0.002
+      );
+      srvFaceCol.push(ZONE_NIC[0], ZONE_NIC[1], ZONE_NIC[2]);
+    }
+  }
+
+  // ============================================================
+  // ZONE 3 — Compute-tray ports row (GREEN), just below the mesh grille (~0.5U)
+  // ============================================================
+  const portsCx = (sLeft + sRight) / 2;
+  const portsZoneW = SERVER.w - 2 * margin;
+  // dark base strip
+  for (let i = 0; i < 350; i++) {
+    srvFacePos.push(
+      portsCx + (Math.random()-0.5)*portsZoneW,
+      (portsTopY + portsBotY)/2 + (Math.random()-0.5)*(portsTopY - portsBotY - 0.002),
+      frontZ_srv - 0.001
+    );
+    srvFaceCol.push(0.08, 0.08, 0.10);
+  }
+  // 6 compute-tray port indicators (GREEN bezel, evenly spaced)
+  const cpPortCount = 6;
+  for (let p = 0; p < cpPortCount; p++) {
+    const cx = sLeft + margin + ((portsZoneW) / cpPortCount) * (p + 0.5);
+    const cy = (portsTopY + portsBotY) / 2;
+    // small rectangular GREEN bezel
+    for (let i = 0; i < 42; i++) {
+      srvFacePos.push(
+        cx + (Math.random()-0.5)*0.014,
+        cy + (Math.random()-0.5)*0.008,
+        frontZ_srv - 0.002
+      );
+      srvFaceCol.push(ZONE_PORTS[0], ZONE_PORTS[1], ZONE_PORTS[2]);
+    }
+    // dark center pin opening
+    for (let i = 0; i < 18; i++) {
+      const a = (i / 18) * Math.PI * 2;
+      srvFacePos.push(cx + Math.cos(a)*0.002, cy + Math.sin(a)*0.002, frontZ_srv - 0.0025);
+      srvFaceCol.push(0.03, 0.03, 0.05);
+    }
+  }
+
+  // ============================================================
+  // ZONE 4 — Bottom 2U: Disk tray (NVMe bays, BLUE)
+  // ============================================================
+  const diskZoneL = sLeft + margin;
+  const diskZoneR = sRight - margin;
+  const diskZoneW = diskZoneR - diskZoneL;
+  const diskZoneH = diskTopY - diskBotY;
+  // dark base
+  for (let i = 0; i < 980; i++) {
+    srvFacePos.push(
+      diskZoneL + Math.random()*diskZoneW,
+      diskBotY  + Math.random()*diskZoneH,
+      frontZ_srv - 0.001
+    );
+    srvFaceCol.push(0.08, 0.08, 0.10);
+  }
+  // 8 NVMe disk bays in 2 rows × 4 cols, each with BLUE LED bezel
+  const dCols = 4, dRows = 2;
+  // leave room on far right for a small status LCD
+  const dWidthArea  = diskZoneW * 0.78;
+  const dWidthPerBay = (dWidthArea - (dCols - 1) * 0.003) / dCols;
+  const dHeightPerBay = (diskZoneH - (dRows - 1) * 0.004 - 0.006) / dRows;
+  for (let r = 0; r < dRows; r++) {
+    for (let c = 0; c < dCols; c++) {
+      const dCx = diskZoneL + 0.005 + dWidthPerBay/2 + c * (dWidthPerBay + 0.003);
+      const dCy = diskBotY  + 0.003 + dHeightPerBay/2 + r * (dHeightPerBay + 0.004);
+      // dark bay body
+      for (let i = 0; i < 91; i++) {
+        srvFacePos.push(
+          dCx + (Math.random()-0.5)*(dWidthPerBay - 0.003),
+          dCy + (Math.random()-0.5)*(dHeightPerBay - 0.003),
+          frontZ_srv - 0.0015
+        );
+        srvFaceCol.push(0.05, 0.05, 0.07);
+      }
+      // BLUE LED activity bar across bottom edge of bay
+      for (let i = 0; i < 35; i++) {
+        srvFacePos.push(
+          dCx + (Math.random()-0.5)*(dWidthPerBay - 0.005),
+          dCy - dHeightPerBay/2 + 0.0035 + (Math.random()-0.5)*0.002,
+          frontZ_srv - 0.0025
+        );
+        srvFaceCol.push(ZONE_DISK[0], ZONE_DISK[1], ZONE_DISK[2]);
+      }
+    }
+  }
+  // Small cyan LCD at far right of disk zone
+  const lcdCx = diskZoneR - 0.020;
+  const lcdCy = diskBotY + diskZoneH/2;
+  for (let i = 0; i < 140; i++) {
+    srvFacePos.push(
+      lcdCx + (Math.random()-0.5)*0.030,
+      lcdCy + (Math.random()-0.5)*(diskZoneH - 0.010),
+      frontZ_srv - 0.002
+    );
+    srvFaceCol.push(0.20, 0.85, 0.95);
+  }
+}
+
+// ---- 4. CoolIT CHx80 CDU (teal, installed in Rack #2, 2U above the floor) ----
+// Rack #2 center is at xOffset = RACK.w + 0.05 (= 0.65 m).
+// 4U CDU sits above a 2U bottom gap → uBase = 2 → CDU fills U3..U6.
+// Front face (handle side) aligned with rack front (-Z), matching server orientation.
+function addCDU(xOffset, uBase) {
+  const cw = CDU.w/2, ch = CDU.h/2, cd = CDU.d/2;
+  const cY = -rh + (uBase * U_HEIGHT) + ch;
+  const cZ = -rd + cd;
+  boxEdges(cw, ch, cd).forEach(e => {
+    for (let i = 0; i < 350; i++) {
+      const t = i / 350;
+      cduPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + cY,
+        e.s[2]+(e.e[2]-e.s[2])*t + cZ
+      );
+      // Edge: blue-green (teal) — bright signature color
+      cduCol.push(0.0, 0.65, 0.55);
+    }
+  });
+  // CDU interior volume (dimmer teal)
+  for (let i = 0; i < 2450; i++) {
+    cduPos.push(
+      (Math.random()-0.5)*CDU.w + xOffset,
+      (Math.random()-0.5)*CDU.h + cY,
+      (Math.random()-0.5)*CDU.d + cZ
+    );
+    cduCol.push(0.0, 0.30, 0.25);
+  }
+
+  // ---- CDU FRONT-PANEL detail (matches CoolIT CHx80 layout) ----
+  //   Body color stays teal for identifiability; we add front-face zones in NormalBlending buffer:
+  //   - black mounting ears (both sides)
+  //   - logo strip (lower-left, light silver)
+  //   - cyan LCD display (left-center)
+  //   - row of control LEDs (center, green/amber/cyan)
+  //   - pump-status indicator panel (right)
+  const frontZ_cdu = -rd - 0.0015;
+  const cBottom = cY - ch;
+  const cTop    = cY + ch;
+  const cLeft   = xOffset - CDU.w/2;
+  const cRight  = xOffset + CDU.w/2;
+
+  // Front-panel base — light silver-gray bezel covering the full CDU face
+  for (let i = 0; i < 1050; i++) {
+    srvFacePos.push(
+      xOffset + (Math.random()-0.5)*CDU.w,
+      cY      + (Math.random()-0.5)*CDU.h,
+      frontZ_cdu
+    );
+    srvFaceCol.push(0.62, 0.64, 0.68);
+  }
+
+  // (a) Mounting ears (both sides) — black handles
+  [cLeft + 0.005, cRight - 0.005].forEach(eX => {
+    for (let i = 0; i < 175; i++) {
+      srvFacePos.push(
+        eX + (Math.random()-0.5)*0.012,
+        cY + (Math.random()-0.5)*(CDU.h - 0.005),
+        frontZ_cdu - 0.001
+      );
+      srvFaceCol.push(0.06, 0.06, 0.08);
+    }
+  });
+
+  // ---- Helper: bright rectangle outline (perimeter line) on the front face ----
+  function panelOutline(cx, cy, w, h, zOff, rgb, density) {
+    const halfW = w/2, halfH = h/2;
+    const ring = density || 220;
+    for (let k = 0; k < ring; k++) {
+      const t = k / ring;
+      let px, py;
+      if      (t < 0.25) { px = -halfW + (t*4)*w;       py = -halfH; }
+      else if (t < 0.50) { px = +halfW;                  py = -halfH + ((t-0.25)*4)*h; }
+      else if (t < 0.75) { px = +halfW - ((t-0.50)*4)*w; py = +halfH; }
+      else               { px = -halfW;                  py = +halfH - ((t-0.75)*4)*h; }
+      srvFacePos.push(cx + px, cy + py, frontZ_cdu + zOff);
+      srvFaceCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  }
+
+  // (b) Logo strip — lower-left, small dark area with bright cyan accent line + outline
+  const logoCx = cLeft + 0.045;
+  const logoCy = cBottom + 0.018;
+  for (let i = 0; i < 140; i++) {
+    srvFacePos.push(
+      logoCx + (Math.random()-0.5)*0.040,
+      logoCy + (Math.random()-0.5)*0.012,
+      frontZ_cdu - 0.001
+    );
+    srvFaceCol.push(0.10, 0.10, 0.12);
+  }
+  panelOutline(logoCx, logoCy, 0.040, 0.012, -0.0025, [0.78, 0.80, 0.85], 160);
+  // bright cyan accent line under the logo
+  for (let i = 0; i < 42; i++) {
+    srvFacePos.push(
+      logoCx + (Math.random()-0.5)*0.035,
+      logoCy - 0.005 + (Math.random()-0.5)*0.0015,
+      frontZ_cdu - 0.002
+    );
+    srvFaceCol.push(0.10, 0.85, 0.95);
+  }
+
+  // (c) LCD display panel — left-center, SKY-BLUE illuminated panel with bright outline + soft glow halo
+  const lcdCx = cLeft + 0.055;
+  const lcdCy = cY + 0.005;
+  const lcdW  = 0.080;
+  const lcdH  = 0.038;
+  const SKY_BLUE   = [0.40, 0.78, 0.98];
+  const SKY_BRIGHT = [0.85, 0.95, 1.00];
+
+  // dark bezel
+  for (let i = 0; i < 210; i++) {
+    srvFacePos.push(
+      lcdCx + (Math.random()-0.5)*lcdW,
+      lcdCy + (Math.random()-0.5)*lcdH,
+      frontZ_cdu - 0.001
+    );
+    srvFaceCol.push(0.05, 0.05, 0.07);
+  }
+  // sky-blue illuminated display (denser fill for stronger glow effect)
+  for (let i = 0; i < 364; i++) {
+    srvFacePos.push(
+      lcdCx + (Math.random()-0.5)*(lcdW - 0.006),
+      lcdCy + (Math.random()-0.5)*(lcdH - 0.006),
+      frontZ_cdu - 0.002
+    );
+    srvFaceCol.push(SKY_BLUE[0], SKY_BLUE[1], SKY_BLUE[2]);
+  }
+  // bright white-blue OUTLINE around the LCD active area
+  panelOutline(lcdCx, lcdCy, lcdW - 0.005, lcdH - 0.005, -0.003, SKY_BRIGHT, 320);
+  // outer dark bezel outline (frame)
+  panelOutline(lcdCx, lcdCy, lcdW + 0.002, lcdH + 0.002, -0.0005, [0.30, 0.30, 0.34], 280);
+  // SOFT GLOW HALO — sparse sky-blue particles extending beyond the LCD body
+  for (let i = 0; i < 196; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const r   = Math.sqrt(Math.random());
+    const dx  = (lcdW/2 + 0.022) * Math.cos(ang) * r;
+    const dy  = (lcdH/2 + 0.014) * Math.sin(ang) * r;
+    // Only place glow particles OUTSIDE the LCD body itself
+    if (Math.abs(dx) < lcdW/2 - 0.003 && Math.abs(dy) < lcdH/2 - 0.003) continue;
+    srvFacePos.push(lcdCx + dx, lcdCy + dy, frontZ_cdu - 0.0018);
+    srvFaceCol.push(SKY_BLUE[0]*0.55, SKY_BLUE[1]*0.7, SKY_BLUE[2]*0.85);
+  }
+
+  // (d) Control LED row — center, 5 LEDs in a recessed dark strip (with outline)
+  const ledColors = [
+    [0.10, 0.95, 0.30],  // PWR — green
+    [0.10, 0.95, 0.30],  // PUMP1 — green
+    [0.95, 0.65, 0.10],  // ALARM — amber
+    [0.10, 0.85, 0.95],  // COMM — cyan
+    [0.95, 0.20, 0.20],  // FAULT — red
+  ];
+  const ledStartX = xOffset + 0.020;
+  const ledStripCx = ledStartX + (ledColors.length - 1) * 0.012 / 2;
+  const ledStripCy = cY + 0.020;
+  const ledStripW  = ledColors.length * 0.014;
+  const ledStripH  = 0.018;
+  // dark recessed strip
+  for (let i = 0; i < 140; i++) {
+    srvFacePos.push(
+      ledStripCx + (Math.random()-0.5)*ledStripW,
+      ledStripCy + (Math.random()-0.5)*ledStripH,
+      frontZ_cdu - 0.0015
+    );
+    srvFaceCol.push(0.05, 0.05, 0.07);
+  }
+  // outline around the LED strip
+  panelOutline(ledStripCx, ledStripCy, ledStripW, ledStripH, -0.0025, [0.55, 0.57, 0.62], 200);
+  // the LEDs themselves
+  ledColors.forEach((rgb, i) => {
+    const lx = ledStartX + i * 0.012;
+    const ly = ledStripCy;
+    for (let k = 0; k < 32; k++) {
+      const a = (k / 32) * Math.PI * 2;
+      srvFacePos.push(lx + Math.cos(a)*0.0038, ly + Math.sin(a)*0.0038, frontZ_cdu - 0.0030);
+      srvFaceCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+
+  // (e) Pump status panel — right side, dark area with 2 small green pump-status dots + outline
+  const pumpCx = cRight - 0.060;
+  const pumpCy = cY;
+  const pumpW = 0.080, pumpH = CDU.h - 0.020;
+  for (let i = 0; i < 175; i++) {
+    srvFacePos.push(
+      pumpCx + (Math.random()-0.5)*pumpW,
+      pumpCy + (Math.random()-0.5)*pumpH,
+      frontZ_cdu - 0.001
+    );
+    srvFaceCol.push(0.10, 0.10, 0.12);
+  }
+  // outline around the pump panel
+  panelOutline(pumpCx, pumpCy, pumpW, pumpH, -0.0025, [0.55, 0.57, 0.62], 280);
+  // 2 small "pump active" green LEDs stacked vertically
+  [0.014, -0.014].forEach(dy => {
+    for (let k = 0; k < 30; k++) {
+      const a = (k / 30) * Math.PI * 2;
+      srvFacePos.push(pumpCx + 0.012 + Math.cos(a)*0.0038,
+                      pumpCy + dy + Math.sin(a)*0.0038,
+                      frontZ_cdu - 0.002);
+      srvFaceCol.push(0.10, 0.95, 0.30);
+    }
+  });
+  // small label pad next to the LEDs (light silver, with outline)
+  const labelCx = pumpCx - 0.020;
+  const labelCy = pumpCy;
+  for (let i = 0; i < 56; i++) {
+    srvFacePos.push(
+      labelCx + (Math.random()-0.5)*0.030,
+      labelCy + (Math.random()-0.5)*0.012,
+      frontZ_cdu - 0.002
+    );
+    srvFaceCol.push(0.78, 0.78, 0.82);
+  }
+  panelOutline(labelCx, labelCy, 0.030, 0.012, -0.0028, [0.45, 0.45, 0.50], 160);
+}
+// ---- 5. Two 8U orange servers in Rack #2, bottoms aligned with Rack #1's servers ----
+// Rack #1 Server #1 bottom at U8 → Rack #2 8U server #1 bottom at U8 (uBase = 8) → U9..U16
+// Rack #1 Server #2 bottom at U20 → Rack #2 8U server #2 bottom at U20 (uBase = 20) → U21..U28
+// Between CDU top (U6) and first 8U server bottom (U8) is exactly the requested 2U gap (U7..U8).
+function addServer8(xOffset, uBase) {
+  const sw = SERVER8.w/2, sh = SERVER8.h/2, sd = SERVER8.d/2;
+  const sY = -rh + (uBase * U_HEIGHT) + sh;
+  const sZ = -rd + sd;   // front-aligned, same as Rack #1 servers
+
+  boxEdges(sw, sh, sd).forEach(e => {
+    for (let i = 0; i < 350; i++) {
+      const t = i / 350;
+      serverPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + sY,
+        e.s[2]+(e.e[2]-e.s[2])*t + sZ
+      );
+      serverCol.push(0.49, 0.2205, 0.0); // same orange edge as Rack #1 servers
+    }
+  });
+  for (let i = 0; i < 2800; i++) {
+    serverPos.push(
+      (Math.random()-0.5)*SERVER8.w + xOffset,
+      (Math.random()-0.5)*SERVER8.h + sY,
+      (Math.random()-0.5)*SERVER8.d + sZ
+    );
+    serverCol.push(0.4, 0.2, 0.0);
+  }
+
+  // ---- LC server FRONT-PANEL detail (matches Inventec P9000 G6 LC layout) ----
+  //   Top ~5U  : 5 vertical GPU/PCIe sleds (dark metal, slim handle on each)
+  //   Bottom ~3U: left = 8× U.2 NVMe drive bays (blue-LED bezels)
+  //               right = LCD display + status LEDs + power button (control panel)
+  const frontZ_srv = -rd - 0.0015;        // just in front of the server front face
+  const sBottom = sY - sh;                // server bottom Y
+  const sTop    = sY + sh;                // server top Y
+  const sLeft   = xOffset - SERVER8.w/2;
+  const sRight  = xOffset + SERVER8.w/2;
+
+  // Front-panel base — slightly lighter dark-gray bezel covering the full server face
+  for (let i = 0; i < 1260; i++) {
+    srvFacePos.push(
+      xOffset + (Math.random()-0.5)*SERVER8.w,
+      sY      + (Math.random()-0.5)*SERVER8.h,
+      frontZ_srv
+    );
+    srvFaceCol.push(0.18, 0.18, 0.20);     // dark gray panel
+  }
+
+  // Split: top 5U (sleds) vs bottom 3U (drives + control)
+  const splitY  = sBottom + 3 * U_HEIGHT; // boundary between bottom 3U and top 5U
+  const sledTopY = sTop  - 0.005;
+  const sledBotY = splitY + 0.005;
+
+  // ---- 1) Five vertical GPU/PCIe sleds in the top 5U ----
+  const SLED_COUNT = 5;
+  const sledMargin = 0.010;
+  const sledTotalW = SERVER8.w - 2 * sledMargin;
+  const sledGap    = 0.004;
+  const sledW      = (sledTotalW - (SLED_COUNT - 1) * sledGap) / SLED_COUNT;
+  for (let s = 0; s < SLED_COUNT; s++) {
+    const sledCx = sLeft + sledMargin + sledW/2 + s * (sledW + sledGap);
+    // Sled body — slightly raised dark slab
+    for (let i = 0; i < 490; i++) {
+      srvFacePos.push(
+        sledCx + (Math.random()-0.5) * (sledW - 0.003),
+        (sledTopY + sledBotY)/2 + (Math.random()-0.5) * (sledTopY - sledBotY - 0.005),
+        frontZ_srv - 0.001
+      );
+      srvFaceCol.push(0.10, 0.10, 0.12);
+    }
+    // Sled outline (brighter edge — silver bezel)
+    const ring = 60;
+    for (let k = 0; k < ring; k++) {
+      const t = k / ring;
+      let px, py;
+      const w = sledW - 0.003, h = sledTopY - sledBotY - 0.005;
+      if      (t < 0.25) { px = -w/2 + (t*4)*w;       py = -h/2; }
+      else if (t < 0.50) { px = +w/2;                  py = -h/2 + ((t-0.25)*4)*h; }
+      else if (t < 0.75) { px = +w/2 - ((t-0.50)*4)*w; py = +h/2; }
+      else               { px = -w/2;                  py = +h/2 - ((t-0.75)*4)*h; }
+      srvFacePos.push(sledCx + px, (sledTopY + sledBotY)/2 + py, frontZ_srv - 0.0015);
+      srvFaceCol.push(0.45, 0.45, 0.48);
+    }
+    // Small horizontal handle slit centered on the sled
+    for (let i = 0; i < 56; i++) {
+      srvFacePos.push(
+        sledCx + (Math.random()-0.5) * (sledW * 0.5),
+        (sledTopY + sledBotY)/2 + (Math.random()-0.5) * 0.006,
+        frontZ_srv - 0.002
+      );
+      srvFaceCol.push(0.55, 0.55, 0.60);
+    }
+    // Small green status LED at top of each sled
+    for (let i = 0; i < 30; i++) {
+      const a = (i / 30) * Math.PI * 2;
+      srvFacePos.push(
+        sledCx + Math.cos(a) * 0.003,
+        sledTopY - 0.012 + Math.sin(a) * 0.003,
+        frontZ_srv - 0.0025
+      );
+      srvFaceCol.push(0.10, 0.95, 0.30);
+    }
+  }
+
+  // ---- 2) Bottom 3U: left = 8× U.2 NVMe drive bays, right = LCD/control panel ----
+  const bottomTopY = splitY - 0.004;
+  const bottomBotY = sBottom + 0.005;
+  // Drive-bay zone occupies left ~70 % of the width
+  const dbZoneRight = sLeft + SERVER8.w * 0.70;
+  // 8 drive bays in 4 cols × 2 rows
+  const dbCols = 4, dbRows = 2;
+  const dbZoneW = dbZoneRight - sLeft - 2 * sledMargin;
+  const dbZoneH = bottomTopY - bottomBotY;
+  const dbW = (dbZoneW - (dbCols - 1) * 0.003) / dbCols;
+  const dbH = (dbZoneH - (dbRows - 1) * 0.003) / dbRows;
+  for (let r = 0; r < dbRows; r++) {
+    for (let c = 0; c < dbCols; c++) {
+      const dbCx = sLeft + sledMargin + dbW/2 + c * (dbW + 0.003);
+      const dbCy = bottomBotY + dbH/2 + r * (dbH + 0.003);
+      // Drive bay body — dark panel
+      for (let i = 0; i < 154; i++) {
+        srvFacePos.push(
+          dbCx + (Math.random()-0.5)*(dbW - 0.003),
+          dbCy + (Math.random()-0.5)*(dbH - 0.003),
+          frontZ_srv - 0.001
+        );
+        srvFaceCol.push(0.08, 0.08, 0.10);
+      }
+      // Bright blue LED activity bar along one side of the bezel
+      for (let i = 0; i < 35; i++) {
+        srvFacePos.push(
+          dbCx - dbW/2 + 0.003 + (Math.random()-0.5)*0.003,
+          dbCy + (Math.random()-0.5)*(dbH * 0.7),
+          frontZ_srv - 0.002
+        );
+        srvFaceCol.push(0.20, 0.55, 0.95);
+      }
+    }
+  }
+
+  // ---- 3) Right side of bottom — LCD + status LEDs + power button ----
+  const ctlLeft  = dbZoneRight + 0.005;
+  const ctlRight = sRight - sledMargin;
+  const ctlCx    = (ctlLeft + ctlRight)/2;
+  const ctlW     = ctlRight - ctlLeft;
+  const ctlH     = bottomTopY - bottomBotY;
+  // Control panel base — black
+  for (let i = 0; i < 350; i++) {
+    srvFacePos.push(
+      ctlCx + (Math.random()-0.5)*ctlW,
+      (bottomTopY + bottomBotY)/2 + (Math.random()-0.5)*ctlH,
+      frontZ_srv - 0.001
+    );
+    srvFaceCol.push(0.06, 0.06, 0.08);
+  }
+  // Cyan LCD strip on top of the control panel
+  const lcdH = ctlH * 0.45;
+  const lcdCy = bottomTopY - lcdH/2 - 0.003;
+  for (let i = 0; i < 154; i++) {
+    srvFacePos.push(
+      ctlCx + (Math.random()-0.5)*(ctlW - 0.005),
+      lcdCy + (Math.random()-0.5)*lcdH,
+      frontZ_srv - 0.002
+    );
+    srvFaceCol.push(0.20, 0.85, 0.95);
+  }
+  // 3 status LEDs in a vertical strip (green / amber / red)
+  const ledColors = [[0.10,0.95,0.30], [0.95,0.65,0.10], [0.95,0.20,0.20]];
+  ledColors.forEach((rgb, i) => {
+    const ledY = bottomBotY + 0.010 + i * 0.011;
+    for (let k = 0; k < 30; k++) {
+      const a = (k / 30) * Math.PI * 2;
+      srvFacePos.push(
+        ctlCx - ctlW/2 + 0.008 + Math.cos(a)*0.004,
+        ledY + Math.sin(a)*0.004,
+        frontZ_srv - 0.002
+      );
+      srvFaceCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+  // Power button — small white circle at the lower-right of the control panel
+  for (let k = 0; k < 50; k++) {
+    const a = (k / 50) * Math.PI * 2;
+    const r = Math.sqrt(Math.random()) * 0.006;
+    srvFacePos.push(
+      ctlCx + ctlW/2 - 0.012 + Math.cos(a)*r,
+      bottomBotY + 0.014 + Math.sin(a)*r,
+      frontZ_srv - 0.002
+    );
+    srvFaceCol.push(0.85, 0.85, 0.88);
+  }
+
+  // ---- 4) InfiniBand NIC port row — 8 green-bezel ports (LC server uplinks to QM9700)
+  //        sits in a thin strip between the top-5U GPU sleds and the bottom-3U drives area.
+  const ibY = sY + 0.020;
+  const ibAreaW = SERVER8.w - 0.024;
+  const ibPortCount = 8;
+  const ibPortGap = 0.004;
+  const ibPortW = (ibAreaW - (ibPortCount - 1) * ibPortGap) / ibPortCount;
+  const ibPortH = 0.012;
+  const ibStartX = xOffset - ibAreaW/2 + ibPortW/2;
+  for (let n = 0; n < ibPortCount; n++) {
+    const px = ibStartX + n * (ibPortW + ibPortGap);
+    // dark port cavity
+    for (let i = 0; i < 49; i++) {
+      srvFacePos.push(
+        px + (Math.random()-0.5) * (ibPortW - 0.002),
+        ibY + (Math.random()-0.5) * (ibPortH - 0.002),
+        frontZ_srv - 0.001
+      );
+      srvFaceCol.push(0.02, 0.02, 0.03);
+    }
+    // bright green IB bezel (outline rectangle)
+    const ibRing = 24;
+    const pw = ibPortW - 0.001, phh = ibPortH - 0.001;
+    for (let k = 0; k < ibRing; k++) {
+      const t = k / ibRing;
+      let dx, dy;
+      if      (t < 0.25) { dx = -pw/2 + (t*4)*pw;       dy = -phh/2; }
+      else if (t < 0.50) { dx = +pw/2;                   dy = -phh/2 + ((t-0.25)*4)*phh; }
+      else if (t < 0.75) { dx = +pw/2 - ((t-0.50)*4)*pw; dy = +phh/2; }
+      else               { dx = -pw/2;                   dy = +phh/2 - ((t-0.75)*4)*phh; }
+      srvFacePos.push(px + dx, ibY + dy, frontZ_srv - 0.0022);
+      srvFaceCol.push(0.20, 0.90, 0.25);
+    }
+    // tiny link LED just below each port
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      srvFacePos.push(px + Math.cos(a)*0.0013,
+                      ibY - ibPortH/2 - 0.004 + Math.sin(a)*0.0013,
+                      frontZ_srv - 0.0028);
+      srvFaceCol.push(0.10, 0.95, 0.30);
+    }
+  }
+}
+// ---- 6. Populate each set (both sets get the same contents) ----
+function populateSet(xBase) {
+  // Rack A: RDC + two 10U servers
+  addRDC(xBase);
+  addServer(xBase, 8);    // 10U Server #1 (U9–U18)
+  addServer(xBase, 20);   // 10U Server #2 (U21–U30)
+  // Rack B: CDU + two 8U servers
+  const xB = xBase + RACK.w + SET_GAP;
+  addCDU(xB, 2);
+  addServer8(xB, 8);            // 8U Server #1 — bottom aligned with 10U #1
+  addServer8(xB, 20);           // 8U Server #2 — bottom aligned with 10U #2
+}
+populateSet(0);            // Set 1
+populateSet(SET_OFFSET);   // Set 2 (50 mm gap to the right of Set 1)
+
+// ---- 7. Rack Manifold (supply + return) + floor-embedded header pipes ----
+// Cylindrical pipe builder — distributes particles on the outer surface of a round pipe.
+//   axis: 'x' | 'y' | 'z'   (direction the pipe runs along)
+//   length: total pipe length along that axis
+//   diameter: outer diameter of the pipe
+// Density is tuned so the pipe reads as a solid tube under NormalBlending.
+function addCylinder(xC, yC, zC, axis, length, diameter, rgb) {
+  const r = diameter / 2;
+  const circ = 2 * Math.PI * r;
+  const angStep = Math.max(10, Math.round(circ / 0.012));  // ~12 mm arc between angular rings
+  const lenStep = Math.max(20, Math.round(length / 0.008)); // ~8 mm along the pipe
+  for (let a = 0; a < angStep; a++) {
+    const theta = (a / angStep) * Math.PI * 2;
+    const c1 = Math.cos(theta) * r;
+    const c2 = Math.sin(theta) * r;
+    for (let l = 0; l <= lenStep; l++) {
+      const tL = -length / 2 + (l / lenStep) * length;
+      let px = xC, py = yC, pz = zC;
+      if (axis === 'x')      { px += tL; py += c1; pz += c2; }
+      else if (axis === 'y') { px += c1; py += tL; pz += c2; }
+      else if (axis === 'z') { px += c1; py += c2; pz += tL; }
+      manifoldPos.push(px, py, pz);
+      manifoldCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  }
+}
+
+// Secondary loop (inside rack, CDU → servers) — Rack Manifold
+const SUPPLY_RGB = [0.60, 0.20, 0.95]; // cold supply — purple
+const RETURN_RGB = [0.95, 0.12, 0.12]; // hot return  — red
+// Primary loop (external chiller → CDU) — 200 mm headers under access floor
+const CHILLER_SUPPLY_RGB = [0.08, 0.18, 0.60]; // cold supply — NAVY
+const CHILLER_RETURN_RGB = [0.95, 0.12, 0.12]; // hot return — red (unchanged)
+
+function addManifold(xRackCenter) {
+  // Rear-center of the rack, 80 mm in from the rear wall.
+  const zCenter = rd - 0.08;
+  const yCenter = 0; // vertically centered → spans ≈ -0.9525..+0.9525 (1.905 m)
+  const half = MANIFOLD_PITCH / 2;
+
+  // Two vertical Ø 38 mm round pipes, 1905 mm tall
+  addCylinder(xRackCenter - half, yCenter, zCenter, 'y',
+              MANIFOLD.height, MANIFOLD.tube, SUPPLY_RGB);
+  addCylinder(xRackCenter + half, yCenter, zCenter, 'y',
+              MANIFOLD.height, MANIFOLD.tube, RETURN_RGB);
+}
+
+// Install vertical manifold inside each CDU rack (Rack B of each set)
+const rackB1Center = RACK.w + SET_GAP;                       // Set 1, Rack B
+const rackB2Center = SET_OFFSET + RACK.w + SET_GAP;          // Set 2, Rack B
+addManifold(rackB1Center);
+addManifold(rackB2Center);
+
+// ---- 8. External chiller headers — Ø 200 mm supply & return, floor-embedded ----
+// These are the primary loop coming from the external chiller (not the 38 mm rack manifold).
+// Modeled as square tubes of 200 mm cross-section for particle rendering.
+const CHILLER_PIPE = 0.20;                            // Ø 200 mm main loop pipe
+const CHILLER_PITCH = CHILLER_PIPE + 0.05;            // 250 mm center-to-center (50 mm clearance)
+
+const rowLeft  = -RACK.w / 2;                         // left wall of Rack 1A
+const rowRight = SET_OFFSET + RACK.w + SET_GAP + RACK.w / 2; // right wall of Rack 2B
+const HEADER_EXT_LEFT  = 0.40;                        // 400 mm service extension at the left end
+const HEADER_EXT_RIGHT = 0.40 + 3.00;                 // 400 mm + 3 m extension (restored — chiller sits at the end)
+const headerLen     = (rowRight - rowLeft) + HEADER_EXT_LEFT + HEADER_EXT_RIGHT;
+const headerCenterX = ((rowRight + HEADER_EXT_RIGHT) + (rowLeft - HEADER_EXT_LEFT)) / 2;
+// Access-floor convention: rack bottom (-rh) = access-floor tile top surface.
+// The supply/return lines sit 200 mm below the access floor (raised 100 mm from 300 mm),
+// so pipe center Y = -rh - 0.200 - (pipe radius).
+const headerYbelow  = -rh - 0.200 - (CHILLER_PIPE / 2); // 200 mm drop under the access floor (was 300)
+const headerZrear   = rd - (CHILLER_PIPE / 2) - 0.05 + 0.25; // shifted 250 mm toward rear
+
+// Supply header (NAVY, Ø 200 mm circular pipe) — front side of the trench
+addCylinder(headerCenterX, headerYbelow, headerZrear - CHILLER_PITCH / 2, 'x',
+            headerLen, CHILLER_PIPE, CHILLER_SUPPLY_RGB);
+// Return header (red, Ø 200 mm circular pipe) — rear side of the trench
+addCylinder(headerCenterX, headerYbelow, headerZrear + CHILLER_PITCH / 2, 'x',
+            headerLen, CHILLER_PIPE, CHILLER_RETURN_RGB);
+
+// (Previous Y-riser / Z-branch attempts removed — the 3 m X extension above
+//  is now baked into the horizontal header length via HEADER_EXT_RIGHT.)
+
+// ---- 9. Partition wall (가벽) — 300 mm thick, 4 m tall, along a grid line ----
+// Placed along the grid line immediately to the right of the rack row to separate
+// the computing hall from the chiller plant side. Runs in Z direction.
+// Trimmed: previous -Z end was at -5, +Z end at +5.
+// Cut 2.5 m from the left (-Z) end → new left at -2.5
+// Cut 2 m   from the right (+Z) end → new right at +3.0
+// New length = 5.5 m, new center Z = 0.25
+const WALL = {
+  xCenter:   4.0,        // pushed 1 grid (+1 m) toward the chiller (was 3.0)
+  thickness: 0.30,       // 300 mm
+  height:    4.0,        // 4 m
+  length:    5.5,        // 5.5 m along Z
+  runAxis:   'z',
+  zCenter:   0.25,
+};
+
+function addPartitionWall() {
+  const hx = (WALL.runAxis === 'z' ? WALL.thickness : WALL.length) / 2;
+  const hy = WALL.height / 2;
+  const hz = (WALL.runAxis === 'z' ? WALL.length : WALL.thickness) / 2;
+  const cY = -rh + WALL.height / 2;
+
+  // Edges (brighter gray so the wall reads clearly)
+  boxEdges(hx, hy, hz).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(20, Math.round(len * 220));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      wallPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + WALL.xCenter,
+        e.s[1]+(e.e[1]-e.s[1])*t + cY,
+        e.s[2]+(e.e[2]-e.s[2])*t + WALL.zCenter
+      );
+      wallCol.push(0.0, 0.0, 0.0);
+    }
+  });
+
+  // Translucent surface fill — sample the two broad faces
+  for (let i = 0; i < 16800; i++) {
+    const broadFace = Math.random() < 0.5 ? -1 : 1;
+    if (WALL.runAxis === 'z') {
+      wallPos.push(
+        broadFace * hx + WALL.xCenter,
+        (Math.random() - 0.5) * WALL.height + cY,
+        (Math.random() - 0.5) * WALL.length + WALL.zCenter
+      );
+    } else {
+      wallPos.push(
+        (Math.random() - 0.5) * WALL.length + WALL.xCenter,
+        (Math.random() - 0.5) * WALL.height + cY,
+        broadFace * hz + WALL.zCenter
+      );
+    }
+    wallCol.push(0.0, 0.0, 0.0);
+  }
+}
+// addPartitionWall(); // removed
+
+// ---- 10. Kiturami BumYang small chiller — top-fans only, parallel to the wall ----
+// Orientation: long side (1,320 mm) runs along Z (parallel to the wall, whose long axis is Z).
+// Position: centered at the END of the horizontal headers (X = pipeEndX), Z centered between supply/return.
+// Only the top twin-fan rings are rendered (body geometry omitted per user).
+const CHILLER_UNIT = {
+  w_along_z: 1.32,       // 1,320 mm long side — aligned with wall's Z axis
+  h:        1.23,        // 1,230 mm tall
+  d_along_x: 0.684,      // 684 mm deep (perpendicular to wall)
+  xC:        rowRight + HEADER_EXT_RIGHT,  // same X as the end of the 3 m header extension (≈ 5.65)
+  yC:       -rh + 1.23 / 2,                // body center; fans drawn on top face
+  zC:        headerZrear,                  // centered between supply and return Z (= mid-pitch)
+};
+function addChiller() {
+  // Body envelope — dimensions per real drawing: 1.32 Z × 1.23 Y × 0.684 X
+  const hx = CHILLER_UNIT.d_along_x / 2;
+  const hy = CHILLER_UNIT.h / 2;
+  const hz = CHILLER_UNIT.w_along_z / 2;
+
+  // Body edges (metallic silver)
+  boxEdges(hx, hy, hz).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(30, Math.round(len * 300));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      chillerPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + CHILLER_UNIT.xC,
+        e.s[1]+(e.e[1]-e.s[1])*t + CHILLER_UNIT.yC,
+        e.s[2]+(e.e[2]-e.s[2])*t + CHILLER_UNIT.zC
+      );
+      chillerCol.push(0.72, 0.74, 0.80);
+    }
+  });
+  // Body volume (darker industrial gray)
+  for (let i = 0; i < 4200; i++) {
+    chillerPos.push(
+      (Math.random()-0.5)*CHILLER_UNIT.d_along_x + CHILLER_UNIT.xC,
+      (Math.random()-0.5)*CHILLER_UNIT.h         + CHILLER_UNIT.yC,
+      (Math.random()-0.5)*CHILLER_UNIT.w_along_z + CHILLER_UNIT.zC
+    );
+    chillerCol.push(0.20, 0.22, 0.28);
+  }
+
+  // Top twin fans — Ø 595 mm, spaced along the 1,320 mm Z axis
+  const fanTopY = CHILLER_UNIT.yC + CHILLER_UNIT.h / 2;
+  const fanR    = 0.595 / 2;
+  const fanZoff = [-0.30, +0.30];
+  fanZoff.forEach(fz => {
+    // Outer shroud ring
+    const N = 140;
+    for (let a = 0; a < N; a++) {
+      const theta = (a / N) * Math.PI * 2;
+      chillerPos.push(
+        CHILLER_UNIT.xC + Math.cos(theta) * fanR,
+        fanTopY + 0.004,
+        CHILLER_UNIT.zC + fz + Math.sin(theta) * fanR
+      );
+      chillerCol.push(0.80, 0.82, 0.87);
+    }
+    // Inner hub ring (Ø 150 mm)
+    for (let a = 0; a < 60; a++) {
+      const theta = (a / 60) * Math.PI * 2;
+      chillerPos.push(
+        CHILLER_UNIT.xC + Math.cos(theta) * 0.075,
+        fanTopY + 0.004,
+        CHILLER_UNIT.zC + fz + Math.sin(theta) * 0.075
+      );
+      chillerCol.push(0.55, 0.58, 0.65);
+    }
+    // (Fan blade spokes are built separately as animated Points — see below)
+  });
+}
+addChiller();
+
+// ---- 10b. Animated chiller top-fans — two rotating fan-blade Points objects ----
+// Built in LOCAL space (centered at origin, blades on the X-Z plane) so each
+// Points object can be rotated via `.rotation.y` in the animate loop.
+const chillerFans = [];
+{
+  const fanR    = 0.595 / 2;
+  const fanTopY = CHILLER_UNIT.yC + CHILLER_UNIT.h / 2;
+  const fanZoff = [-0.30, +0.30];
+  fanZoff.forEach((fz, fanIdx) => {
+    const localPos = [];
+    const localCol = [];
+    // 4 curved blade strokes per fan (axial-fan look)
+    const N_BLADES = 4;
+    for (let b = 0; b < N_BLADES; b++) {
+      const theta0 = (b / N_BLADES) * Math.PI * 2;
+      const steps  = 80;
+      for (let s = 0; s < steps; s++) {
+        const f  = s / steps;                    // 0..1 along blade length
+        const r  = 0.085 + f * (fanR - 0.085);   // hub edge → tip
+        // Blade has slight pitch/curl — angular offset grows with radius
+        const curl = 0.55 * f;                   // radians of curl
+        const th   = theta0 + curl;
+        // Slight thickness — 3 parallel strokes per blade (chord)
+        for (let c = -1; c <= 1; c++) {
+          const tch = th + c * 0.05 * (1 - f);   // chord spread, narrower at tip
+          localPos.push(
+            Math.cos(tch) * r,
+            0.003,
+            Math.sin(tch) * r
+          );
+          localCol.push(0.55, 0.58, 0.65);
+        }
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(localPos), 3));
+    g.setAttribute('color',    new THREE.BufferAttribute(new Float32Array(localCol), 3));
+    const m = new THREE.PointsMaterial({
+      size: 0.012,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.9,
+      sizeAttenuation: true,
+      depthWrite: false,
+    });
+    const fanPts = new THREE.Points(g, m);
+    fanPts.position.set(CHILLER_UNIT.xC, fanTopY + 0.001, CHILLER_UNIT.zC + fz);
+    // Slight phase offset so the two fans don't tick in sync
+    fanPts.userData.spinSpeed = (fanIdx === 0) ? 6.5 : 6.0;   // rad/sec
+    fanPts.userData.spinDir   = (fanIdx === 0) ? 1 : -1;      // counter-rotating pair
+    fanPts.rotation.y = fanIdx * 0.4;
+    scene.add(fanPts);
+    chillerFans.push(fanPts);
+  });
+}
+
+function updateChillerFans(now) {
+  const t = now / 1000;
+  for (let i = 0; i < chillerFans.length; i++) {
+    const f = chillerFans[i];
+    f.rotation.y = t * f.userData.spinSpeed * f.userData.spinDir;
+  }
+}
+
+// ---- 11. Curved connector pipes — pipe ends → chiller inlet/outlet ----
+// Smooth bend using CatmullRom curve; sampled and tubed with a circular cross-section.
+function addCurvedPipe(controlPts, diameter, rgb) {
+  const curve = new THREE.CatmullRomCurve3(
+    controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+  );
+  const r = diameter / 2;
+  const circ = 2 * Math.PI * r;
+  const angStep = Math.max(12, Math.round(circ / 0.012));
+  const lenStep = Math.max(60, Math.round(curve.getLength() / 0.008));
+  const tan = new THREE.Vector3();
+  const nrm = new THREE.Vector3();
+  const bin = new THREE.Vector3();
+  const ref = new THREE.Vector3(0, 1, 0);
+  const refAlt = new THREE.Vector3(1, 0, 0);
+
+  for (let l = 0; l <= lenStep; l++) {
+    const t = l / lenStep;
+    const pt = curve.getPoint(t);
+    curve.getTangent(t, tan);
+    // Build an orthonormal frame around tangent
+    const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+    bin.crossVectors(tan, base).normalize();
+    nrm.crossVectors(bin, tan).normalize();
+    for (let a = 0; a < angStep; a++) {
+      const th = (a / angStep) * Math.PI * 2;
+      const cN = Math.cos(th) * r;
+      const cB = Math.sin(th) * r;
+      manifoldPos.push(
+        pt.x + cN * nrm.x + cB * bin.x,
+        pt.y + cN * nrm.y + cB * bin.y,
+        pt.z + cN * nrm.z + cB * bin.z
+      );
+      manifoldCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  }
+}
+
+// 90° smooth elbow connecting the horizontal Ø 200 mm headers UP to the chiller.
+// The bend itself sits UNDER the access floor (per instruction); the pipe then rises
+// through the floor into the chiller body.
+const pipeEndX     = rowRight + HEADER_EXT_RIGHT;           // X at the end of the 3 m extension (≈ 5.65)
+const supplyStartZ = headerZrear - CHILLER_PITCH / 2;
+const returnStartZ = headerZrear + CHILLER_PITCH / 2;
+
+// Target Y where the pipe meets the chiller body bottom (just inside the chiller envelope)
+const chillerRiseTopY = -rh + 0.45;     // ~450 mm above floor — mid-low body inlet
+
+// Control points produce a smooth quarter-turn: horizontal → elbow (under floor) → vertical riser.
+function supplyReturnBend(startZ) {
+  return [
+    [pipeEndX - 0.20, headerYbelow,           startZ],  // still in straight horizontal run
+    [pipeEndX,        headerYbelow,           startZ],  // end of straight section
+    [pipeEndX + 0.15, headerYbelow + 0.02,    startZ],  // entering the bend
+    [pipeEndX + 0.22, headerYbelow + 0.12,    startZ],  // through the bend (still below floor)
+    [pipeEndX + 0.25, headerYbelow + 0.25,    startZ],  // elbow crest (still below floor if possible)
+    [pipeEndX + 0.25, -rh,                    startZ],  // crosses the access-floor plane
+    [pipeEndX + 0.25, chillerRiseTopY,        startZ],  // riser terminus inside the chiller
+  ];
+}
+addCurvedPipe(supplyReturnBend(supplyStartZ), CHILLER_PIPE, CHILLER_SUPPLY_RGB);
+addCurvedPipe(supplyReturnBend(returnStartZ), CHILLER_PIPE, CHILLER_RETURN_RGB);
+
+// ---- 12. Per-set internal flow: Supply → RDC → CDU → Return ----
+// Per user's flow spec:
+//   1) Chiller supply branch → RDC (Rack A) Water In
+//   2) RDC Water Out        → CDU (Rack B) Water In
+//   3) CDU Water Out        → Chiller return line
+// Legs 1 & 2 use navy (cold side up to CDU inlet). Leg 3 uses red (hot return).
+// Branch pipe diameter 60 mm — smaller than the Ø 200 mm headers but clearly visible.
+const BRANCH_PIPE = 0.048;  // 60 mm → 48 mm (-20%)
+
+function addSetInternalPiping(xBase) {
+  const rackACenter = xBase;
+  const rackBCenter = xBase + RACK.w + SET_GAP;
+
+  // RDC pipe taps — bottom face of RDC. Supply riser moved to +X side (rear-viewer's RIGHT).
+  const rdcInX    = rackACenter + 0.20;    // SUPPLY riser tap — moved to right per user
+  const rdcOutX   = rackACenter - 0.20;    // RDC OUT tap — still on left (will adjust separately)
+  const rdcInZ    = rd + 0.06;             // RDC bottom, near rack-side (lower Z)
+  const rdcOutZ   = rd + 2 * dd - 0.06;    // RDC bottom, near rear (higher Z)
+  const rdcBottomY = -rh + 0.02;           // just above floor at RDC bottom
+
+  // CDU pipe taps — rear face inside, near bottom; OUT on rear-RIGHT (-X), IN on rear-LEFT (+X)
+  const cduRearZ = -rd + CDU.d - 0.05;     // ≈ 0.20
+  const cduTapY  = -rh + 0.08;             // 80 mm above floor
+  const cduInX   = rackBCenter - 0.18;
+  const cduOutX  = rackBCenter + 0.18;     // moved to right side per user
+
+  // Actuator boxes on the chiller mains (small gray cubes at tap points)
+  function actuator(x, y, z) {
+    const sz = 0.10;  // 100 mm cube
+    boxEdges(sz/2, sz/2, sz/2).forEach(e => {
+      for (let i = 0; i < 60; i++) {
+        const t = i / 60;
+        manifoldPos.push(
+          e.s[0]+(e.e[0]-e.s[0])*t + x,
+          e.s[1]+(e.e[1]-e.s[1])*t + y,
+          e.s[2]+(e.e[2]-e.s[2])*t + z
+        );
+        manifoldCol.push(0.85, 0.85, 0.55);  // yellow-gray valve
+      }
+    });
+  }
+  actuator(rdcInX,  headerYbelow, supplyStartZ);   // supply-side actuator (for RDC In)
+  actuator(cduOutX, headerYbelow, returnStartZ);   // return-side actuator (for CDU Out)
+
+  // Leg 1: chiller supply main → actuator → RDC Water In (vertical riser, RIGHT side)
+  addCurvedPipe([
+    [rdcInX, headerYbelow,         supplyStartZ],
+    [rdcInX, headerYbelow + 0.30, (supplyStartZ + rdcInZ) * 0.5],
+    [rdcInX, -rh - 0.05,           rdcInZ],
+    [rdcInX, rdcBottomY,           rdcInZ],
+  ], BRANCH_PIPE, CHILLER_SUPPLY_RGB);
+
+  // Leg 2: RDC bottom (behind blue) → DOWN into plenum → ACROSS → UP to CDU REAR — PURPLE
+  const rdcBehindZ = rdcInZ + 0.10;        // 100 mm behind the blue supply tap on RDC bottom
+  const cduRearLeftX = rackBCenter - 0.18;
+  const cduMidY2 = -rh + 4 * U_HEIGHT;
+  addCurvedPipe([
+    [rdcInX,        rdcBottomY,                       rdcBehindZ],     // exit RDC from its bottom
+    [rdcInX,        -rh - 0.05,                       rdcBehindZ],     // drop through floor
+    [(rdcInX + cduRearLeftX) * 0.5, headerYbelow + 0.25, (rdcBehindZ + cduRearZ) * 0.5], // under-floor arc
+    [cduRearLeftX,  -rh - 0.05,                       cduRearZ + 0.10],// rise back up near CDU
+    [cduRearLeftX,  cduMidY2,                         cduRearZ + 0.05],// approach CDU rear face
+    [cduRearLeftX,  cduMidY2,                         cduRearZ],       // into CDU REAR (not top)
+  ], BRANCH_PIPE, SUPPLY_RGB);
+
+  // Leg 4 + 5: CDU rear-CENTER → bottom of rack manifolds (PURPLE supply + RED return)
+  // Two tubes split symmetrically around CDU center for visibility (no overlap).
+  {
+    const cduMidY_link = -rh + 4 * U_HEIGHT;
+    const manifoldZ = rd - 0.08;
+    const manifoldBottomY = -MANIFOLD.height / 2;     // ≈ -0.9525
+    const splitOff = 0.06;                             // 60 mm offset from center on the CDU side
+    const halfPitch = MANIFOLD_PITCH / 2;              // manifold tube X offset from center
+
+    // PURPLE — CDU rear (slightly left) → manifold SUPPLY tube bottom (-X side)
+    addCurvedPipe([
+      [rackBCenter - splitOff, cduMidY_link, cduRearZ],
+      [rackBCenter - splitOff * 0.7, (cduMidY_link + manifoldBottomY) * 0.5, (cduRearZ + manifoldZ) * 0.5],
+      [rackBCenter - halfPitch, manifoldBottomY, manifoldZ],
+    ], BRANCH_PIPE, SUPPLY_RGB);
+
+    // RED — CDU rear (slightly right) → manifold RETURN tube bottom (+X side)
+    addCurvedPipe([
+      [rackBCenter + splitOff, cduMidY_link, cduRearZ],
+      [rackBCenter + splitOff * 0.7, (cduMidY_link + manifoldBottomY) * 0.5, (cduRearZ + manifoldZ) * 0.5],
+      [rackBCenter + halfPitch, manifoldBottomY, manifoldZ],
+    ], BRANCH_PIPE, RETURN_RGB);
+
+    // 8U servers ↔ manifold: 2 supply (purple) + 2 return (red) per server, arranged horizontally
+    const halfPitch_srv = MANIFOLD_PITCH / 2;
+    const serverRearZ = -rd + SERVER8.d;
+    const sag = 0.15;
+    // 4 horizontal taps on the server rear: 2 supply on -X side, 2 return on +X side
+    const tapXs_supply = [-0.15, -0.05];
+    const tapXs_return = [ 0.05,  0.15];
+
+    [8, 20].forEach(uBase => {
+      const srvY = -rh + uBase * U_HEIGHT + 4 * U_HEIGHT;
+
+      // 2 PURPLE supply hoses
+      tapXs_supply.forEach((tx, i) => {
+        const yOff = (i === 0 ? +0.03 : -0.03);   // tiny vertical split at manifold side
+        addCurvedPipe([
+          [rackBCenter + tx,            srvY,             serverRearZ],
+          [rackBCenter + tx * 0.85,     srvY - sag * 0.6, serverRearZ + 0.06],
+          [rackBCenter + tx * 0.5,      srvY - sag,       (serverRearZ + manifoldZ) * 0.5],
+          [rackBCenter - halfPitch_srv, srvY - sag * 0.4, manifoldZ - 0.04],
+          [rackBCenter - halfPitch_srv, srvY + yOff,      manifoldZ],
+        ], BRANCH_PIPE, SUPPLY_RGB);
+      });
+
+      // 2 RED return hoses
+      tapXs_return.forEach((tx, i) => {
+        const yOff = (i === 0 ? +0.03 : -0.03);
+        addCurvedPipe([
+          [rackBCenter + tx,            srvY,             serverRearZ],
+          [rackBCenter + tx * 0.85,     srvY - sag * 0.6, serverRearZ + 0.06],
+          [rackBCenter + tx * 0.5,      srvY - sag,       (serverRearZ + manifoldZ) * 0.5],
+          [rackBCenter + halfPitch_srv, srvY - sag * 0.4, manifoldZ - 0.04],
+          [rackBCenter + halfPitch_srv, srvY + yOff,      manifoldZ],
+        ], BRANCH_PIPE, RETURN_RGB);
+      });
+    });
+  }
+
+  // Leg 3: CDU Water Out — natural drape, arched up to clear the supply line
+  const cduMidY = -rh + 4 * U_HEIGHT;
+  addCurvedPipe([
+    [cduOutX, cduMidY,                  cduRearZ],
+    [cduOutX, cduMidY - 0.10,           cduRearZ + 0.30],         // arc upward path (stays above supply line)
+    [cduOutX, cduMidY - 0.30,           returnStartZ - 0.05],     // past the supply line in Z
+    [cduOutX, headerYbelow,             returnStartZ],
+  ], BRANCH_PIPE, CHILLER_RETURN_RGB);
+}
+
+// Series flow piping for both sets: Chiller → RDC → CDU → Chiller
+addSetInternalPiping(0);
+addSetInternalPiping(SET_OFFSET);
+
+// ---- 13. DEFOG-style 2-tier overhead cable tray system ----
+// Reference: cabletray_defog_structure.md (DEFOG 4-part rack-top kit).
+//   Stack (bottom → top): Rack → Tray Support-C (black) → Closed channel (with lid)
+// User spec for THIS scene:
+//   Lower tier  = YELLOW closed channel (modeled like the DEFOG fiber duct geometry)
+//   Upper tier  = BLUE   closed channel (same closed-duct geometry)
+// 5 racks: empty network rack (x=-0.65) + Set 1 RackA (0) + Set 1 RackB (0.65) +
+//          Set 2 RackA (1.30) + Set 2 RackB (1.95).
+// X span: leftmost rack left-wall (-0.95) → rightmost rack right-wall (+2.25) = 3.20 m.
+// Dynamic — propagates RACK.w changes (e.g. 600 → 800 mm)
+const RACK_X_CENTERS = [
+  -(RACK.w + SET_GAP),
+  0,
+  RACK.w + SET_GAP,
+  SET_OFFSET,
+  SET_OFFSET + RACK.w + SET_GAP,
+];
+
+const TRAY = {
+  xCenter:      0.85,           // midpoint of the 5-rack row (RACK.w 0.8 + SET_GAP 0.05)
+  length:       4.40,           // 4,400 mm — covers wider 800 mm racks + 100 mm overhang per side
+  width:        0.40,           // 400 mm channel width (Z direction)
+  // Tray zCenter history: 0 → -0.25 (+150 mm front) → -0.40 (+150 mm front) → -0.35 (-50 mm rear)
+  // Current: zCenter = -0.35
+  //   → front face at z = -0.35 - 0.20 = -0.55 (50 mm behind rack front-edge line z = -rd = -0.6)
+  //   → rear face  at z = -0.35 + 0.20 = -0.15
+  zCenter:      -0.35,
+  channelH:     0.10,           // 100 mm channel height (side wall)
+  wallT:        0.012,          // 12 mm wall / floor / lid thickness
+  // Tier center heights above rack top
+  bottomY:      rh + 0.10 + 0.05,   // lower (yellow) channel center — 100 mm clearance + half height
+  topY:         rh + 0.30 + 0.05,   // upper (blue)   channel center — 200 mm above lower-bottom face
+  // Support-C (saddle/leg) parameters — black ㄷ/口 steel saddle bolted to each rack top
+  supportH:     0.10,           // 100 mm tall (lifts lower channel above rack top)
+  supportXT:    0.05,           // 50 mm thick along X (saddle leg)
+  supportZW:    0.45,           // 450 mm wide along Z (slightly wider than 400 mm tray)
+};
+const TRAY_YELLOW_RGB  = [0.95, 0.80, 0.10];   // RAL ~1023 safety yellow
+const TRAY_BLUE_RGB    = [0.15, 0.55, 0.95];   // signal blue
+const SUPPORT_RGB      = [0.10, 0.10, 0.12];   // matte black Tray Support-C
+const LID_DARKEN       = 0.85;                 // subtle tonal split for lid vs. channel body
+
+// HI-MESH wire-mesh cable tray (open basket): U-shaped transverse ribs every ~100 mm,
+// laced together by parallel longitudinal wires running along the length.
+// No lid — open top, like a real wire mesh basket tray.
+//   - Longitudinal wires run along X (the tray length)
+//   - Transverse ribs are U-shaped: front side wall → floor → back side wall
+//   - Wire intersections are visually dense, the openings between are visibly empty
+function addClosedChannel(yCenter, rgb) {
+  const halfL = TRAY.length / 2;
+  const halfW = TRAY.width  / 2;
+  const halfH = TRAY.channelH / 2;
+
+  const xMin = TRAY.xCenter - halfL;
+  const xMax = TRAY.xCenter + halfL;
+  const zMin = TRAY.zCenter - halfW;     // back side wall plane
+  const zMax = TRAY.zCenter + halfW;     // front side wall plane
+  const yBot = yCenter - halfH;          // floor plane
+  const yTop = yCenter + halfH;          // top edge of side walls (open above)
+
+  // Helper: dense points along a straight line A→B
+  function addWire(ax, ay, az, bx, by, bz, c) {
+    const len = Math.hypot(bx-ax, by-ay, bz-az);
+    const N   = Math.max(8, Math.round(len * 320));   // ~3 mm point spacing
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      trayPos.push(ax + (bx-ax)*t, ay + (by-ay)*t, az + (bz-az)*t);
+      trayCol.push(c[0], c[1], c[2]);
+    }
+  }
+
+  // ----- 1. LONGITUDINAL wires (along X) -----
+  // Floor wires — 7 evenly spaced across the width Z
+  const N_FLOOR_WIRES = 7;
+  for (let i = 0; i < N_FLOOR_WIRES; i++) {
+    const z = zMin + (i / (N_FLOOR_WIRES - 1)) * (zMax - zMin);
+    addWire(xMin, yBot, z, xMax, yBot, z, rgb);
+  }
+  // Side-wall wires — 3 per side, climbing the wall height
+  const N_SIDE_WIRES = 3;
+  for (let i = 0; i < N_SIDE_WIRES; i++) {
+    const y = yBot + ((i + 1) / (N_SIDE_WIRES + 1)) * (yTop - yBot);
+    addWire(xMin, y, zMin, xMax, y, zMin, rgb);    // back wall
+    addWire(xMin, y, zMax, xMax, y, zMin === zMax ? zMin : zMax, rgb);   // front wall
+  }
+  // Top-edge wires (one along each side, defining the open mouth)
+  addWire(xMin, yTop, zMin, xMax, yTop, zMin, rgb);
+  addWire(xMin, yTop, zMax, xMax, yTop, zMax, rgb);
+
+  // ----- 2. TRANSVERSE U-ribs every 100 mm along X -----
+  // Each rib is a continuous U: top-back → bottom-back → bottom-front → top-front
+  const RIB_PITCH = 0.10;     // 100 mm spacing
+  const N_RIBS = Math.floor(TRAY.length / RIB_PITCH) + 1;
+  for (let r = 0; r < N_RIBS; r++) {
+    const x = xMin + r * RIB_PITCH;
+    if (x > xMax + 1e-6) break;
+    // Vertical back leg (top → bottom)
+    addWire(x, yTop, zMin,  x, yBot, zMin, rgb);
+    // Floor bar (back → front)
+    addWire(x, yBot, zMin,  x, yBot, zMax, rgb);
+    // Vertical front leg (bottom → top)
+    addWire(x, yBot, zMax,  x, yTop, zMax, rgb);
+  }
+
+  // ----- 3. End caps (rib at each absolute end) — already covered by ribs at xMin/xMax -----
+  // ----- 4. Subtle splice/joint thickening at every 4th rib (visual cue) -----
+  for (let r = 0; r < N_RIBS; r += 4) {
+    const x = xMin + r * RIB_PITCH;
+    if (x > xMax) break;
+    // small extra ring at rib intersections for visual punch
+    const cBright = [Math.min(1, rgb[0]*1.15), Math.min(1, rgb[1]*1.15), Math.min(1, rgb[2]*1.15)];
+    addWire(x - 0.005, yBot, zMin, x + 0.005, yBot, zMin, cBright);
+    addWire(x - 0.005, yBot, zMax, x + 0.005, yBot, zMax, cBright);
+  }
+}
+
+// Tray Support-C — short black ㄷ-shaped saddle on each rack top, lifting the lower channel.
+// Modeled as a thin solid box (50 × 100 × 450 mm) per rack — visually reads as the saddle leg.
+function addTraySupports(yCenter, hCenter) {
+  const hx = TRAY.supportXT / 2;
+  const hy = TRAY.supportH  / 2;
+  const hz = TRAY.supportZW / 2;
+  RACK_X_CENTERS.forEach(xC => {
+    // Edges
+    boxEdges(hx, hy, hz).forEach(e => {
+      const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+      const density = Math.max(20, Math.round(len * 250));
+      for (let i = 0; i < density; i++) {
+        const t = i / density;
+        trayPos.push(
+          e.s[0]+(e.e[0]-e.s[0])*t + xC,
+          e.s[1]+(e.e[1]-e.s[1])*t + hCenter,
+          e.s[2]+(e.e[2]-e.s[2])*t + TRAY.zCenter
+        );
+        trayCol.push(SUPPORT_RGB[0], SUPPORT_RGB[1], SUPPORT_RGB[2]);
+      }
+    });
+    // Solid fill
+    for (let i = 0; i < 700; i++) {
+      trayPos.push(
+        (Math.random()-0.5)*TRAY.supportXT + xC,
+        (Math.random()-0.5)*TRAY.supportH  + hCenter,
+        (Math.random()-0.5)*TRAY.supportZW + TRAY.zCenter
+      );
+      trayCol.push(SUPPORT_RGB[0]*1.5, SUPPORT_RGB[1]*1.5, SUPPORT_RGB[2]*1.5);
+    }
+  });
+}
+
+// Lower-tier supports: from rack top up to the bottom of the lower (yellow) channel
+const lowerChanBottomY = TRAY.bottomY - TRAY.channelH / 2;
+const lowerSupportYC   = (rh + lowerChanBottomY) / 2;
+addTraySupports(TRAY.bottomY, lowerSupportYC);
+
+// Inter-tier spacer supports: from the lid of the lower channel up to the floor of the upper channel
+const lowerChanTopY    = TRAY.bottomY + TRAY.channelH / 2;
+const upperChanBotY    = TRAY.topY    - TRAY.channelH / 2;
+const interSupportYC   = (lowerChanTopY + upperChanBotY) / 2;
+addTraySupports(TRAY.topY, interSupportYC);
+
+// Now add the two closed channels
+addClosedChannel(TRAY.bottomY, TRAY_YELLOW_RGB);  // lower tier — yellow
+addClosedChannel(TRAY.topY,    TRAY_BLUE_RGB);    // upper tier — blue
+
+// ---- Cable Droppers — 2 per rack, color-matched to the tier they sit on ----
+// Per DEFOG cable-tray accessory photo: a small base block + a curved quarter-round chute that
+// guides cables off the tray edge down into the rack. Colors match their tier (yellow / blue).
+// Placement (front-viewer convention: -X = left, +X = right):
+//   LOWER tier dropper → LEFT of each rack (xOffset = -0.20)
+//   UPPER tier dropper → RIGHT of each rack (xOffset = +0.20)
+const DROPPER_BASE_W = 0.060;   // 60 mm wide (along X)
+const DROPPER_BASE_H = 0.022;   // 22 mm tall block
+const DROPPER_BASE_D = 0.050;   // 50 mm deep (along Z)
+const DROPPER_DOM_R  = 0.028;   // 28 mm dome radius
+
+function addCableDropper(xC, trayFloorY, rgb) {
+  // Position: dropper sits on the tray CHANNEL FLOOR, anchored at the tray's FRONT edge so
+  // its mouth faces the rack front (-Z). Cables run inside the tray, enter the dropper on the
+  // floor, and exit the chute down the rack front face.
+  const trayFrontZ = TRAY.zCenter - TRAY.width/2;    // = -0.45
+  // Base block sits on the tray floor, centered at the tray front edge (half inside, half outside)
+  const bCy = trayFloorY + DROPPER_BASE_H/2 + 0.003;
+  const bZ  = trayFrontZ;                              // base CENTER at the tray front edge
+  boxEdges(DROPPER_BASE_W/2, DROPPER_BASE_H/2, DROPPER_BASE_D/2).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(18, Math.round(len * 240));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      trayPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xC,
+        e.s[1]+(e.e[1]-e.s[1])*t + bCy,
+        e.s[2]+(e.e[2]-e.s[2])*t + bZ
+      );
+      trayCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+  // interior fill
+  for (let i = 0; i < 350; i++) {
+    trayPos.push(
+      xC + (Math.random()-0.5)*DROPPER_BASE_W,
+      bCy + (Math.random()-0.5)*DROPPER_BASE_H,
+      bZ + (Math.random()-0.5)*DROPPER_BASE_D
+    );
+    trayCol.push(rgb[0]*0.72, rgb[1]*0.72, rgb[2]*0.72);
+  }
+
+  // Curved chute — a partial half-pipe whose MOUTH faces -Z (rack front).
+  // Axis runs along X; in the Y-Z plane it arcs from the TOP-BACK of the base down to OPEN-FRONT.
+  const domTopY    = bCy + DROPPER_BASE_H/2;           // top of base
+  // Dome axis sits a bit above the base top, just behind the base front edge,
+  // so the arc rolls from the top over the front edge and faces toward -Z (downward-forward)
+  const domAxisY   = domTopY;
+  const domAxisZ   = bZ - DROPPER_BASE_D/2 + DROPPER_DOM_R * 0.3;
+  const N_ang = 56;
+  const N_len = 28;
+  // Arc sweeps from theta=0 (top) through 90° (front/-Z) to 135° (below-front/mouth-down)
+  const thetaStart = 0;
+  const thetaEnd   = Math.PI * 0.75;            // 135° — mouth opens downward-forward
+  for (let a = 0; a < N_ang; a++) {
+    const theta = thetaStart + (a / N_ang) * (thetaEnd - thetaStart);
+    const cy = Math.cos(theta) * DROPPER_DOM_R;   // starts at +domR (top), ends angled down
+    const cz = -Math.sin(theta) * DROPPER_DOM_R;  // 0 at top, -domR at front, angled down-forward after
+    for (let l = 0; l <= N_len; l++) {
+      const lx = -DROPPER_BASE_W/2 + (l / N_len) * DROPPER_BASE_W;
+      trayPos.push(xC + lx, domAxisY + cy, domAxisZ + cz);
+      trayCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  }
+  // Side cheeks (small fillet discs on either end of the chute) — visual closure of the arc
+  [-DROPPER_BASE_W/2, +DROPPER_BASE_W/2].forEach(lx => {
+    for (let i = 0; i < 56; i++) {
+      const theta = thetaStart + Math.random() * (thetaEnd - thetaStart);
+      const r = Math.sqrt(Math.random()) * DROPPER_DOM_R;
+      const cy = Math.cos(theta) * r;
+      const cz = -Math.sin(theta) * r;
+      trayPos.push(xC + lx, domAxisY + cy, domAxisZ + cz);
+      trayCol.push(rgb[0]*0.80, rgb[1]*0.80, rgb[2]*0.80);
+    }
+  });
+  // Darker inner shadow at the chute mouth (bottom-front opening) — emphasizes the opening
+  const mouthTheta = thetaEnd;
+  const mouthY = domAxisY + Math.cos(mouthTheta) * DROPPER_DOM_R;
+  const mouthZ = domAxisZ - Math.sin(mouthTheta) * DROPPER_DOM_R;
+  for (let i = 0; i < 63; i++) {
+    trayPos.push(
+      xC + (Math.random()-0.5)*DROPPER_BASE_W,
+      mouthY + (Math.random()-0.5)*0.004,
+      mouthZ + (Math.random()-0.5)*0.004
+    );
+    trayCol.push(rgb[0]*0.30, rgb[1]*0.30, rgb[2]*0.30);
+  }
+}
+
+// Install: 2 per rack (lower-tier dropper on left, upper-tier dropper on right)
+// Drop mount level = the FLOOR of each tray channel (interior bottom panel Y)
+const yellowTrayFloorY = TRAY.bottomY - TRAY.channelH/2;
+const blueTrayFloorY   = TRAY.topY    - TRAY.channelH/2;
+// Drop-off X positions aligned with the side-rails so cables enter/exit the tray
+// right above the rail they actually rise/descend on.
+//   -X rail ≈ rackX - 0.29  →  yellow-tier (UTP) dropper placed at rackX - 0.26
+//   +X rail ≈ rackX + 0.29  →  blue-tier (IB / uplink) dropper placed at rackX + 0.26
+RACK_X_CENTERS.forEach(xC => {
+  addCableDropper(xC - 0.39, yellowTrayFloorY, TRAY_YELLOW_RGB); // 노랑 1단 — -X 레일 끝선 (10cm 더 -X로, 800mm 랙 확장 반영)
+  addCableDropper(xC + 0.38, blueTrayFloorY,   TRAY_BLUE_RGB);   // 파랑 2단 — +X 레일 (10cm 더 +X로)
+});
+
+// ---- 14. Overhead Track Busway (Starline T5-style modular power distribution) ----
+// Reference: busway_defog_structure.md
+// Mounted overhead, parallel to (and 50 mm in front of) the cable tray system, at a
+// slightly higher Y. Stack: Rack → Tray Support-C → Lower channel (Y) → Spacer → Upper channel (B)
+//                       → BUSWAY (highest tier, hanger-suspended).
+// Components in this model:
+//   1. Straight body (light metallic gray rectangular extrusion, 150 W × 80 H mm cross-section)
+//   2. Underside slot (dark recessed groove down the centerline — where tap-offs plug in)
+//   3. End caps at both ends
+//   4. Vertical hangers (5, evenly spaced) suggesting overhead suspension
+//   5. Tap-off boxes (1 per rack center, hanging off the underside)
+//   6. Drop cables (from each tap-off box down to the corresponding rack top)
+const BUSWAY = {
+  xCenter:    0.85,           // same X center as the rack row (matches tray)
+  length:     4.40,           // matches cable tray length (4,400 mm) — extended for 800 mm racks
+  width:      0.15,           // 150 mm cross-section (Z)
+  height:     0.08,           // 80 mm cross-section (Y)
+  // Aligned so the busway's REAR face sits on the rack-system's rear edge line (z = +rd).
+  // i.e. busway spans Z = (rd - 0.15) .. (rd) — flush with the rack rear.
+  zCenter:    (0.6) - 0.15/2, // = +rd − width/2  (rd = RACK.d/2 = 0.6)
+  yCenter:    rh + 0.65,      // raised +200 mm from previous (was rh + 0.45)
+  endCapT:    0.02,           // 20 mm end-cap visual thickness
+  hangerH:    0.30,           // 300 mm hanger drop above the busway
+  hangerT:    0.015,          // 15 mm hanger rod cross-section
+};
+const BUSWAY_BODY_RGB    = [0.78, 0.80, 0.85];   // light metallic housing
+const BUSWAY_SLOT_RGB    = [0.05, 0.05, 0.07];   // dark slot underside
+const BUSWAY_ENDCAP_RGB  = [0.50, 0.52, 0.58];   // slightly darker end caps
+const BUSWAY_HANGER_RGB  = [0.10, 0.10, 0.12];   // black hanger rod
+const TAPOFF_BODY_RGB    = [0.55, 0.57, 0.62];   // tap-off box housing
+const TAPOFF_LED_RGB     = [0.10, 0.95, 0.30];   // status LED — green
+const DROP_CABLE_RGB     = [0.06, 0.06, 0.07];   // black drop cable
+
+// Sparse white "ridge" highlight on a cable curve — boosts visibility of the dark cable
+// against the dark scene background. Density should be ≈ 10% of the cable's own particle count.
+function addCableHighlight(controlPts, diameter, count) {
+  const curve = new THREE.CatmullRomCurve3(
+    controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+  );
+  const r = diameter / 2 + 0.0007;          // just outside the cable surface
+  const ref = new THREE.Vector3(0, 1, 0);
+  const refAlt = new THREE.Vector3(1, 0, 0);
+  const tan = new THREE.Vector3();
+  const nrm = new THREE.Vector3();
+  const bin = new THREE.Vector3();
+  for (let i = 0; i < count; i++) {
+    const t = Math.random();
+    const pt = curve.getPoint(t);
+    curve.getTangent(t, tan);
+    const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+    bin.crossVectors(tan, base).normalize();
+    nrm.crossVectors(bin, tan).normalize();
+    const ang = Math.random() * Math.PI * 2;
+    const cN = Math.cos(ang) * r;
+    const cB = Math.sin(ang) * r;
+    buswayPos.push(
+      pt.x + cN * nrm.x + cB * bin.x,
+      pt.y + cN * nrm.y + cB * bin.y,
+      pt.z + cN * nrm.z + cB * bin.z
+    );
+    buswayCol.push(0.96, 0.96, 0.96);       // bright white highlight
+  }
+}
+
+// Generic helper: short cylinder pushed into the busway buffer (used for IEC 60309 shrouds + plug caps)
+function pushCylBW(xC, yC, zC, axis, length, diameter, rgb) {
+  const r = diameter / 2;
+  const circ = 2 * Math.PI * r;
+  const angStep = Math.max(20, Math.round(circ / 0.006));   // dense angular sampling for crisp ring
+  const lenStep = Math.max(8,  Math.round(length / 0.005));
+  for (let a = 0; a < angStep; a++) {
+    const theta = (a / angStep) * Math.PI * 2;
+    const c1 = Math.cos(theta) * r;
+    const c2 = Math.sin(theta) * r;
+    for (let l = 0; l <= lenStep; l++) {
+      const tL = -length/2 + (l / lenStep) * length;
+      let px = xC, py = yC, pz = zC;
+      if      (axis === 'x') { px += tL; py += c1; pz += c2; }
+      else if (axis === 'y') { px += c1; py += tL; pz += c2; }
+      else                   { px += c1; py += c2; pz += tL; }
+      buswayPos.push(px, py, pz);
+      buswayCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  }
+}
+
+// IEC 60309 panel-mount receptacle (or cable plug cap): red shroud + 5 brass pin dots + dark cavity
+//   cx, cy, cz   — base position (the flange/cap face)
+//   dir          — direction the shroud extends: '+z', '-z', '+y', '-y', '+x', '-x'
+//   length       — shroud / cap length along that axis
+//   showPins     — true to draw 5 pins on the open end (false for a back-side panel mount)
+function addIEC309(cx, cy, cz, dir, length, showPins) {
+  const RED = [0.92, 0.12, 0.15];
+  const PIN_RGB = [0.85, 0.72, 0.35];   // brassy pin
+  const DARK = [0.06, 0.06, 0.07];
+  const sign = (dir[0] === '-') ? -1 : +1;
+  const axis = dir[1];
+  const dia = 0.056;                    // 56 mm shroud outer dia (real 63A 6h spec)
+  // Shroud body — cylinder centered at midpoint of [cx, cx+sign*length]
+  let mx = cx, my = cy, mz = cz;
+  if      (axis === 'x') mx += sign * length / 2;
+  else if (axis === 'y') my += sign * length / 2;
+  else                   mz += sign * length / 2;
+  pushCylBW(mx, my, mz, axis, length, dia, RED);
+  // Inner cavity disc at the open end (dark)
+  const tipFrac = 0.92;
+  let tx = cx, ty = cy, tz = cz;
+  if      (axis === 'x') tx += sign * length * tipFrac;
+  else if (axis === 'y') ty += sign * length * tipFrac;
+  else                   tz += sign * length * tipFrac;
+  for (let i = 0; i < 154; i++) {
+    const rr = Math.sqrt(Math.random()) * dia/2 * 0.80;
+    const ang = Math.random() * Math.PI * 2;
+    let x = tx, y = ty, z = tz;
+    const ca = Math.cos(ang) * rr;
+    const sa = Math.sin(ang) * rr;
+    if      (axis === 'x') { y += ca; z += sa; }
+    else if (axis === 'y') { x += ca; z += sa; }
+    else                   { x += ca; y += sa; }
+    buswayPos.push(x, y, z);
+    buswayCol.push(DARK[0], DARK[1], DARK[2]);
+  }
+  // 5 pins (3P+N+E) on a 26.5 mm pitch circle — earth pin slightly larger
+  if (showPins) {
+    const pinPitchR = 0.0133;   // 26.5 mm dia / 2
+    const pinAngles = [Math.PI*1.5,        // earth at 6 o'clock
+                       Math.PI*0.30, Math.PI*0.70,
+                       Math.PI*1.10, Math.PI*1.90];
+    pinAngles.forEach((ang, idx) => {
+      const isEarth = (idx === 0);
+      const pinDia = isEarth ? 0.010 : 0.008;
+      const pinX = Math.cos(ang) * pinPitchR;
+      const pinY = Math.sin(ang) * pinPitchR;
+      // Pin position at the OPEN END of the shroud
+      let x = cx, y = cy, z = cz;
+      const off = sign * length * 0.92;
+      if      (axis === 'x') { x += off; y += pinX; z += pinY; }
+      else if (axis === 'y') { y += off; x += pinX; z += pinY; }
+      else                   { z += off; x += pinX; y += pinY; }
+      for (let i = 0; i < 28; i++) {
+        const rr = Math.sqrt(Math.random()) * pinDia/2;
+        const a = Math.random() * Math.PI * 2;
+        buswayPos.push(x + Math.cos(a)*rr, y + Math.sin(a)*rr, z);
+        buswayCol.push(PIN_RGB[0], PIN_RGB[1], PIN_RGB[2]);
+      }
+    });
+  }
+}
+
+// Generic helper: filled box (edges + volume) into the busway buffer
+function pushBoxBW(dx, dy, dz, hx, hy, hz, rgb, volCount, edgeMul) {
+  edgeMul = edgeMul || 1;
+  boxEdges(hx, hy, hz).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(20, Math.round(len * 220 * edgeMul));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      buswayPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + dx,
+        e.s[1]+(e.e[1]-e.s[1])*t + dy,
+        e.s[2]+(e.e[2]-e.s[2])*t + dz
+      );
+      buswayCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  });
+  for (let i = 0; i < volCount; i++) {
+    buswayPos.push(
+      (Math.random()-0.5)*hx*2 + dx,
+      (Math.random()-0.5)*hy*2 + dy,
+      (Math.random()-0.5)*hz*2 + dz
+    );
+    buswayCol.push(rgb[0]*0.78, rgb[1]*0.78, rgb[2]*0.78);
+  }
+}
+
+function addBuswayBody() {
+  const halfL = BUSWAY.length / 2;
+  const halfW = BUSWAY.width / 2;
+  const halfH = BUSWAY.height / 2;
+
+  // 1. Main body — light metallic housing
+  pushBoxBW(BUSWAY.xCenter, BUSWAY.yCenter, BUSWAY.zCenter,
+            halfL, halfH, halfW, BUSWAY_BODY_RGB, 5500, 1.0);
+
+  // 2. Underside slot — dark recessed groove down the centerline of the underside
+  const slotW_Z = BUSWAY.width * 0.35;        // 35% of width
+  const slotH   = 0.012;                      // 12 mm visual depth into the body
+  for (let i = 0; i < 2450; i++) {
+    buswayPos.push(
+      (Math.random()-0.5)*BUSWAY.length + BUSWAY.xCenter,
+      BUSWAY.yCenter - halfH + slotH/2,       // just inside the underside face
+      (Math.random()-0.5)*slotW_Z + BUSWAY.zCenter
+    );
+    buswayCol.push(BUSWAY_SLOT_RGB[0], BUSWAY_SLOT_RGB[1], BUSWAY_SLOT_RGB[2]);
+  }
+
+  // 3. End caps — slightly darker thin slabs at both ends
+  [-halfL - BUSWAY.endCapT/2, +halfL + BUSWAY.endCapT/2].forEach(xOff => {
+    pushBoxBW(BUSWAY.xCenter + xOff, BUSWAY.yCenter, BUSWAY.zCenter,
+              BUSWAY.endCapT/2, halfH, halfW,
+              BUSWAY_ENDCAP_RGB, 600, 1.0);
+  });
+}
+
+// 4. Hangers — 5 short vertical rods above the busway
+function addBuswayHangers() {
+  const hangerXs = [-1.40, -0.70, 0, +0.70, +1.40];
+  const yBot = BUSWAY.yCenter + BUSWAY.height/2;
+  const yC   = yBot + BUSWAY.hangerH/2;
+  const yTop = yBot + BUSWAY.hangerH;
+  const halfT = BUSWAY.hangerT / 2;
+  hangerXs.forEach(xOff => {
+    // vertical rod
+    pushBoxBW(BUSWAY.xCenter + xOff, yC, BUSWAY.zCenter,
+              halfT, BUSWAY.hangerH/2, halfT,
+              BUSWAY_HANGER_RGB, 350, 1.0);
+    // small mounting plate at top
+    pushBoxBW(BUSWAY.xCenter + xOff, yTop, BUSWAY.zCenter,
+              0.04, 0.005, 0.04,
+              BUSWAY_HANGER_RGB, 200, 1.5);
+  });
+}
+
+// 5+6. M70-style 2-outlet smart tap-off boxes (1 per rack) + 2 drop-cord plug-cables per box
+//      Each tap-off feeds the two stacked PDUs in its rack via red IEC 309 plug cables.
+//      Form per `busway_tapoff_2outlet_structure.md`:
+//        - landscape light-gray steel body
+//        - top: small plug-mast riser + black Turn-n-Lock handle (engages busway slot)
+//        - front-left: black control panel with small cyan LCD + green status LED
+//        - front-top-center: horizontal vent slots
+//        - front-lower: 2× red IEC 309 receptacles
+//      Front face is oriented toward -Z (toward the cold-aisle viewer side).
+function addTapOffsAndDropCables() {
+  const yTopOfBus = BUSWAY.yCenter - BUSWAY.height/2;   // bottom face of busway
+  const tapW = 0.18, tapH = 0.13, tapD = 0.14;          // body 180×130×140 mm (landscape)
+  const mastW = 0.05, mastH = 0.04, mastD = 0.05;       // plug-mast riser  50×40×50
+  const handleR = 0.014, handleH = 0.05;                // Turn-n-Lock handle
+  const M70_BODY_RGB    = [0.78, 0.80, 0.85];
+  const M70_FACE_RGB    = [0.65, 0.67, 0.72];
+  const M70_PANEL_RGB   = [0.10, 0.10, 0.12];
+  const M70_VENT_RGB    = [0.20, 0.20, 0.22];
+  const M70_RED         = [0.92, 0.12, 0.15];
+  const M70_HANDLE_RGB  = [0.10, 0.10, 0.12];
+  const M70_LCD_RGB     = [0.20, 0.85, 0.95];
+
+  RACK_X_CENTERS.forEach(xC => {
+    // 1. Plug-mast riser — between busway underside and body top
+    const mastCy = yTopOfBus - mastH/2;
+    pushBoxBW(xC, mastCy, BUSWAY.zCenter,
+              mastW/2, mastH/2, mastD/2,
+              [0.55, 0.57, 0.62], 200, 1.2);
+    // 2. Turn-n-Lock handle on top of the riser (short black stub)
+    pushBoxBW(xC, yTopOfBus + handleH/2 - 0.005, BUSWAY.zCenter,
+              handleR, handleH/2, handleR,
+              M70_HANDLE_RGB, 80, 1.5);
+
+    // 3. Body — landscape light-gray box, just below the plug-mast
+    const bodyCy = mastCy - mastH/2 - tapH/2;
+    pushBoxBW(xC, bodyCy, BUSWAY.zCenter,
+              tapW/2, tapH/2, tapD/2,
+              M70_BODY_RGB, 1100, 1.2);
+
+    // Front face flipped 180° (Y-axis rotation): now faces +Z (toward the hot aisle / RDC side).
+    // X-axis features are mirrored accordingly so the box reads as truly rotated, not just "wrong-side-out".
+    const frontZ = BUSWAY.zCenter + tapD/2 + 0.001;
+    const fz = +1;   // +1 = pushing INTO the front face (now +Z direction)
+
+    // 4. Front-face overlay (slightly darker)
+    for (let i = 0; i < 420; i++) {
+      buswayPos.push(
+        xC + (Math.random()-0.5)*tapW,
+        bodyCy + (Math.random()-0.5)*tapH,
+        frontZ
+      );
+      buswayCol.push(M70_FACE_RGB[0], M70_FACE_RGB[1], M70_FACE_RGB[2]);
+    }
+
+    // 5. Right zone — black control panel (X mirrored from original "left zone" because of 180° flip)
+    const panelW = 0.045, panelH = tapH * 0.82;
+    const panelCx = xC + tapW/2 - panelW/2 - 0.005;   // now on the +X side after mirror
+    const panelCy = bodyCy;
+    for (let i = 0; i < 560; i++) {
+      buswayPos.push(
+        panelCx + (Math.random()-0.5)*panelW,
+        panelCy + (Math.random()-0.5)*panelH,
+        frontZ + 0.001 * fz
+      );
+      buswayCol.push(M70_PANEL_RGB[0], M70_PANEL_RGB[1], M70_PANEL_RGB[2]);
+    }
+    // small cyan LCD in the panel
+    const lcdW = 0.026, lcdH = 0.018;
+    for (let i = 0; i < 84; i++) {
+      buswayPos.push(
+        panelCx + (Math.random()-0.5)*lcdW,
+        panelCy + 0.025 + (Math.random()-0.5)*lcdH,
+        frontZ + 0.002 * fz
+      );
+      buswayCol.push(M70_LCD_RGB[0], M70_LCD_RGB[1], M70_LCD_RGB[2]);
+    }
+    // green status LED below LCD
+    for (let i = 0; i < 60; i++) {
+      const a = (i / 60) * Math.PI * 2;
+      buswayPos.push(
+        panelCx + Math.cos(a) * 0.005,
+        panelCy - 0.025 + Math.sin(a) * 0.005,
+        frontZ + 0.002 * fz
+      );
+      buswayCol.push(0.10, 0.95, 0.30);
+    }
+
+    // 6. Top-center horizontal vent slots (X mirrored)
+    const ventCx = xC - 0.008;
+    const ventTopY = bodyCy + tapH/2 - 0.012;
+    for (let v = 0; v < 4; v++) {
+      const vy = ventTopY - v * 0.009;
+      for (let i = 0; i < 24; i++) {
+        buswayPos.push(
+          ventCx + (Math.random()-0.5)*0.075,
+          vy,
+          frontZ + 0.001 * fz
+        );
+        buswayCol.push(M70_VENT_RGB[0], M70_VENT_RGB[1], M70_VENT_RGB[2]);
+      }
+    }
+
+    // 7. Two real IEC 60309 panel-mount receptacles on the lower-LEFT of the M70 front face.
+    //    Per Legrand P17 / IEC 60309 6h spec — red shroud (Ø 56 mm) extends +Z out of the box,
+    //    5 brass pins (3P+N+E, earth at 6 o'clock) visible at the open end.
+    const rcpY  = bodyCy - tapH * 0.22;
+    const rcpXs = [xC - 0.020, xC - 0.070];        // 50 mm pitch between the two outlets
+    const tapShroudLen = 0.040;                    // 40 mm shroud length
+    rcpXs.forEach(rcx => {
+      // Red flange / mounting plate around the shroud base (visual sealing flange)
+      for (let i = 0; i < 140; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.sqrt(Math.random()) * 0.034;   // 68 mm dia flange
+        buswayPos.push(rcx + Math.cos(a)*r, rcpY + Math.sin(a)*r, frontZ);
+        buswayCol.push(M70_RED[0]*0.9, M70_RED[1]*0.9, M70_RED[2]*0.9);
+      }
+      // The shroud itself — protrudes in +Z direction (away from the box face)
+      addIEC309(rcx, rcpY, frontZ, '+z', tapShroudLen, true);
+    });
+
+    // 8. Two RED power harnesses — IEC 60309 plug ↔ M70 outlet at top, plug ↔ PDU rear inlet at bottom.
+    //    Mapping: left M70 outlet → PDU2 (upper, U41-43), right M70 outlet → PDU1 (lower, U38-40).
+    //    PDU inlets are panel-mount sockets installed on the PDU REAR face (z = -rd + PDU.d = -0.2),
+    //    facing +Z so a cable approaching from the rear can plug straight in.
+    const pdu2_yC   = -rh + (40 + 1.5) * U_HEIGHT;       // PDU2 vertical center (U41-43)
+    const pdu1_yC   = -rh + (37 + 1.5) * U_HEIGHT;       // PDU1 vertical center (U38-40)
+    const pduRearZ  = -rd + PDU.d;                        // -0.6 + 0.40 = -0.20 (PDU rear face)
+    const pduInletShroudLen = 0.040;                      // PDU inlet shroud length
+    const cablePlugLen      = 0.045;                      // length of the red plug cap on the cable end
+
+    rcpXs.forEach((rcx, idx) => {
+      const pduYC  = (idx === 0) ? pdu2_yC : pdu1_yC;
+      // Place each PDU rear inlet at the same X as its M70 outlet so the cable runs almost straight in X
+      const inletX = rcx;
+
+      // (a) PDU rear-face panel inlet — IEC 60309 shroud protruding +Z from the PDU back
+      addIEC309(inletX, pduYC, pduRearZ, '+z', pduInletShroudLen, true);
+      // back-side flange on PDU rear face
+      for (let i = 0; i < 126; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.sqrt(Math.random()) * 0.034;
+        buswayPos.push(inletX + Math.cos(a)*r, pduYC + Math.sin(a)*r, pduRearZ);
+        buswayCol.push(M70_RED[0]*0.85, M70_RED[1]*0.85, M70_RED[2]*0.85);
+      }
+
+      // (b) Cable plug cap — RED IEC 60309 plug inserted INTO the M70 outlet shroud (top of harness)
+      //     Plug body extends +Z from where it engages the shroud, then the cable exits its back end.
+      const tapPlugBackZ = frontZ + tapShroudLen + cablePlugLen - 0.010;  // back of plug (where cable exits)
+      pushCylBW(rcx, rcpY, frontZ + tapShroudLen + cablePlugLen/2 - 0.010,
+                'z', cablePlugLen, 0.054, M70_RED);
+
+      // (c) Cable plug cap — RED IEC 60309 plug inserted INTO the PDU rear inlet shroud (bottom of harness)
+      //     Plug extends +Z from inlet shroud open end; cable exits its back end (further +Z).
+      const pduPlugBackZ = pduRearZ + pduInletShroudLen + cablePlugLen - 0.010;
+      pushCylBW(inletX, pduYC, pduRearZ + pduInletShroudLen + cablePlugLen/2 - 0.010,
+                'z', cablePlugLen, 0.054, M70_RED);
+
+      // (d) Black 63A IEC 309 power harness — THICK, STIFF cable, large bend radius.
+      //     Real 63A 5×16 mm² cable is ~28 mm OD with a minimum bend radius of 4-6× cable dia
+      //     (≈ 150 mm). So we draw it as a thick cable with only a couple of broad sweeps —
+      //     a short straight slack out of the plug, then ONE large J-curve down to the PDU
+      //     inlet. No S-bend, no tight kinks.
+      const harnessCtl = [
+        [rcx,    rcpY,                  tapPlugBackZ],                  // exits M70 plug back face
+        [rcx,    rcpY - 0.04,           tapPlugBackZ + 0.04],           // short straight slack
+        [rcx,    (rcpY + pduYC)*0.45,   (tapPlugBackZ + pduPlugBackZ)*0.5 + 0.10],  // single broad arc
+        [inletX, pduYC + 0.18,          pduPlugBackZ + 0.10],           // wide approach to PDU
+        [inletX, pduYC,                 pduPlugBackZ],                  // terminate at PDU plug back
+      ];
+      addCurvedPipe(harnessCtl, 0.022, DROP_CABLE_RGB);                  // 22 mm thick black harness
+      // White ridge highlight (~10% density of cable surface) — keeps the harness visible
+      // against the otherwise dark scene without changing its color.
+      addCableHighlight(harnessCtl, 0.022, 240);
+    });
+  });
+}
+
+addBuswayBody();
+addBuswayHangers();
+// NOTE: addTapOffsAndDropCables() is called LATER, after the PDU constants are defined,
+// because it references PDU.w / PDU.d for inlet placement. Calling it here would hit a
+// "Cannot access 'PDU' before initialization" TDZ error.
+
+// ---- 15. Rack PDU — 3U Smart PDU, 2 units per rack at the top ----
+// Spec: see pdu_pos_s3c63aw5_spec.md — 3U, 482 W × 131 H × 400 D mm, 24× C13 in (4×2 banks)×3 lines
+// Layout per user spec (2026-04-15):
+//   - Normal racks (4): leave U44 empty at the very top, then PDU2 (U41-43, uBase=40)
+//                       directly under it, then PDU1 (U38-40, uBase=37) directly under PDU2.
+//                       PDU1 and PDU2 stacked / touching.
+//   - Network rack (empty rack at x=-0.65) holds the L2/L3/InfiniBand switches at U38/U40/U42.
+//                       Below the lowest switch (L2 at U38), leave a 1U gap (U37 empty),
+//                       then PDU1 at U34-36 (uBase=33), then PDU2 at U31-33 (uBase=30).
+const PDU = {
+  w: 0.482,             // 482 mm — 19" rack-mount full width
+  h: 3 * U_HEIGHT,      // 3U
+  d: 0.400,             // 400 mm depth
+};
+const PDU_BODY_RGB    = [0.08, 0.08, 0.10];    // matte black chassis
+const PDU_FACE_RGB    = [0.18, 0.18, 0.22];    // slightly lighter front panel
+const PDU_LCD_RGB     = [0.20, 0.85, 0.95];    // small cyan LCD on front-left
+const PDU_OUTLET_L1   = [0.20, 0.55, 0.95];    // L1 — blue
+const PDU_OUTLET_L2   = [0.95, 0.20, 0.20];    // L2 — red
+const PDU_OUTLET_L3   = [0.20, 0.85, 0.30];    // L3 — green
+const PDU_BREAKER_RGB = [0.55, 0.45, 0.10];    // breaker toggle dull amber
+
+function addPDU(xOffset, uBase) {
+  const pw = PDU.w / 2, ph = PDU.h / 2, pd = PDU.d / 2;
+  const py = -rh + (uBase * U_HEIGHT) + ph;
+  const pz = -rd + pd;            // front-aligned, like servers
+
+  // Chassis edges (matte black)
+  boxEdges(pw, ph, pd).forEach(e => {
+    const len = Math.hypot(e.e[0]-e.s[0], e.e[1]-e.s[1], e.e[2]-e.s[2]);
+    const density = Math.max(25, Math.round(len * 280));
+    for (let i = 0; i < density; i++) {
+      const t = i / density;
+      pduPos.push(
+        e.s[0]+(e.e[0]-e.s[0])*t + xOffset,
+        e.s[1]+(e.e[1]-e.s[1])*t + py,
+        e.s[2]+(e.e[2]-e.s[2])*t + pz
+      );
+      pduCol.push(PDU_BODY_RGB[0], PDU_BODY_RGB[1], PDU_BODY_RGB[2]);
+    }
+  });
+  // Body interior (very dark gray haze)
+  for (let i = 0; i < 1680; i++) {
+    pduPos.push(
+      (Math.random()-0.5)*PDU.w + xOffset,
+      (Math.random()-0.5)*PDU.h + py,
+      (Math.random()-0.5)*PDU.d + pz
+    );
+    pduCol.push(PDU_BODY_RGB[0]*1.4, PDU_BODY_RGB[1]*1.4, PDU_BODY_RGB[2]*1.6);
+  }
+  // Front face overlay (slightly lighter — distinguishes the front)
+  const frontZ = -rd - 0.001;
+  for (let i = 0; i < 980; i++) {
+    pduPos.push(
+      (Math.random()-0.5)*PDU.w + xOffset,
+      (Math.random()-0.5)*PDU.h + py,
+      frontZ
+    );
+    pduCol.push(PDU_FACE_RGB[0], PDU_FACE_RGB[1], PDU_FACE_RGB[2]);
+  }
+  // LCD (small cyan rectangle on front-left)
+  const lcdW = 0.06, lcdH = 0.025;
+  const lcdCx = xOffset - PDU.w/2 + 0.05;
+  for (let i = 0; i < 126; i++) {
+    pduPos.push(
+      lcdCx + (Math.random()-0.5)*lcdW,
+      py    + (Math.random()-0.5)*lcdH,
+      frontZ - 0.001
+    );
+    pduCol.push(PDU_LCD_RGB[0], PDU_LCD_RGB[1], PDU_LCD_RGB[2]);
+  }
+  // 6 breaker toggles in the middle of the front (30A × 6 per spec)
+  const brkStartX = xOffset - 0.04;
+  const brkSpacing = 0.018;
+  for (let b = 0; b < 6; b++) {
+    const bx = brkStartX + b * brkSpacing;
+    const by = py + 0.005;
+    const bw = 0.008, bh = 0.018;
+    const ring = 16;
+    for (let k = 0; k < ring; k++) {
+      const t = k / ring;
+      let px, py2;
+      if      (t < 0.25) { px = -bw/2 + (t*4)*bw;        py2 = -bh/2; }
+      else if (t < 0.50) { px = +bw/2;                    py2 = -bh/2 + ((t-0.25)*4)*bh; }
+      else if (t < 0.75) { px = +bw/2 - ((t-0.50)*4)*bw;  py2 = +bh/2; }
+      else               { px = -bw/2;                    py2 = +bh/2 - ((t-0.75)*4)*bh; }
+      pduPos.push(bx + px, by + py2, frontZ - 0.001);
+      pduCol.push(PDU_BREAKER_RGB[0], PDU_BREAKER_RGB[1], PDU_BREAKER_RGB[2]);
+    }
+  }
+  // 24× C13 outlets on the right side of the front, 3 rows × 8 cols, color-coded by line.
+  // 3 lines × (4 × 2 banks): a small visual gap is added between bank 1 and bank 2 on each row.
+  const outletStartX = xOffset + 0.01;            // start to the right of breakers
+  const outletAreaH  = PDU.h - 0.022;
+  const rowH         = outletAreaH / 3;
+  const colSpacingX  = 0.022;
+  const lineRGB = [PDU_OUTLET_L1, PDU_OUTLET_L2, PDU_OUTLET_L3];
+  for (let row = 0; row < 3; row++) {
+    const cy = py - PDU.h/2 + rowH/2 + row * rowH;
+    const rgb = lineRGB[row];
+    for (let col = 0; col < 8; col++) {
+      const bankGap = col >= 4 ? 0.010 : 0;       // visual 4-2-bank split
+      const cx = outletStartX + col * colSpacingX + bankGap;
+      // colored bezel rectangle
+      const w = 0.018, h = 0.013;
+      const ring = 18;
+      for (let k = 0; k < ring; k++) {
+        const t = k / ring;
+        let px, py2;
+        if      (t < 0.25) { px = -w/2 + (t*4)*w;       py2 = -h/2; }
+        else if (t < 0.50) { px = +w/2;                  py2 = -h/2 + ((t-0.25)*4)*h; }
+        else if (t < 0.75) { px = +w/2 - ((t-0.50)*4)*w; py2 = +h/2; }
+        else               { px = -w/2;                  py2 = +h/2 - ((t-0.75)*4)*h; }
+        pduPos.push(cx + px, cy + py2, frontZ - 0.001);
+        pduCol.push(rgb[0], rgb[1], rgb[2]);
+      }
+      // small dark outlet hole in the middle of the bezel
+      pduPos.push(cx, cy, frontZ - 0.0015);
+      pduCol.push(0.04, 0.04, 0.05);
+    }
+  }
+}
+
+// 4 normal racks: top U44 left empty, PDU2 (uBase=40) + PDU1 (uBase=37) stacked under it
+[0, RACK.w + SET_GAP, SET_OFFSET, SET_OFFSET + RACK.w + SET_GAP].forEach(xC => {
+  addPDU(xC, 37);   // PDU1 — U38..U40
+  addPDU(xC, 40);   // PDU2 — U41..U43  (U44 stays empty per spec)
+});
+
+// QM9700 InfiniBand switch installed in each AIR-COOLED rack (Rack A of each set), below the PDU.
+// Stack in Rack A: U44 empty / PDU2 U41-43 / PDU1 U38-40 / 1U gap U37 / IB switch U36 (uBase=35)
+addIBSwitch(0,           35);    // Set 1 — Rack A (AC, 10U servers)
+addIBSwitch(SET_OFFSET,  35);    // Set 2 — Rack A (AC, 10U servers)
+
+// ---- InfiniBand NDR cables — GREEN 400 Gb/s links, switch top row → server NIC ports ----
+// For each AC rack (Rack A of each set):
+//   - 16 cables come out of the IB switch's TOP row OSFP cages (leftmost 8 + rightmost 8)
+//   - Left-8 route along the LEFT side-rail down the rack
+//   - Right-8 route along the RIGHT side-rail down the rack
+//   - At each 10U server's NIC row (mesh grille lower strip), cables turn horizontally into the server
+//     Server #1 (U9-18) and Server #2 (U21-30): 4 left NIC + 4 right NIC each
+const IB_GREEN = [0.20, 0.90, 0.25];
+
+function addIBCables(xC, switchUBase, color) {
+  const switchSY  = -rh + (switchUBase * U_HEIGHT) + U_HEIGHT/2;
+  const switchTopRowY = switchSY + 0.008;       // top row of OSFP cages
+  const switchBotRowY = switchSY - 0.008;       // bottom row of OSFP cages
+  const frontZ_sw  = -rd - 0.002;               // switch front face
+  const frontZ_srv = -rd - 0.0015;              // server front face
+
+  // Reproduce the top-row OSFP port X positions (same math as addIBSwitch)
+  const portsAreaL  = xC - 0.448/2 + 0.006;
+  const portsAreaR  = xC + 0.448/2 - 0.060;
+  const portsAreaW  = portsAreaR - portsAreaL;
+  const bankGap     = 0.003;
+  const banksCount  = 4;
+  const colsPerBank = 4;
+  const bankWidth   = (portsAreaW - (banksCount - 1) * bankGap) / banksCount;
+  const cageGap     = 0.0008;
+  const cageW       = (bankWidth - (colsPerBank - 1) * cageGap) / colsPerBank;
+  const portXs = [];
+  for (let b = 0; b < banksCount; b++) {
+    const bankLX = portsAreaL + b * (bankWidth + bankGap);
+    for (let c = 0; c < colsPerBank; c++) {
+      portXs.push(bankLX + c * (cageW + cageGap) + cageW/2);
+    }
+  }
+  // Now portXs has 16 X positions for the top row (left → right)
+
+  // Helper — derive the 8 NIC-port X positions and Y on a 10U server (mirrors addServer layout)
+  function serverNicPorts(srvUBase) {
+    const srvSY = -rh + (srvUBase * U_HEIGHT) + (10 * U_HEIGHT)/2;
+    const srvSBottom = srvSY - (10 * U_HEIGHT)/2;
+    const srvSLeft = xC - SERVER.w/2;
+    const srvSRight = xC + SERVER.w/2;
+    const margin = 0.008;
+    const meshLeft = srvSLeft + margin;
+    const meshRight = srvSRight - margin;
+    const meshW = meshRight - meshLeft;
+    const psuBotY = srvSY + (10 * U_HEIGHT)/2 - U_HEIGHT;
+    const portsTopY = srvSBottom + 2.5 * U_HEIGHT;
+    const meshBotY = portsTopY + 0.003;
+    const meshTopY = psuBotY - 0.003;
+    const meshH = meshTopY - meshBotY;
+    const nicY = meshBotY + meshH * 0.10;
+    const nicCount = 8;
+    const nicSlotW = meshW * 0.085;
+    const nicTotalW = nicSlotW * nicCount + (nicCount - 1) * (meshW * 0.012);
+    const nicLeftX = meshLeft + (meshW - nicTotalW) / 2;
+    const xs = [];
+    for (let n = 0; n < nicCount; n++) {
+      xs.push(nicLeftX + nicSlotW/2 + n * (nicSlotW + meshW * 0.012));
+    }
+    return { xs, y: nicY };
+  }
+  const srv1 = serverNicPorts(8);    // Server 1 (uBase=8, U9-18)
+  const srv2 = serverNicPorts(20);   // Server 2 (uBase=20, U21-30)
+
+  // ---- 8U LC server IB port positions (Rack B of the same set) ----
+  const xB = xC + RACK.w + SET_GAP;               // liquid-cooled partner rack X
+  function lcServerIBPorts(srvUBase) {
+    const sY_srv = -rh + (srvUBase * U_HEIGHT) + (8 * U_HEIGHT)/2;
+    const ibY_srv = sY_srv + 0.020;
+    const areaW = SERVER8.w - 0.024;
+    const portCount = 8;
+    const gap = 0.004;
+    const portW = (areaW - (portCount - 1) * gap) / portCount;
+    const startX = xB - areaW/2 + portW/2;
+    const xs = [];
+    for (let n = 0; n < portCount; n++) xs.push(startX + n * (portW + gap));
+    return { xs, y: ibY_srv };
+  }
+  const lc1 = lcServerIBPorts(8);    // LC server #1 at U9-16
+  const lc2 = lcServerIBPorts(20);   // LC server #2 at U21-28
+
+  // Side-rail X positions — user's LEFT = +X side, user's RIGHT = -X side.
+  const leftRailX_A  = xC + RACK.w/2 - 0.010;     // user-LEFT rail of Rack A (+X side)
+  const rightRailX_A = xC - RACK.w/2 + 0.010;     // user-RIGHT rail of Rack A (-X side)
+  const leftRailX_B  = xB + RACK.w/2 - 0.010;     // user-LEFT rail of Rack B (+X side)
+
+  const railZ = frontZ_sw - 0.018;
+  const trayY = TRAY.topY;                        // blue (upper) tray center Y
+  const trayZ = TRAY.zCenter;
+
+  // One strand per logical network link — strand count equals actual cable count.
+  // Switch has 32 connected ports (16 left + 16 right) → 32 strands per switch, 64 total.
+  const STRAND_THICK  = 0.0066;   // 6.6 mm diameter for the cable body
+
+  // Write to the dedicated IB-cable buffer (bigger point size downstream).
+  function addIBPipe(controlPts, diameter, rgb) {
+    const curve = new THREE.CatmullRomCurve3(
+      controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+    );
+    const r = diameter / 2;
+    const circ = 2 * Math.PI * r;
+    const angStep = Math.max(14, Math.round(circ / 0.010));
+    const lenStep = Math.max(80, Math.round(curve.getLength() / 0.006));
+    const tan = new THREE.Vector3();
+    const nrm = new THREE.Vector3();
+    const bin = new THREE.Vector3();
+    const ref = new THREE.Vector3(0, 1, 0);
+    const refAlt = new THREE.Vector3(1, 0, 0);
+    for (let l = 0; l <= lenStep; l++) {
+      const t = l / lenStep;
+      const pt = curve.getPoint(t);
+      curve.getTangent(t, tan);
+      const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+      bin.crossVectors(tan, base).normalize();
+      nrm.crossVectors(bin, tan).normalize();
+      for (let a = 0; a < angStep; a++) {
+        const th = (a / angStep) * Math.PI * 2;
+        const cN = Math.cos(th) * r;
+        const cB = Math.sin(th) * r;
+        ibCablePos.push(
+          pt.x + cN * nrm.x + cB * bin.x,
+          pt.y + cN * nrm.y + cB * bin.y,
+          pt.z + cN * nrm.z + cB * bin.z
+        );
+        ibCableCol.push(rgb[0], rgb[1], rgb[2]);
+      }
+    }
+  }
+  function bundleLink(controlPts) {
+    addIBPipe(controlPts, STRAND_THICK, color);
+  }
+
+  // ============================================================
+  // LEFT 16 ports (top-row col 0-7 + bottom-row col 0-7) → LC partner rack via OVERHEAD TRAY
+  //   ↑ up left rail of Rack A → into blue upper tray → across tray to Rack B
+  //   → down Rack B's LEFT rail → into 8U LC server IB port
+  //
+  // Mapping — 16 switch ports → 16 LC IB ports (8 per LC server):
+  //   top row col 0-3 → lc1 ports 0..3
+  //   bot row col 0-3 → lc1 ports 4..7
+  //   top row col 4-7 → lc2 ports 0..3
+  //   bot row col 4-7 → lc2 ports 4..7
+  // ============================================================
+  for (let rowIdx = 0; rowIdx < 2; rowIdx++) {
+    const swY = (rowIdx === 0) ? switchTopRowY : switchBotRowY;
+    for (let c = 0; c < 8; c++) {
+      const pX = portXs[c];
+      const targetSrv = (c < 4) ? lc1 : lc2;
+      const targetIdx = (rowIdx === 0) ? (c % 4) : (4 + (c % 4));
+      const tX = targetSrv.xs[targetIdx];
+      const tY = targetSrv.y;
+      bundleLink([
+        [pX,           swY,          frontZ_sw],                  // exit OSFP cage
+        [pX + 0.005,   swY,          frontZ_sw - 0.006],          // pull forward toward user-LEFT (+X)
+        [leftRailX_A,  swY,          railZ],                      // reach Rack A user-LEFT rail (same Y)
+        [leftRailX_A,  swY + 0.04,   railZ],                      // start going up
+        [leftRailX_A,  trayY - 0.05, railZ],                      // approaching tray
+        [leftRailX_A,  trayY,        railZ],                      // just below tray
+        [leftRailX_A,  trayY,        trayZ],                      // into tray (same Y)
+        [leftRailX_B,  trayY,        trayZ],                      // slide along tray to Rack B
+        [leftRailX_B,  trayY,        railZ],                      // exit tray back to side-rail plane
+        [leftRailX_B,  trayY - 0.05, railZ],                      // just below tray on Rack B
+        [leftRailX_B,  tY + 0.04,    railZ],                      // straight vertical drop
+        [leftRailX_B,  tY + 0.010,   railZ],                      // approaching target Y
+        [leftRailX_B,  tY,           railZ],                      // turn horizontal at NIC level
+        [tX,           tY,           frontZ_srv - 0.005],         // approach NIC port
+        [tX,           tY,           frontZ_srv + 0.002],         // plug 2mm into port
+      ]);
+    }
+  }
+
+  // ============================================================
+  // RIGHT 16 ports (top-row col 8-15 + bottom-row col 8-15) → same-rack AC server NIC ports
+  //   → RIGHT rail of Rack A → drop straight DOWN → into 10U AC server NIC port
+  //
+  // Mapping:
+  //   top row col 8-11  → srv1 NIC ports 0..3 (left side of server)
+  //   bot row col 8-11  → srv1 NIC ports 4..7 (right side of server)
+  //   top row col 12-15 → srv2 NIC ports 0..3
+  //   bot row col 12-15 → srv2 NIC ports 4..7
+  // ============================================================
+  for (let rowIdx = 0; rowIdx < 2; rowIdx++) {
+    const swY = (rowIdx === 0) ? switchTopRowY : switchBotRowY;
+    for (let c = 8; c < 16; c++) {
+      const pX = portXs[c];
+      const targetSrv = (c < 12) ? srv1 : srv2;
+      const localC = (c - 8) % 4;
+      const targetIdx = (rowIdx === 0) ? localC : (4 + localC);
+      const tX = targetSrv.xs[targetIdx];
+      const tY = targetSrv.y;
+      bundleLink([
+        [pX,           swY,                   frontZ_sw],
+        [pX - 0.005,   swY,                   frontZ_sw - 0.006],  // pull forward toward user-RIGHT (-X)
+        [rightRailX_A, swY,                   railZ],
+        [rightRailX_A, swY - 0.020,           railZ],
+        [rightRailX_A, (swY + tY) * 0.5,      railZ],
+        [rightRailX_A, tY + 0.020,            railZ],
+        [rightRailX_A, tY,                    railZ],
+        [tX,           tY,                    frontZ_srv - 0.005],
+        [tX,           tY,                    frontZ_srv + 0.002],
+      ]);
+    }
+  }
+}
+
+addIBCables(0,          35, IB_GREEN);   // Set 1 Rack A
+addIBCables(SET_OFFSET, 35, IB_GREEN);   // Set 2 Rack A
+
+// ---- Red UPLINK cables: AC IB switch ↔ Network-rack QM9700 (via blue tray) ----
+// Each AC IB switch sends 4 uplinks UP the LEFT rail → across the blue tray → DOWN the
+// network-rack left rail → into the network-rack QM9700 (at U36) on its top-row left ports.
+// Each AC rack gets a different 4-port slice of the network switch so uplinks don't collide.
+const IB_RED = [0.95, 0.15, 0.15];
+
+function addIBUplinkCables(acRackX, netPortOffset) {
+  const frontZ_sw  = -rd - 0.002;
+  // Red uplinks route DEEPER behind the rail (Z offset) so they don't overlap the green
+  // server cables that use the normal railZ plane. 35 mm behind the switch face vs green's 18 mm.
+  const railZ      = frontZ_sw - 0.035;
+  const trayY      = TRAY.topY;
+  const trayZ      = TRAY.zCenter - 0.020;   // slightly behind green lane inside the tray too
+
+  // AC switch position (IB switch at U36, uBase=35)
+  const acSwY      = -rh + (35 * U_HEIGHT) + U_HEIGHT/2;
+  // User's "LEFT" rail = +X side of the rack (user's viewpoint is the reverse of the code axes here).
+  const acLeftRail = acRackX + RACK.w/2 - 0.010;
+
+  // Network QM9700 position (network rack at emptyRackX = -(RACK.w + SET_GAP) = -0.65, uBase=35)
+  const netRackX   = -(RACK.w + SET_GAP);
+  const netSwY     = -rh + (35 * U_HEIGHT) + U_HEIGHT/2;
+  const netLeftRail= netRackX + RACK.w/2 - 0.010;   // user's LEFT = +X side of network rack
+
+  // Reproduce the QM9700 top-row port X positions for the network switch
+  const portsAreaL = netRackX - 0.448/2 + 0.006;
+  const portsAreaR = netRackX + 0.448/2 - 0.060;
+  const portsAreaW = portsAreaR - portsAreaL;
+  const bankGap    = 0.003;
+  const banksCount = 4;
+  const colsPerBank= 4;
+  const bankWidth  = (portsAreaW - (banksCount - 1) * bankGap) / banksCount;
+  const cageGap    = 0.0008;
+  const cageW      = (bankWidth - (colsPerBank - 1) * cageGap) / colsPerBank;
+  function netPortX(colIdx) {
+    const b = Math.floor(colIdx / colsPerBank);
+    const c = colIdx % colsPerBank;
+    const bankLX = portsAreaL + b * (bankWidth + bankGap);
+    return bankLX + c * (cageW + cageGap) + cageW/2;
+  }
+
+  const STRAND_THICK = 0.0066;
+
+  // Inline addIBPipe (writes to the ibCablePos buffer so uplinks share the dedicated render layer)
+  function drawIBPipeLocal(controlPts) {
+    const curve = new THREE.CatmullRomCurve3(
+      controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+    );
+    const r = STRAND_THICK / 2;
+    const circ = 2 * Math.PI * r;
+    const angStep = Math.max(14, Math.round(circ / 0.010));
+    const lenStep = Math.max(100, Math.round(curve.getLength() / 0.006));
+    const tan = new THREE.Vector3();
+    const nrm = new THREE.Vector3();
+    const bin = new THREE.Vector3();
+    const ref = new THREE.Vector3(0, 1, 0);
+    const refAlt = new THREE.Vector3(1, 0, 0);
+    for (let l = 0; l <= lenStep; l++) {
+      const t = l / lenStep;
+      const pt = curve.getPoint(t);
+      curve.getTangent(t, tan);
+      const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+      bin.crossVectors(tan, base).normalize();
+      nrm.crossVectors(bin, tan).normalize();
+      for (let a = 0; a < angStep; a++) {
+        const th = (a / angStep) * Math.PI * 2;
+        const cN = Math.cos(th) * r;
+        const cB = Math.sin(th) * r;
+        ibCablePos.push(
+          pt.x + cN * nrm.x + cB * bin.x,
+          pt.y + cN * nrm.y + cB * bin.y,
+          pt.z + cN * nrm.z + cB * bin.z
+        );
+        ibCableCol.push(IB_RED[0], IB_RED[1], IB_RED[2]);
+      }
+    }
+  }
+
+  // 4 uplinks per AC rack — sourced from the AC switch left side, landing on consecutive
+  // top-row ports on the network QM9700 (starting at netPortOffset)
+  for (let i = 0; i < 4; i++) {
+    // source — uplink exit on the user-LEFT face (+X side) of the AC switch
+    const srcX = acLeftRail - 0.006 - i * 0.003;
+    const srcY = acSwY + (i % 2 === 0 ? +0.008 : -0.008);   // alternate top/bot row bank-0 ports
+
+    const netCol = netPortOffset + i;                       // e.g. 0..3 for rack 1, 4..7 for rack 2
+    const tPortX = netPortX(netCol);
+    const tPortY = netSwY + 0.008;                          // top row
+
+    drawIBPipeLocal([
+      [srcX,         srcY,        frontZ_sw],                     // exit AC switch (left side)
+      [acLeftRail,   srcY,        railZ],                         // reach AC rack left rail
+      [acLeftRail,   srcY + 0.04, railZ],                         // begin vertical rise
+      [acLeftRail,   trayY - 0.05, railZ],
+      [acLeftRail,   trayY,       railZ],
+      [acLeftRail,   trayY,       trayZ],                         // into the blue tray
+      [netLeftRail,  trayY,       trayZ],                         // along tray to network rack
+      [netLeftRail,  trayY,       railZ],                         // exit tray back to side rail
+      [netLeftRail,  trayY - 0.05, railZ],
+      [netLeftRail,  tPortY + 0.06, railZ],                       // vertical drop along user-left rail
+      [netLeftRail,  tPortY + 0.020, railZ],
+      [netLeftRail,  tPortY,      railZ],                         // at switch level, still at rail
+      // Smooth X-Z arc from rail into the OSFP cage face
+      [(netLeftRail + tPortX)*0.5, tPortY, (railZ + frontZ_sw)*0.5],
+      [tPortX,       tPortY,      frontZ_sw - 0.010],             // approach the cage
+      [tPortX,       tPortY,      frontZ_sw - 0.003],
+      [tPortX,       tPortY,      frontZ_sw + 0.002],             // plug 2 mm into OSFP port
+    ]);
+  }
+}
+
+// Target the user-LEFT-side top-row ports of the network QM9700 so uplinks land on the cages
+// closest to where the cables actually descend down the user-LEFT rail.
+// col 12..15 sit on the +X (user-LEFT) end of the switch; col 8..11 are the next bank.
+addIBUplinkCables(0,          12);    // Set 1 Rack A → network QM9700 top-row col 12..15
+addIBUplinkCables(SET_OFFSET, 8);     // Set 2 Rack A → network QM9700 top-row col 8..11
+
+// ---- L2 switch → server UTP management network (YELLOW, via yellow lower tray) ----
+// 16 UTP lines from the L2 Catalyst's USER-LEFT (+X) half → up user-left rail of network rack →
+// yellow (lower) tray → across to each server rack → down user-left (+X) rail → 2 lines into
+// each server's UTP network port. 8 servers × 2 lines = 16 lines total.
+const UTP_YELLOW = [0.06, 0.14, 0.55];    // NAVY (legacy name kept for code clarity)
+
+function addL2UTPCables() {
+  const emptyRackX_L = -(RACK.w + SET_GAP);
+  const l2UBase      = 31;                               // L2 switch at U32 (uBase=31)
+  const frontZ_sw    = -rd - 0.002;
+  const frontZ_srv   = -rd - 0.0015;
+  const railZ_utp    = frontZ_sw - 0.050;                // deeper Z-lane than IB cables
+  const trayY        = TRAY.bottomY;                     // YELLOW (lower) tray center Y
+  const trayZ_utp    = TRAY.zCenter - 0.035;
+
+  const switchX   = emptyRackX_L;
+  const switchSY  = -rh + (l2UBase * U_HEIGHT) + U_HEIGHT/2;
+  const leftX_sw  = switchX - 0.448/2 + 0.004;
+  const modeR     = leftX_sw + 0.448 * 0.12;
+  const portsL_L2 = modeR + 0.003;
+  const portsR_L2 = leftX_sw + 0.448 * 0.82;
+  const portsAreaW= portsR_L2 - portsL_L2;
+  const portBanks = 2;
+  const colsPerBank2 = 12;
+  const bankGap2  = 0.004;
+  const bankW2    = (portsAreaW - (portBanks - 1) * bankGap2) / portBanks;
+  const portGap2  = 0.0005;
+  const portW2    = (bankW2 - (colsPerBank2 - 1) * portGap2) / colsPerBank2;
+  function l2PortX(colIdx) {
+    const b = Math.floor(colIdx / colsPerBank2);
+    const c = colIdx % colsPerBank2;
+    const bankLX = portsL_L2 + b * (bankW2 + bankGap2);
+    return bankLX + portW2/2 + c * (portW2 + portGap2);
+  }
+  const topRowY_L2 = switchSY + 0.009;
+  const botRowY_L2 = switchSY - 0.009;
+
+  const netLeftRail = emptyRackX_L - RACK.w/2 + 0.010;   // network rack -X rail (user's RIGHT)
+
+  // 8 servers (left-to-right order by pair)
+  const servers = [
+    { rackX: 0,                                  uBase: 8,  type: 'ac' },
+    { rackX: 0,                                  uBase: 20, type: 'ac' },
+    { rackX: RACK.w + SET_GAP,                   uBase: 8,  type: 'lc' },
+    { rackX: RACK.w + SET_GAP,                   uBase: 20, type: 'lc' },
+    { rackX: SET_OFFSET,                         uBase: 8,  type: 'ac' },
+    { rackX: SET_OFFSET,                         uBase: 20, type: 'ac' },
+    { rackX: SET_OFFSET + RACK.w + SET_GAP,      uBase: 8,  type: 'lc' },
+    { rackX: SET_OFFSET + RACK.w + SET_GAP,      uBase: 20, type: 'lc' },
+  ];
+
+  function utpPortY(uBase, type) {
+    const sBottom = -rh + uBase * U_HEIGHT;
+    // AC 10U: compute-tray port row at ~2.25 U; LC 8U: lower-middle ~1.5 U
+    return sBottom + (type === 'ac' ? 2.25 : 1.5) * U_HEIGHT;
+  }
+  function utpPortXs(rackX) {
+    // Both UTP ports placed near the server's -X edge (closer to the -X side rail)
+    // so cables take the shortest path up to the -X rail without long horizontal sweeps.
+    return [rackX - 0.018, rackX - 0.004];
+  }
+
+  const UTP_STRAND_THICK = 0.0045;
+  function drawUTPPipe(controlPts) {
+    const curve = new THREE.CatmullRomCurve3(
+      controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+    );
+    const r = UTP_STRAND_THICK / 2;
+    const circ = 2 * Math.PI * r;
+    const angStep = Math.max(12, Math.round(circ / 0.010));
+    const lenStep = Math.max(100, Math.round(curve.getLength() / 0.006));
+    const tan = new THREE.Vector3(), nrm = new THREE.Vector3(), bin = new THREE.Vector3();
+    const ref = new THREE.Vector3(0, 1, 0), refAlt = new THREE.Vector3(1, 0, 0);
+    for (let l = 0; l <= lenStep; l++) {
+      const t = l / lenStep;
+      const pt = curve.getPoint(t);
+      curve.getTangent(t, tan);
+      const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+      bin.crossVectors(tan, base).normalize();
+      nrm.crossVectors(bin, tan).normalize();
+      for (let a = 0; a < angStep; a++) {
+        const th = (a / angStep) * Math.PI * 2;
+        const cN = Math.cos(th) * r;
+        const cB = Math.sin(th) * r;
+        ibCablePos.push(
+          pt.x + cN * nrm.x + cB * bin.x,
+          pt.y + cN * nrm.y + cB * bin.y,
+          pt.z + cN * nrm.z + cB * bin.z
+        );
+        ibCableCol.push(UTP_YELLOW[0], UTP_YELLOW[1], UTP_YELLOW[2]);
+      }
+    }
+  }
+
+  // 16 cables: i = 0..15
+  //   col index = userLeftCols[i%8] (L2 cols 0..7 on the -X side of the switch)
+  //   row = top (i<8) or bottom (i>=8)
+  //   server = floor(i/2), port = i%2
+  const userLeftCols = [0, 1, 2, 3, 4, 5, 6, 7];        // -X side of L2 switch
+
+  // Each of the 16 cables gets a unique Z stagger so they read as 16 parallel lanes in the tray
+  // and on the rails (instead of all piling on one plane).
+  const Z_STAGGER_STEP = 0.0018;          // 1.8 mm between adjacent cable lanes
+  const Z_STAGGER_BASE = (16 - 1) / 2;    // centers the stagger around railZ_utp
+
+  for (let i = 0; i < 16; i++) {
+    const col = userLeftCols[i % 8];
+    const swY = (i < 8) ? topRowY_L2 : botRowY_L2;
+    const pX  = l2PortX(col);
+
+    const srv = servers[Math.floor(i / 2)];
+    const tUTPY = utpPortY(srv.uBase, srv.type);
+    const tUTPX = utpPortXs(srv.rackX)[i % 2];
+    const tgtRail = srv.rackX - RACK.w/2 + 0.010;       // -X rail of target rack
+
+    // Per-cable Z offset: keeps the 16 lines from stacking on top of each other
+    const zOff   = (i - Z_STAGGER_BASE) * Z_STAGGER_STEP;
+    const railZ_i = railZ_utp + zOff;
+    const trayZ_i = trayZ_utp + zOff;
+
+    drawUTPPipe([
+      [pX,           swY,            frontZ_sw],                     // exit L2 RJ45 port
+      [pX - 0.005,   swY,            frontZ_sw - 0.006],             // pull forward toward -X
+      [netLeftRail,  swY,            railZ_i],                       // reach network-rack -X rail
+      [netLeftRail,  swY + 0.08,     railZ_i],                       // begin vertical rise
+      [netLeftRail,  trayY - 0.05,   railZ_i],                       // just below yellow tray
+      [netLeftRail,  trayY,          railZ_i],
+      [netLeftRail,  trayY,          trayZ_i],                       // into yellow tray (own lane)
+      [tgtRail,      trayY,          trayZ_i],                       // along tray to target rack
+      [tgtRail,      trayY,          railZ_i],                       // exit tray
+      [tgtRail,      trayY - 0.05,   railZ_i],
+      [tgtRail,      tUTPY + 0.06,   railZ_i],                       // vertical drop
+      [tgtRail,      tUTPY + 0.015,  railZ_i],
+      [tgtRail,      tUTPY,          railZ_i],                       // at UTP port Y
+      [(tgtRail + tUTPX)*0.5, tUTPY, (railZ_i + frontZ_srv)*0.5],    // smooth arc in
+      [tUTPX,        tUTPY,          frontZ_srv - 0.005],
+      [tUTPX,        tUTPY,          frontZ_srv + 0.002],            // plug into UTP port
+    ]);
+  }
+}
+
+addL2UTPCables();
+
+// ---- Tap-off box green management port → L2 remaining RJ45 ports (via yellow tray) ----
+// Each of the 5 busway tap-off boxes has a green status/management port (DCIM uplink).
+// Route one UTP cable per box: drape down from the tap-off face → into the yellow tray →
+// along the tray to the network rack → down its -X rail → into an unused L2 RJ45 port.
+// L2 ports used: top row col 8..12 (still on the -X half of the switch, just after the
+// first 8 server-UTP columns we already consumed).
+function addTapOffUTPCables() {
+  const emptyRackX_L = -(RACK.w + SET_GAP);
+  const l2UBase      = 31;
+  const frontZ_sw    = -rd - 0.002;
+  // Deeper Z than the server-UTP lane so these don't mix with the other cable bundles.
+  const railZ_dcim   = frontZ_sw - 0.070;
+  const trayY        = TRAY.bottomY;                        // YELLOW tray center Y
+  const trayZ_dcim   = TRAY.zCenter + 0.040;                // opposite lane from server UTP (+Z side)
+  const UTP_COL_DCIM = [0.10, 0.22, 0.65];                  // slightly lighter navy
+
+  // L2 port X (reuse addL2Switch layout math)
+  const switchX      = emptyRackX_L;
+  const switchSY     = -rh + (l2UBase * U_HEIGHT) + U_HEIGHT/2;
+  const leftX_sw     = switchX - 0.448/2 + 0.004;
+  const modeR        = leftX_sw + 0.448 * 0.12;
+  const portsL_L2    = modeR + 0.003;
+  const portsR_L2    = leftX_sw + 0.448 * 0.82;
+  const portsAreaW2  = portsR_L2 - portsL_L2;
+  const bankGap2     = 0.004;
+  const colsPerBank2 = 12;
+  const bankW2       = (portsAreaW2 - bankGap2) / 2;
+  const portGap2     = 0.0005;
+  const portW2       = (bankW2 - (colsPerBank2 - 1) * portGap2) / colsPerBank2;
+  function l2PortX(colIdx) {
+    const b = Math.floor(colIdx / colsPerBank2);
+    const c = colIdx % colsPerBank2;
+    const bankLX = portsL_L2 + b * (bankW2 + bankGap2);
+    return bankLX + portW2/2 + c * (portW2 + portGap2);
+  }
+  const topRowY_L2 = switchSY + 0.009;
+
+  const netLeftRail_minusX = emptyRackX_L - RACK.w/2 + 0.010;   // -X rail of network rack
+
+  // Tap-off green port positions (mirrors addTapOffsAndDropCables math)
+  const yTopOfBus = BUSWAY.yCenter - BUSWAY.height/2;
+  const mastH     = 0.04;
+  const mastCy    = yTopOfBus - mastH/2;
+  const tapW = 0.18, tapH = 0.13;
+  const bodyCy    = mastCy - mastH/2 - tapH/2;
+  const panelW    = 0.045;
+  const tapFrontZ = BUSWAY.zCenter + 0.14/2 + 0.001;    // +Z face of rotated tap-off
+
+  const UTP_STRAND = 0.00675;   // +50 % density/thickness (was 0.0045)
+  function drawDCIMPipe(controlPts) {
+    const curve = new THREE.CatmullRomCurve3(
+      controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+    );
+    const r = UTP_STRAND / 2;
+    const circ = 2 * Math.PI * r;
+    const angStep = Math.max(12, Math.round(circ / 0.010));
+    const lenStep = Math.max(120, Math.round(curve.getLength() / 0.006));
+    const tan = new THREE.Vector3(), nrm = new THREE.Vector3(), bin = new THREE.Vector3();
+    const ref = new THREE.Vector3(0, 1, 0), refAlt = new THREE.Vector3(1, 0, 0);
+    for (let l = 0; l <= lenStep; l++) {
+      const t = l / lenStep;
+      const pt = curve.getPoint(t);
+      curve.getTangent(t, tan);
+      const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+      bin.crossVectors(tan, base).normalize();
+      nrm.crossVectors(bin, tan).normalize();
+      for (let a = 0; a < angStep; a++) {
+        const th = (a / angStep) * Math.PI * 2;
+        const cN = Math.cos(th) * r;
+        const cB = Math.sin(th) * r;
+        ibCablePos.push(
+          pt.x + cN * nrm.x + cB * bin.x,
+          pt.y + cN * nrm.y + cB * bin.y,
+          pt.z + cN * nrm.z + cB * bin.z
+        );
+        ibCableCol.push(UTP_COL_DCIM[0], UTP_COL_DCIM[1], UTP_COL_DCIM[2]);
+      }
+    }
+  }
+
+  // One cable per tap-off box (5 total) → L2 top-row cols 8..12
+  for (let i = 0; i < RACK_X_CENTERS.length; i++) {
+    const xC = RACK_X_CENTERS[i];
+    // Tap-off green port approximate position (left side of front panel, near LED)
+    const panelCx  = xC + tapW/2 - panelW/2 - 0.005;   // -X side of rotated panel = +X world
+    const greenPortX = panelCx;
+    const greenPortY = bodyCy - 0.025;                 // green LED row
+    const greenPortZ = tapFrontZ;                      // +Z face
+
+    // Yellow-dropper entry (near this rack's yellow dropper at xC - 0.29)
+    const dropperEntryX = xC - 0.29;
+
+    // Target L2 port (col 8..12, top row, on -X bank of switch)
+    const tCol  = 8 + i;                               // 8, 9, 10, 11, 12
+    const tPortX = l2PortX(tCol);
+    const tPortY = topRowY_L2;
+
+    // Per-cable Z stagger inside tray to keep the 5 lines separated
+    const zOff = (i - 2) * 0.002;                      // ±4 mm across 5 lines
+    const railZ_i = railZ_dcim + zOff;
+    const trayZ_i = trayZ_dcim + zOff;
+
+    drawDCIMPipe([
+      [greenPortX,       greenPortY,            greenPortZ],             // exit tap-off green port
+      [greenPortX,       greenPortY - 0.04,     greenPortZ + 0.02],      // natural drape outward
+      [greenPortX - 0.02, greenPortY - 0.10,    greenPortZ + 0.01],      // arc downward
+      [dropperEntryX + 0.04, yellowTrayFloorY + 0.10, TRAY.zCenter + 0.02], // approach dropper
+      [dropperEntryX,    yellowTrayFloorY + 0.03, trayZ_i],              // enter near dropper
+      [dropperEntryX,    yellowTrayFloorY + 0.02, trayZ_i],              // in the tray floor
+      [dropperEntryX,    trayY,                 trayZ_i],                // tray centerline
+      [netLeftRail_minusX, trayY,               trayZ_i],                // along tray to network rack
+      [netLeftRail_minusX, trayY,               railZ_i],                // exit tray to -X rail
+      [netLeftRail_minusX, trayY - 0.05,        railZ_i],
+      [netLeftRail_minusX, tPortY + 0.05,       railZ_i],                // vertical drop to L2
+      [netLeftRail_minusX, tPortY + 0.015,      railZ_i],
+      [netLeftRail_minusX, tPortY,              railZ_i],
+      [(netLeftRail_minusX + tPortX)*0.5, tPortY, (railZ_i + frontZ_sw)*0.5],
+      [tPortX,           tPortY,                frontZ_sw - 0.005],
+      [tPortX,           tPortY,                frontZ_sw + 0.002],      // plug into L2 RJ45
+    ]);
+  }
+}
+
+addTapOffUTPCables();
+
+// ---- Fiber optic 20-line uplink from blue tray (+X end) → L3 switch SFP ports ----
+// 20 yellow fiber strands (like single-mode patch cords) emerge from the BLUE (upper) tray
+// at its +X end and slide along the tray to the network rack, then drop down the network-rack
+// +X (user-LEFT) rail into the L3 switch's SFP28 ports (2 rows × 10 cols = 20 ports).
+const FIBER_YELLOW = [0.98, 0.88, 0.10];
+
+function addFiberL3Cables() {
+  const emptyRackX_L = -(RACK.w + SET_GAP);
+  const l3UBase      = 33;                          // L3 switch at U34
+  const frontZ_sw    = -rd - 0.002;
+  // Fiber runs in its OWN shallow Z-layer (closer to the viewer than the server-UTP deep layer)
+  const railZ_fiber  = frontZ_sw - 0.012;
+  const trayY        = TRAY.topY;                   // BLUE tray center Y
+  const trayZ_center = TRAY.zCenter;
+
+  // L3 switch SFP cage X positions (reuse addL3Switch layout math)
+  const xOffset = emptyRackX_L;
+  const l3SY    = -rh + (l3UBase * U_HEIGHT) + U_HEIGHT/2;
+  const sfpLeft = xOffset - 0.448/2 + 0.006;
+  const sfpRight= sfpLeft + 0.448 * 0.62;
+  const sfpCols = 12;
+  const sfpGapC = 0.0008;
+  const sfpCageW = ((sfpRight - sfpLeft) - (sfpCols - 1) * sfpGapC) / sfpCols;
+  function l3SFPx(colIdx) {
+    return sfpLeft + sfpCageW/2 + colIdx * (sfpCageW + sfpGapC);
+  }
+  const topRowY_L3 = l3SY + 0.008;
+  const botRowY_L3 = l3SY - 0.008;
+
+  // Network rack +X (user-LEFT) rail — fiber drops down this rail
+  const netLeftRail_plusX = emptyRackX_L + RACK.w/2 - 0.010;
+
+  // Blue tray X-end origin: tray spans TRAY.xCenter ± TRAY.length/2
+  const trayXplusEnd = TRAY.xCenter + TRAY.length/2 - 0.040;   // 40 mm inside from the tip
+
+  // Increased density: continuous solid line (no visible gaps along the run)
+  const FIBER_THICK = 0.0060;        // thicker (3.8 → 6 mm) so the line reads clearly
+  function drawFiberPipe(controlPts, rgb) {
+    const curve = new THREE.CatmullRomCurve3(
+      controlPts.map(p => new THREE.Vector3(p[0], p[1], p[2]))
+    );
+    const r = FIBER_THICK / 2;
+    const circ = 2 * Math.PI * r;
+    const angStep = Math.max(18, Math.round(circ / 0.0035));   // ~3.5 mm angular spacing
+    const lenStep = Math.max(300, Math.round(curve.getLength() / 0.0025));   // ~2.5 mm along length
+    const tan = new THREE.Vector3(), nrm = new THREE.Vector3(), bin = new THREE.Vector3();
+    const ref = new THREE.Vector3(0, 1, 0), refAlt = new THREE.Vector3(1, 0, 0);
+    for (let l = 0; l <= lenStep; l++) {
+      const t = l / lenStep;
+      const pt = curve.getPoint(t);
+      curve.getTangent(t, tan);
+      const base = (Math.abs(tan.dot(ref)) > 0.95) ? refAlt : ref;
+      bin.crossVectors(tan, base).normalize();
+      nrm.crossVectors(bin, tan).normalize();
+      for (let a = 0; a < angStep; a++) {
+        const th = (a / angStep) * Math.PI * 2;
+        const cN = Math.cos(th) * r;
+        const cB = Math.sin(th) * r;
+        ibCablePos.push(
+          pt.x + cN * nrm.x + cB * bin.x,
+          pt.y + cN * nrm.y + cB * bin.y,
+          pt.z + cN * nrm.z + cB * bin.z
+        );
+        ibCableCol.push(rgb[0], rgb[1], rgb[2]);
+      }
+    }
+    // Extra "core" sample line down the centerline of the curve — guarantees a solid line look
+    // even at oblique camera angles where the tube outline could appear sparse.
+    const coreSteps = Math.max(400, Math.round(curve.getLength() / 0.0015));
+    for (let l = 0; l <= coreSteps; l++) {
+      const t = l / coreSteps;
+      const pt = curve.getPoint(t);
+      ibCablePos.push(pt.x, pt.y, pt.z);
+      ibCableCol.push(rgb[0], rgb[1], rgb[2]);
+    }
+  }
+
+  // 20 fibers — populated starting from the +X-most SFP cage (col 11) working toward -X (col 2)
+  // Top row first (10 fibers), then bottom row (10 fibers).
+  const FIBER_COUNT = 20;
+  const Z_STAGGER = 0.0040;              // 4 mm lane spacing → clearly non-overlapping
+  const Z_BASE = (FIBER_COUNT - 1) / 2;  // center the stagger
+
+  for (let i = 0; i < FIBER_COUNT; i++) {
+    const rowIdx = (i < 10) ? 0 : 1;
+    const col    = 11 - (i % 10);         // start at col 11 (+X-most), descend to col 2
+    const tPortX = l3SFPx(col);
+    const tPortY = (rowIdx === 0) ? topRowY_L3 : botRowY_L3;
+
+    const zOff = (i - Z_BASE) * Z_STAGGER;
+    const railZ_i = railZ_fiber + zOff;
+    const trayZ_i = trayZ_center + zOff;
+
+    drawFiberPipe([
+      [trayXplusEnd,            trayY,        trayZ_i],                    // emerge from tray +X end
+      [trayXplusEnd - 0.10,     trayY,        trayZ_i],
+      [netLeftRail_plusX + 0.10, trayY,       trayZ_i],                    // approach network rack
+      [netLeftRail_plusX,       trayY,        trayZ_i],
+      [netLeftRail_plusX,       trayY,        railZ_i],                    // exit tray to +X rail plane
+      [netLeftRail_plusX,       trayY - 0.05, railZ_i],                    // below tray
+      [netLeftRail_plusX,       tPortY + 0.08, railZ_i],                   // vertical drop
+      [netLeftRail_plusX,       tPortY + 0.025, railZ_i],
+      [netLeftRail_plusX,       tPortY,       railZ_i],                    // at port level
+      [(netLeftRail_plusX + tPortX)*0.5, tPortY, (railZ_i + frontZ_sw)*0.5], // smooth arc
+      [tPortX,                  tPortY,       frontZ_sw - 0.005],
+      [tPortX,                  tPortY,       frontZ_sw + 0.002],          // plug into SFP cage
+    ], FIBER_YELLOW);
+  }
+}
+
+addFiberL3Cables();
+
+// Network rack (leftmost, x = emptyRackX = -0.65) — PDU now at the TOP (swapped with switches per user)
+// U44 empty / PDU2 U41-43 / PDU1 U38-40 / U37 empty / InfiniBand U36 / 1U gap / L3 U34 / 1U gap / L2 U32
+addPDU(emptyRackX, 37);   // PDU1 — U38..U40
+addPDU(emptyRackX, 40);   // PDU2 — U41..U43   (U44 stays empty, matching the other 4 racks)
+
+// Now that PDU geometry is defined, draw the M70 tap-off boxes and the IEC 60309 power harnesses
+// that go from each box's two outlets down to the corresponding PDU rear inlets.
+addTapOffsAndDropCables();
+
+// ---- Build three Points objects with different sizes ----
+// Rack stays at current coarseness; RDC and Server are rendered finer as requested.
+function makePoints(positions, colors, size, opacity, blending = THREE.AdditiveBlending) {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors), 3));
+  const mat = new THREE.PointsMaterial({
+    size,
+    vertexColors: true,
+    transparent: true,
+    opacity,
+    blending,
+    sizeAttenuation: true,
+    depthWrite: false,
+  });
+  return new THREE.Points(geo, mat);
+}
+
+scene.add(makePoints(rackEdgePos, rackEdgeCol, 0.008, 0.85, THREE.NormalBlending));  // rack EDGES — black on transparent bg
+scene.add(makePoints(rackVolPos,  rackVolCol,  0.022, 0.85));  // rack interior haze — unchanged
+scene.add(makePoints(rdcPos,      rdcCol,      0.012, 0.85));  // RDC blue — finer
+scene.add(makePoints(serverPos,   serverCol,   0.012, 0.85));  // server orange — finer
+// Server FRONT-PANEL detail (PSU/NIC/PORTS/DISK zones, LCDs, LEDs) rendered with NormalBlending
+// so the distinct color bezels read clearly without being washed out by additive stacking.
+scene.add(makePoints(srvFacePos,  srvFaceCol,  0.008, 1.0, THREE.NormalBlending));
+// InfiniBand cables — own buffer with a much larger point size so thickness changes are visible.
+scene.add(makePoints(ibCablePos,  ibCableCol,  0.014, 1.0, THREE.NormalBlending));
+scene.add(makePoints(cduPos,      cduCol,      0.012, 0.85));  // CDU teal — same fine size
+// Manifold uses NormalBlending — these represent real pipes, not glow.
+// AdditiveBlending was stacking the red channel past 1.0 and clipping to white.
+scene.add(makePoints(manifoldPos, manifoldCol, 0.009, 1.0, THREE.NormalBlending));
+// scene.add(makePoints(wallPos, wallCol, 0.020, 0.55, THREE.NormalBlending)); // Partition wall removed
+scene.add(makePoints(chillerPos,  chillerCol,  0.012, 0.9,  THREE.NormalBlending)); // Kiturami BumYang chiller
+scene.add(makePoints(trayPos,     trayCol,     0.011, 0.95, THREE.NormalBlending)); // Overhead 2-tier cable trays (yellow/blue)
+scene.add(makePoints(buswayPos,   buswayCol,   0.011, 0.95, THREE.NormalBlending)); // Overhead Track busway + tap-offs + drop cables
+scene.add(makePoints(pduPos,      pduCol,      0.010, 0.95, THREE.NormalBlending)); // 3U Smart PDU — 2 per rack (top of rack)
+
+// =====================================================================
+// FLUID FLOW ANIMATION — chiller → RDC → CDU → return → chiller closed loop
+// Color transitions: BLUE → PURPLE → RED → BLUE, 32-second cycle
+// =====================================================================
+function buildFlowPath(xBase) {
+  const xRackA = xBase;
+  const xRackB = xBase + RACK.w + SET_GAP;
+  const chX = CHILLER_UNIT.xC, chY = CHILLER_UNIT.yC, chZ = CHILLER_UNIT.zC;
+  const rdcInX_     = xRackA + 0.20;
+  const rdcCenterX  = xRackA;
+  const rdcInZ_     = rd + 0.06;
+  const rdcBehindZ_ = rdcInZ_ + 0.10;
+  const rdcBottomY_ = -rh + 0.02;
+  const cduRearZ_   = -rd + CDU.d - 0.05;
+  const cduMidY_    = -rh + 4 * U_HEIGHT;
+  const cduInX_     = xRackB - 0.18;
+  const cduOutX_    = xRackB + 0.18;
+  const supplyZ     = headerZrear - CHILLER_PITCH / 2;
+  const returnZ     = headerZrear + CHILLER_PITCH / 2;
+
+  // --- RDC helical coil (10 turns, bottom → top of RDC) ---
+  const rdcYMin = rdcBottomY_ + 0.05;
+  const rdcYMax = rh;                        // 100 % of RDC height (spiral reaches full top)
+  const rdcSpiralRadiusX = 0.28;             // wider X sweep in the 800 mm rack
+  const rdcSpiralRadiusZ = 0.08;             // shallower Z sweep (inside RDC volume)
+  const rdcZmid = rdcInZ_ + 0.12;            // center Z inside RDC
+  const RDC_TURNS = 10;
+  const RDC_PTS_PER_TURN = 4;                // 4 quarter-turn control points
+  const RDC_TOTAL_PTS = RDC_TURNS * RDC_PTS_PER_TURN;
+  const rdcCoil = [];
+  for (let k = 0; k < RDC_TOTAL_PTS; k++) {
+    const f = k / (RDC_TOTAL_PTS - 1);       // 0..1
+    const ang = k * (Math.PI * 2 / RDC_PTS_PER_TURN);
+    const y = rdcYMin + f * (rdcYMax - rdcYMin);
+    rdcCoil.push([
+      rdcCenterX + Math.cos(ang) * rdcSpiralRadiusX,
+      y,
+      rdcZmid    + Math.sin(ang) * rdcSpiralRadiusZ,
+    ]);
+  }
+
+  // --- CDU internal — multiple pulsating loops with varying radius (expanding/contracting) ---
+  const cduLoop = [];
+  const CDU_PTS = 24;
+  for (let k = 0; k < CDU_PTS; k++) {
+    const f = k / CDU_PTS;
+    const ang = k * 2.7;                                   // irregular angular pace
+    const rExpand = 0.20 + 0.13 * Math.sin(f * Math.PI * 4);    // radius pulsates
+    const rZ      = 0.12 + 0.08 * Math.cos(f * Math.PI * 3);
+    const yOff    = 0.03 * Math.sin(f * Math.PI * 5);
+    cduLoop.push([
+      xRackB + Math.cos(ang) * rExpand,
+      cduMidY_ + yOff,
+      -0.20 + Math.sin(ang) * rZ,
+    ]);
+  }
+
+  // --- Chiller internal — 10-turn full-volume spiral ---
+  // Uses the full chiller envelope: X ±0.25, Y ±0.45, Z ±0.50
+  const CHILLER_TURNS = 10;
+  const CHILLER_PTS_PER_TURN = 4;
+  const CHILLER_TOTAL_PTS = CHILLER_TURNS * CHILLER_PTS_PER_TURN;
+  const chiller_rx = 0.25;
+  const chiller_rz = 0.50;                   // Z is the long axis of the chiller
+  const chiller_yMin = chY - 0.45;
+  const chiller_yMax = chY + 0.45;
+  const chillerSpiral = [];
+  for (let k = 0; k < CHILLER_TOTAL_PTS; k++) {
+    const f = k / (CHILLER_TOTAL_PTS - 1);
+    const ang = k * (Math.PI * 2 / CHILLER_PTS_PER_TURN);
+    // Up on the first half (f 0→0.5) then back down on the second half — so the
+    // particle sweeps the entire volume twice while spiralling.
+    const yf = (f < 0.5) ? f * 2 : (1 - f) * 2;
+    const y  = chiller_yMin + yf * (chiller_yMax - chiller_yMin);
+    chillerSpiral.push([
+      chX + Math.cos(ang) * chiller_rx,
+      y,
+      chZ + Math.sin(ang) * chiller_rz,
+    ]);
+  }
+
+  const pts = [
+    // --- Chiller internal (10-turn full-volume spiral)
+    ...chillerSpiral,
+    [chX,        chillerRiseTopY, supplyZ],
+    // --- Supply line to RDC ---
+    [pipeEndX + 0.25, -rh - 0.05,   supplyZ],
+    [pipeEndX + 0.25, headerYbelow, supplyZ],
+    [pipeEndX,        headerYbelow, supplyZ],
+    [rdcInX_,         headerYbelow, supplyZ],
+    [rdcInX_,         headerYbelow + 0.30, (supplyZ + rdcInZ_)/2],
+    [rdcInX_,         -rh - 0.05,   rdcInZ_],
+    [rdcInX_,         rdcBottomY_,  rdcInZ_],
+    // --- RDC 10-turn helical coil ---
+    ...rdcCoil,
+    // --- RDC out ---
+    [rdcInX_,         rdcYMax,      rdcBehindZ_],
+    [rdcInX_,         rdcBottomY_,  rdcBehindZ_],
+    [rdcInX_,         -rh - 0.05,   rdcBehindZ_],
+    // --- Cross to CDU ---
+    [(rdcInX_ + cduInX_)/2, headerYbelow + 0.25, (rdcBehindZ_ + cduRearZ_)/2],
+    [cduInX_,         -rh - 0.05,   cduRearZ_ + 0.10],
+    [cduInX_,         cduMidY_,     cduRearZ_ + 0.05],
+    [cduInX_,         cduMidY_,     cduRearZ_],
+    // --- CDU internal (pulsating expansion/contraction loop) ---
+    ...cduLoop,
+    // --- CDU out → return line ---
+    [cduOutX_,        cduMidY_,     cduRearZ_],
+    [cduOutX_,        cduMidY_ - 0.30, returnZ - 0.05],
+    [cduOutX_,        headerYbelow, returnZ],
+    [pipeEndX,        headerYbelow, returnZ],
+    [pipeEndX + 0.25, headerYbelow, returnZ],
+    [pipeEndX + 0.25, -rh - 0.05,   returnZ],
+    [pipeEndX + 0.25, chillerRiseTopY, returnZ],
+    [chX,             chillerRiseTopY, returnZ],
+    // (closes back into the chillerSpiral start via CatmullRomCurve3 closed loop)
+  ];
+  return new THREE.CatmullRomCurve3(
+    pts.map(p => new THREE.Vector3(p[0], p[1], p[2])),
+    true
+  );
+}
+
+const FLOW_PATHS = [ buildFlowPath(0), buildFlowPath(SET_OFFSET) ];
+const FLOW_N_PER_SET = HERO_MODE ? 1800 : 10800; // Homepage keeps the visual read without saturating the GPU.
+const FLOW_TOTAL     = FLOW_N_PER_SET * 2;
+
+const flowParticles = [];
+for (let s = 0; s < 2; s++) {
+  for (let i = 0; i < FLOW_N_PER_SET; i++) {
+    flowParticles.push({
+      setIdx: s,
+      t: (i / FLOW_N_PER_SET + Math.random() * 0.008) % 1,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+const flowGeom   = new THREE.BufferGeometry();
+const flowPosArr = new Float32Array(FLOW_TOTAL * 3);
+const flowColArr = new Float32Array(FLOW_TOTAL * 3);
+flowGeom.setAttribute('position', new THREE.BufferAttribute(flowPosArr, 3));
+flowGeom.setAttribute('color',    new THREE.BufferAttribute(flowColArr, 3));
+// NormalBlending — particles keep their own color instead of summing toward white
+// when many overlap (AdditiveBlending was clipping the full stack to white in the mains).
+const flowMat = new THREE.PointsMaterial({
+  size: 0.045,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.95,
+  blending: THREE.NormalBlending,
+  sizeAttenuation: true,
+  depthWrite: false,
+});
+const flowPoints = new THREE.Points(flowGeom, flowMat);
+scene.add(flowPoints);
+
+// Temperature gradient — continuous transition across the WHOLE loop:
+//   t 0.00  (chiller outlet — coldest)  → BLUE
+//   t 0.50  (roughly RDC mid-coil)      → PURPLE
+//   t 0.65  (CDU entry → mid-loop)      → fully RED  ← particle turns red inside the CDU
+//   t 0.65..0.95 (CDU internal + return main) → RED held
+//   t 1.00  (back inside chiller)       → BLUE again
+function flowColorAtT(t) {
+  const BLUE   = [0.25, 0.55, 1.00];
+  const PURPLE = [0.78, 0.30, 0.98];
+  const RED    = [1.00, 0.18, 0.22];
+  function lerpC(a, b, k) {
+    return [a[0] + (b[0]-a[0])*k, a[1] + (b[1]-a[1])*k, a[2] + (b[2]-a[2])*k];
+  }
+  // Closed loop: t 0..0.32 = chiller internal (10-turn spiral).
+  // Cooling starts at 20 % of the chiller (t ≈ 0.064) and gradually transitions RED → BLUE
+  // over the remaining 80 % of the chiller.
+  if (t < 0.064) return RED;                                            // first 20 % of chiller — still hot
+  if (t < 0.32)  return lerpC(RED,   BLUE,   (t - 0.064) / 0.256);      // remaining 80 % — gradual RED → BLUE
+  if (t < 0.50) return lerpC(BLUE,  PURPLE, (t - 0.32) / 0.18);         // supply main + RDC entry
+  if (t < 0.62) return lerpC(PURPLE,RED,    (t - 0.50) / 0.12);         // RDC coil end → CDU entry: snap to RED
+  return RED;                                                           // CDU + CDU out + return main: RED
+}
+
+let _flowLast = performance.now();
+const FLOW_CYCLE_SEC = 32;
+function updateFlow() {
+  const now = performance.now();
+  const dt  = (now - _flowLast) / 1000;
+  _flowLast = now;
+  const dtT = dt / FLOW_CYCLE_SEC;
+  const posA = flowGeom.getAttribute('position');
+  const colA = flowGeom.getAttribute('color');
+  for (let i = 0; i < flowParticles.length; i++) {
+    const p = flowParticles[i];
+    // Per-segment speed modulation: the big-diameter Ø 200 mm mains carry so much fluid
+    // that particles should crawl through them so the pipe visually reads as FILLED.
+    //   supply main (chiller outlet → RDC inlet) : t ≈ 0.31 .. 0.46 (full supply line)
+    //   return main (CDU → chiller)              : t ≈ 0.95 .. 1.00 (full return line)
+    let speedMod = 1.0;
+    if ((p.t > 0.31 && p.t < 0.46) || (p.t > 0.95)) {
+      speedMod = 0.15;   // ~1/7 speed — heavy packing in the mains
+    }
+    p.t = (p.t + dtT * speedMod) % 1;
+    const pt = FLOW_PATHS[p.setIdx].getPoint(p.t);
+    const c  = flowColorAtT(p.t);
+    const pulse = 0.78 + 0.22 * Math.sin(now * 0.005 + p.phase + p.t * 12);
+
+    // In the big Ø 200 mm mains, spin each particle in the pipe cross-section
+    // (Y-Z plane) at a radius equal to the pipe radius (≈ 0.10 m). Each particle
+    // has a unique phase, so collectively the pipe is filled with a helical swirl.
+    let py = pt.y, pz = pt.z;
+    // Swirl in the big Ø 200 mm mains.
+    //   Supply main : chiller outlet → RDC inlet   — particles corkscrew through the full pipe
+    //   Return main : CDU outlet → chiller inlet   — same behavior on the way back
+    const inSupplyMain = (p.t > 0.31 && p.t < 0.46);
+    const inReturnMain = (p.t > 0.95);
+    if (inSupplyMain || inReturnMain) {
+      const PIPE_R = 0.10;                    // = CHILLER_PIPE / 2
+      const ang = p.t * 260 + p.phase;
+      py += Math.cos(ang) * PIPE_R;
+      pz += Math.sin(ang) * PIPE_R;
+    }
+    posA.setXYZ(i, pt.x, py, pz);
+    colA.setXYZ(i, c[0]*pulse, c[1]*pulse, c[2]*pulse);
+  }
+  posA.needsUpdate = true;
+  colA.needsUpdate = true;
+}
+
+// =====================================================================
+// SECONDARY LOOP — CDU ↔ rack manifold ↔ server ↔ manifold ↔ CDU
+// Green coolant particles circling inside each Rack B (CDU rack) — 4 closed
+// loops total (2 sets × 2 LC servers per CDU).
+// =====================================================================
+function buildSecondaryPath(xBase, serverUBase) {
+  const rackBCx   = xBase + RACK.w + SET_GAP;
+  const mfSupplyX = rackBCx - MANIFOLD_PITCH/2;
+  const mfReturnX = rackBCx + MANIFOLD_PITCH/2;
+  const mfZ       = rd - 0.08;
+  const cduMidY_  = -rh + 4 * U_HEIGHT;
+  const cduRearZ_ = -rd + CDU.d - 0.05;
+  const srvY      = -rh + (serverUBase + 4) * U_HEIGHT;    // 8U server center Y
+  const srvRearZ  = -rd + SERVER8.d - 0.05;
+
+  const pts = [
+    // CDU internal — quick sweep
+    [rackBCx - 0.08, cduMidY_ + 0.02, -0.30],
+    [rackBCx + 0.06, cduMidY_ - 0.02, -0.22],
+    [rackBCx - 0.04, cduMidY_ + 0.04, -0.15],
+    // CDU out (rear-center-LEFT tap) → manifold supply top region
+    [mfSupplyX,      cduMidY_ + 0.05, cduRearZ_],
+    [mfSupplyX,      cduMidY_ + 0.15, mfZ],
+    // Manifold SUPPLY travels vertically to server NIC level
+    [mfSupplyX,      srvY + 0.15,     mfZ],
+    [mfSupplyX,      srvY + 0.03,     mfZ],
+    // Enter server (rear supply tap) → move DEEP into the server volume toward the front
+    // (past the mid-depth point all the way to the GPU cold-plate / manifold area).
+    // Server spans Z = -rd..-rd+SERVER8.d  = (-0.60..+0.25) for an 800 mm rack.
+    [mfSupplyX,      srvY,            mfZ - 0.06],
+    [rackBCx - 0.14, srvY + 0.02,     srvRearZ - 0.10],   // just inside rear
+    [rackBCx - 0.18, srvY - 0.01,     srvRearZ - 0.30],   // 1/3 deep
+    [rackBCx - 0.08, srvY + 0.03,     srvRearZ - 0.55],   // DEEP — near GPU/cold-plate zone
+    [rackBCx,        srvY - 0.02,     srvRearZ - 0.70],   // deepest — close to server front face
+    [rackBCx + 0.08, srvY + 0.03,     srvRearZ - 0.55],   // back out again
+    [rackBCx + 0.18, srvY - 0.01,     srvRearZ - 0.30],
+    [rackBCx + 0.14, srvY + 0.02,     srvRearZ - 0.10],
+    // Server out (rear return tap)
+    [rackBCx + 0.12, srvY - 0.02,     srvRearZ - 0.05],
+    [mfReturnX,      srvY,            mfZ - 0.06],
+    [mfReturnX,      srvY + 0.03,     mfZ],
+    // Manifold RETURN rises back to CDU
+    [mfReturnX,      srvY + 0.15,     mfZ],
+    [mfReturnX,      cduMidY_ + 0.15, mfZ],
+    [mfReturnX,      cduMidY_ + 0.05, cduRearZ_],
+    // Back into CDU internal — closes the loop
+    [rackBCx + 0.04, cduMidY_ - 0.02, -0.18],
+  ];
+
+  return new THREE.CatmullRomCurve3(
+    pts.map(p => new THREE.Vector3(p[0], p[1], p[2])),
+    true
+  );
+}
+
+const SEC_PATHS = [
+  buildSecondaryPath(0,          8),   // Set 1 — LC server #1 (U9-16)
+  buildSecondaryPath(0,          20),  // Set 1 — LC server #2 (U21-28)
+  buildSecondaryPath(SET_OFFSET, 8),   // Set 2 — LC server #1
+  buildSecondaryPath(SET_OFFSET, 20),  // Set 2 — LC server #2
+];
+const SEC_N_PER_PATH = HERO_MODE ? 150 : 600;
+const SEC_TOTAL      = SEC_PATHS.length * SEC_N_PER_PATH;
+
+const secParticles = [];
+for (let pi = 0; pi < SEC_PATHS.length; pi++) {
+  for (let i = 0; i < SEC_N_PER_PATH; i++) {
+    secParticles.push({
+      pathIdx: pi,
+      t: (i / SEC_N_PER_PATH + Math.random() * 0.008) % 1,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+const secGeom   = new THREE.BufferGeometry();
+const secPosArr = new Float32Array(SEC_TOTAL * 3);
+const secColArr = new Float32Array(SEC_TOTAL * 3);
+secGeom.setAttribute('position', new THREE.BufferAttribute(secPosArr, 3));
+secGeom.setAttribute('color',    new THREE.BufferAttribute(secColArr, 3));
+const secMat = new THREE.PointsMaterial({
+  size: 0.035,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.95,
+  blending: THREE.NormalBlending,
+  sizeAttenuation: true,
+  depthWrite: false,
+});
+const secPoints = new THREE.Points(secGeom, secMat);
+scene.add(secPoints);
+
+const SEC_GREEN = [0.20, 0.95, 0.30];
+const SEC_CYCLE_SEC = 18;
+let _secLast = performance.now();
+function updateSecondary() {
+  const now = performance.now();
+  const dt = (now - _secLast) / 1000;
+  _secLast = now;
+  const dtT = dt / SEC_CYCLE_SEC;
+  const posA = secGeom.getAttribute('position');
+  const colA = secGeom.getAttribute('color');
+  for (let i = 0; i < secParticles.length; i++) {
+    const p = secParticles[i];
+    p.t = (p.t + dtT) % 1;
+    const pt = SEC_PATHS[p.pathIdx].getPoint(p.t);
+    const pulse = 0.78 + 0.22 * Math.sin(now * 0.005 + p.phase + p.t * 12);
+    posA.setXYZ(i, pt.x, pt.y, pt.z);
+    colA.setXYZ(i, SEC_GREEN[0]*pulse, SEC_GREEN[1]*pulse, SEC_GREEN[2]*pulse);
+  }
+  posA.needsUpdate = true;
+  colA.needsUpdate = true;
+}
+
+// =====================================================================
+// AIR FLOW (공냉 서버) — front cold intake → server interior → hot rear exhaust
+// Open-curve paths per 10U AC server (4 servers total). Blue → Red gradient
+// as the air traverses the server length.
+// =====================================================================
+function buildAirFlowPath(xCenter, uBase) {
+  const sY = -rh + (uBase * U_HEIGHT) + (10 * U_HEIGHT)/2;
+  // Path stages (z values along the airflow):
+  //   intake (z<-0.6) → server interior (-0.6..0.25) → RDC entry (~0.6)
+  //   → through RDC body (0.6..0.9, RED→PURPLE→BLUE)
+  //   → cooled-air dispersion past RDC up to ~1 m beyond (0.9..1.9, BLUE)
+  const pts = [
+    // Far intake — air drawn from 50 cm in front of the server face
+    [xCenter - 0.20, sY + 0.12, -1.30],   // very far outside (~70 cm in front)
+    [xCenter + 0.15, sY - 0.10, -1.10],   // 50 cm in front of server face
+    [xCenter - 0.10, sY + 0.05, -0.90],
+    [xCenter + 0.08, sY - 0.05, -0.75],   // approaching front face
+    [xCenter,        sY + 0.02, -0.60],   // at server front face
+    [xCenter + 0.18, sY + 0.10, -0.40],   // entering server (still cold)
+    [xCenter - 0.18, sY - 0.10, -0.20],
+    [xCenter + 0.15, sY + 0.05,  0.00],   // mid-server — warming
+    [xCenter - 0.12, sY - 0.08,  0.12],
+    [xCenter + 0.08, sY + 0.10,  0.20],   // rear of server — hot
+    [xCenter,        sY,         0.25],   // rear face exhaust (HOT RED)
+    [xCenter + 0.10, sY + 0.05,  0.45],   // hot air exits backward toward RDC
+    [xCenter - 0.05, sY - 0.05,  0.60],   // entering RDC front face
+    // ─── RDC interior: hot RED air gets cooled by water coil ───
+    [xCenter + 0.08, sY + 0.06,  0.72],   // mid-RDC (cooling, RED → PURPLE)
+    [xCenter - 0.08, sY - 0.04,  0.82],   // mid-RDC (PURPLE → BLUE)
+    [xCenter,        sY + 0.02,  0.92],   // exiting RDC rear face (now BLUE/cool)
+    // ─── Dispersion: cooled air spreads out 1 m past RDC ───
+    [xCenter + 0.18, sY + 0.10,  1.15],
+    [xCenter - 0.20, sY - 0.10,  1.40],
+    [xCenter + 0.05, sY + 0.05,  1.65],
+    [xCenter - 0.10, sY - 0.05,  1.90],   // 1 m past RDC, fully dispersed
+  ];
+  return new THREE.CatmullRomCurve3(
+    pts.map(p => new THREE.Vector3(p[0], p[1], p[2])),
+    false    // OPEN curve — one-way flow
+  );
+}
+
+const AIR_PATHS = [
+  buildAirFlowPath(0,          8),
+  buildAirFlowPath(0,          20),
+  buildAirFlowPath(SET_OFFSET, 8),
+  buildAirFlowPath(SET_OFFSET, 20),
+];
+const AIR_N_PER_PATH = HERO_MODE ? 180 : 750;
+const AIR_TOTAL      = AIR_PATHS.length * AIR_N_PER_PATH;
+
+const airParticles = [];
+for (let pi = 0; pi < AIR_PATHS.length; pi++) {
+  for (let i = 0; i < AIR_N_PER_PATH; i++) {
+    airParticles.push({
+      pathIdx: pi,
+      t: Math.random(),
+      phase: Math.random() * Math.PI * 2,
+      // Spread across server front intake area (full server cross-section)
+      fx: (Math.random() - 0.5) * SERVER.w * 0.85,
+      fy: (Math.random() - 0.5) * SERVER.h * 0.80,
+      wavePhase: Math.random() * Math.PI * 2,    // for wave-like color modulation
+    });
+  }
+}
+
+const airGeom   = new THREE.BufferGeometry();
+const airPosArr = new Float32Array(AIR_TOTAL * 3);
+const airColArr = new Float32Array(AIR_TOTAL * 3);
+airGeom.setAttribute('position', new THREE.BufferAttribute(airPosArr, 3));
+airGeom.setAttribute('color',    new THREE.BufferAttribute(airColArr, 3));
+const airMat = new THREE.PointsMaterial({
+  size: 0.028,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.85,
+  blending: THREE.NormalBlending,
+  sizeAttenuation: true,
+  depthWrite: false,
+});
+const airPoints = new THREE.Points(airGeom, airMat);
+scene.add(airPoints);
+
+function airColorAtT(t, waveK) {
+  // 5-stage transition along the full path:
+  //   intake BLUE → server PURPLE → server-rear RED → RDC cooling RED→PURPLE→BLUE
+  //   → past-RDC dispersion BLUE
+  const COLD   = [0.20, 0.50, 1.00];   // pure cold BLUE
+  const MIDDLE = [0.70, 0.20, 0.90];   // PURPLE
+  const HOT    = [1.00, 0.20, 0.18];   // hot RED
+  function lerpC(a, b, kk) {
+    return [a[0] + (b[0]-a[0])*kk, a[1] + (b[1]-a[1])*kk, a[2] + (b[2]-a[2])*kk];
+  }
+  // Apply gentle wave modulation in the t-domain so heating/cooling look organic
+  const tt = Math.max(0, Math.min(1, t + (waveK || 0) * 0.05));
+  // Front color transition shifted 15 % EARLIER along the path —
+  // intake-side warming starts much sooner so the BLUE→PURPLE→RED gradient is visible
+  // well before the particle enters the server body.
+  // Stage A: 0.00..0.05 — pure intake BLUE (only the first 5 % of the path stays pure cold)
+  if (tt < 0.05) return COLD.slice();
+  // Stage B: 0.05..0.27 — front-intake warming  BLUE → PURPLE
+  if (tt < 0.27) return lerpC(COLD,   MIDDLE, (tt - 0.05) / 0.22);
+  // Stage C: 0.27..0.40 — server interior  PURPLE → RED
+  if (tt < 0.40) return lerpC(MIDDLE, HOT,    (tt - 0.27) / 0.13);
+  // Stage D: 0.40..0.65 — server rear → exhaust toward RDC  (RED held)
+  if (tt < 0.65) return HOT.slice();
+  // Stage E: 0.65..0.74 — entering RDC, cooling  RED → PURPLE
+  if (tt < 0.74) return lerpC(HOT,    MIDDLE, (tt - 0.65) / 0.09);
+  // Stage F: 0.74..0.82 — through RDC coil  PURPLE → BLUE
+  if (tt < 0.82) return lerpC(MIDDLE, COLD,   (tt - 0.74) / 0.08);
+  // Stage G: 0.82..1.00 — cooled-air dispersion past RDC  (BLUE held)
+  return COLD.slice();
+}
+
+const AIR_CYCLE_SEC = 3.33;       // 50 % faster (5 / 1.5)
+let _airLast = performance.now();
+function updateAirFlow() {
+  const now = performance.now();
+  const dt = (now - _airLast) / 1000;
+  _airLast = now;
+  const dtT = dt / AIR_CYCLE_SEC;
+  const posA = airGeom.getAttribute('position');
+  const colA = airGeom.getAttribute('color');
+  for (let i = 0; i < airParticles.length; i++) {
+    const p = airParticles[i];
+    p.t = (p.t + dtT) % 1;
+    const pt = AIR_PATHS[p.pathIdx].getPoint(p.t);
+    // Spread X/Y across the server cross-section, fading out as particle moves through:
+    //   - Strong spread at intake (t<0.30) — fills the whole server front face
+    //   - Narrows inside server / rear exhaust toward RDC (0.30..0.65) — focused
+    //   - Tightens through RDC body (0.65..0.82) — confined inside RDC volume
+    //   - EXPANDS strongly past RDC (t>0.82) — cooled-air disperses outward 1 m
+    let spreadFactor;
+    if      (p.t < 0.30) spreadFactor = 1.0;
+    else if (p.t < 0.65) spreadFactor = 1.0 - (p.t - 0.30) / 0.35 * 0.65;   // 1.0 → 0.35
+    else if (p.t < 0.82) spreadFactor = 0.35;                               // confined in RDC
+    else                  spreadFactor = 0.35 + (p.t - 0.82) / 0.18 * 2.65; // 0.35 → 3.0 dispersion
+    const px = pt.x + p.fx * spreadFactor;
+    const py = pt.y + p.fy * spreadFactor;
+    // Wavy color modulation — heating happens in pulses along the path
+    const waveK = 0.18 * Math.sin(p.t * 6 * Math.PI + p.wavePhase);
+    const c = airColorAtT(p.t, waveK);
+    const pulse = 0.75 + 0.25 * Math.sin(now * 0.006 + p.phase + p.t * 10);
+    posA.setXYZ(i, px, py, pt.z);
+    colA.setXYZ(i, c[0]*pulse, c[1]*pulse, c[2]*pulse);
+  }
+  posA.needsUpdate = true;
+  colA.needsUpdate = true;
+}
+
+const FPS_CAP = HERO_MODE ? 15 : 60;
+const FRAME_MS = 1000 / FPS_CAP;
+let _lastFrame = 0;
+function animate(now = 0) {
+  requestAnimationFrame(animate);
+  if (document.hidden) return;
+  if (now - _lastFrame < FRAME_MS) return;
+  _lastFrame = now;
+  const _now = now;
+  try { updateFlow();              } catch (err) { console.error('[flow anim]',   err); }
+  try { updateSecondary();         } catch (err) { console.error('[sec flow]',    err); }
+  try { updateAirFlow();           } catch (err) { console.error('[air flow]',    err); }
+  try { updateChillerFans(_now);   } catch (err) { console.error('[chiller fan]', err); }
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  applyViewOffset();                 // re-apply screen-space output shift
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
